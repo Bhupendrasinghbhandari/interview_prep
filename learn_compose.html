@@ -1,0 +1,2347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Learn Jetpack Compose · 2026 Edition</title>
+<style>
+  :root {
+    --bg: #0b0f17; --card: #121826; --card-hover: #1a2236;
+    --border: #232b3d; --text: #e6edf7; --text-dim: #8a94a7;
+    --accent: #4ecdc4; --accent-hover: #7eddd4;
+    --success: #3fb950; --success-bg: #0f2a1a;
+    --warn: #f0b429; --code-bg: #0a0e15;
+    --compose1: #4ecdc4; --compose2: #95e1d3; --compose3: #c9f4ee;
+    --part1: #4ecdc4; --part2: #95e1d3; --part3: #a78bfa; --part4: #ffa657;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background:
+      radial-gradient(1000px 500px at -10% -10%, rgba(78, 205, 196, 0.06), transparent 60%),
+      radial-gradient(800px 400px at 110% 20%, rgba(167, 139, 250, 0.05), transparent 60%),
+      var(--bg);
+    color: var(--text); line-height: 1.65;
+    padding: 24px 16px 80px;
+  }
+  .container { max-width: 1020px; margin: 0 auto; }
+  .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+  .back-link { color: var(--text-dim); text-decoration: none; font-size: 13px; }
+  .back-link:hover { color: var(--accent); }
+  header {
+    text-align: center; margin-bottom: 32px;
+    padding-bottom: 24px; border-bottom: 1px solid var(--border);
+  }
+  header .eyebrow {
+    display: inline-block; font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--text-dim); padding: 4px 10px; border: 1px solid var(--border);
+    border-radius: 999px; margin-bottom: 14px;
+  }
+  header h1 {
+    font-size: 32px; font-weight: 800; margin-bottom: 10px;
+    background: linear-gradient(135deg, var(--compose1), var(--compose2), var(--compose3));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  header p { color: var(--text-dim); font-size: 15px; max-width: 680px; margin: 0 auto; }
+  .progress-bar { margin-top: 18px; background: var(--card); border-radius: 999px; height: 8px; overflow: hidden; border: 1px solid var(--border); }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--compose1), var(--compose2)); width: 0%; transition: width 0.4s ease; }
+  .progress-text { margin-top: 8px; font-size: 13px; color: var(--text-dim); }
+
+  .toc { margin-top: 32px; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 18px 22px; }
+  .toc h3 { font-size: 14px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-dim); margin-bottom: 12px; }
+  .toc .part { margin-bottom: 10px; }
+  .toc .part-title { font-size: 13px; font-weight: 600; color: var(--accent); margin: 10px 0 6px; }
+  .toc ul { list-style: none; margin-left: 0; }
+  .toc li { font-size: 13px; color: var(--text-dim); padding: 2px 0; }
+  .toc a { color: var(--text-dim); text-decoration: none; }
+  .toc a:hover { color: var(--text); }
+
+  .part-header { margin: 40px 0 18px; padding: 16px 20px; background: var(--card); border-left: 4px solid var(--part1); border-radius: 8px; }
+  .part-header.p2 { border-left-color: var(--part2); }
+  .part-header.p3 { border-left-color: var(--part3); }
+  .part-header.p4 { border-left-color: var(--part4); }
+  .part-header h2 { font-size: 20px; margin-bottom: 4px; }
+  .part-header p { color: var(--text-dim); font-size: 13px; }
+
+  .lesson { background: var(--card); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 12px; overflow: hidden; transition: all 0.2s ease; }
+  .lesson:hover { border-color: var(--accent); }
+  .lesson.done { background: var(--success-bg); border-color: var(--success); opacity: 0.85; }
+  .lesson.done .lesson-title { color: var(--text-dim); }
+  .lesson-header { display: flex; align-items: flex-start; gap: 14px; padding: 16px 20px; cursor: pointer; }
+  .lesson-num { background: var(--bg); color: var(--accent); font-weight: 700; font-size: 13px; padding: 4px 10px; border-radius: 6px; border: 1px solid var(--border); flex-shrink: 0; min-width: 44px; text-align: center; }
+  .lesson-title { flex: 1; font-size: 15px; font-weight: 600; padding-top: 2px; }
+  .level-tag { display: inline-block; font-size: 10px; padding: 2px 8px; border-radius: 4px; margin-left: 8px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; vertical-align: middle; }
+  .level-beg { background: rgba(78, 205, 196, 0.15); color: var(--compose1); }
+  .level-int { background: rgba(167, 139, 250, 0.15); color: var(--part3); }
+  .level-adv { background: rgba(255, 166, 87, 0.15); color: var(--part4); }
+  .lesson-actions { display: flex; gap: 8px; flex-shrink: 0; }
+  .btn { background: var(--bg); color: var(--text); border: 1px solid var(--border); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 500; transition: all 0.15s ease; white-space: nowrap; }
+  .btn:hover { background: var(--card-hover); border-color: var(--accent); }
+  .btn-done { color: var(--success); }
+  .btn-done.active { background: var(--success); color: white; border-color: var(--success); }
+  .lesson-body { display: none; padding: 0 22px 22px; border-top: 1px solid var(--border); margin-top: 4px; padding-top: 18px; color: var(--text); }
+  .lesson-body.open { display: block; }
+  .lesson-body h4 { color: var(--accent); font-size: 14px; margin: 16px 0 8px; font-weight: 600; }
+  .lesson-body p { margin-bottom: 10px; font-size: 14px; }
+  .lesson-body ul, .lesson-body ol { margin: 8px 0 12px 22px; font-size: 14px; }
+  .lesson-body li { margin-bottom: 5px; }
+  .lesson-body code { background: var(--code-bg); padding: 2px 6px; border-radius: 4px; font-family: 'SF Mono', Monaco, Consolas, monospace; font-size: 13px; color: #ffa657; }
+  .lesson-body pre { background: var(--code-bg); padding: 14px 16px; border-radius: 6px; overflow-x: auto; margin: 10px 0; border: 1px solid var(--border); }
+  .lesson-body pre code { background: none; padding: 0; color: var(--text); font-size: 13px; line-height: 1.55; }
+  .lesson-body strong { color: var(--accent-hover); }
+  .intro { background: rgba(78, 205, 196, 0.06); border-left: 3px solid var(--accent); padding: 12px 16px; margin-bottom: 14px; border-radius: 4px; font-size: 14px; }
+  .tip { background: rgba(63, 185, 80, 0.08); border-left: 3px solid var(--success); padding: 10px 14px; margin: 12px 0; border-radius: 4px; font-size: 13px; }
+  .tip strong { color: var(--success); }
+  .warn { background: rgba(240, 180, 41, 0.08); border-left: 3px solid var(--warn); padding: 10px 14px; margin: 12px 0; border-radius: 4px; font-size: 13px; }
+  .warn strong { color: var(--warn); }
+  .takeaway { background: rgba(110, 168, 254, 0.07); border-left: 3px solid #6ea8fe; padding: 10px 14px; margin: 14px 0 0; border-radius: 4px; font-size: 13px; }
+  .takeaway strong { color: #6ea8fe; }
+  .reset-btn { position: fixed; bottom: 20px; right: 20px; background: var(--card); border: 1px solid var(--border); color: var(--text-dim); padding: 8px 14px; border-radius: 999px; cursor: pointer; font-size: 12px; }
+  .reset-btn:hover { color: var(--text); }
+  @media (max-width: 620px) {
+    .lesson-header { flex-wrap: wrap; }
+    .lesson-actions { width: 100%; justify-content: flex-end; margin-top: 8px; }
+    header h1 { font-size: 26px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="top-bar">
+    <a href="index.html" class="back-link">← Back to dashboard</a>
+  </div>
+
+  <header>
+    <span class="eyebrow">Learning Guide · 2026 Edition</span>
+    <h1>Learn Jetpack Compose</h1>
+    <p>A structured path from Compose fundamentals to 2026-current advanced topics. 25 lessons, hands-on code, industry patterns. Designed so you can follow top-to-bottom or jump to what you need.</p>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-text" id="progressText">0 of 0 lessons completed</div>
+  </header>
+
+  <div class="toc">
+    <h3>Contents</h3>
+    <div class="part">
+      <div class="part-title">Part 1 · Fundamentals</div>
+      <ul id="toc-p1"></ul>
+    </div>
+    <div class="part">
+      <div class="part-title">Part 2 · Building Real UIs</div>
+      <ul id="toc-p2"></ul>
+    </div>
+    <div class="part">
+      <div class="part-title">Part 3 · Advanced</div>
+      <ul id="toc-p3"></ul>
+    </div>
+    <div class="part">
+      <div class="part-title">Part 4 · Compose in 2026</div>
+      <ul id="toc-p4"></ul>
+    </div>
+  </div>
+
+  <div class="part-header" id="part-1">
+    <h2>Part 1 · Fundamentals</h2>
+    <p>The core mental model and building blocks. Even if you've shipped Compose, skim this — nuance here prevents most "why isn't my UI updating?" bugs.</p>
+  </div>
+  <div id="p1-container"></div>
+
+  <div class="part-header p2" id="part-2">
+    <h2>Part 2 · Building Real UIs</h2>
+    <p>Beyond "Hello World" — how to structure real screens, handle state, manage lifecycles, navigate, and talk to backend.</p>
+  </div>
+  <div id="p2-container"></div>
+
+  <div class="part-header p3" id="part-3">
+    <h2>Part 3 · Advanced</h2>
+    <p>Side effects, custom layouts, animations, gestures, performance. This is the material that separates mid-level from senior Compose devs.</p>
+  </div>
+  <div id="p3-container"></div>
+
+  <div class="part-header p4" id="part-4">
+    <h2>Part 4 · Compose in 2026</h2>
+    <p>What's actually shipping in big companies right now — Baseline Profiles, shared element transitions, adaptive layouts, Compose Multiplatform, testing.</p>
+  </div>
+  <div id="p4-container"></div>
+</div>
+
+<button class="reset-btn" onclick="resetProgress()">↻ Reset Progress</button>
+
+<script>
+const lessons = [
+  // ============ PART 1: FUNDAMENTALS ============
+  {
+    part: 1, level: 'beg',
+    title: "What is Jetpack Compose? The declarative mental model",
+    body: `
+      <div class="intro">Before we write any Compose code, we need to understand <em>why</em> Compose exists and how it thinks differently from the XML + View system you may have used. This shift in mental model is the single most important thing in the whole course. Once it clicks, everything else becomes intuitive.</div>
+
+      <h4>1. The problem with the old way</h4>
+      <p>For 15 years, Android UI was built in two halves: an XML file described the structure, and your Kotlin/Java code inflated that XML and then mutated individual View objects by ID. You'd do <code>findViewById&lt;TextView&gt;(R.id.username)</code>, hold onto the reference, and call <code>.setText(...)</code> every time the data changed.</p>
+      <p>That pattern has real problems. Every piece of UI state lives in TWO places — once in your data, once in the View — and keeping them in sync is YOUR job. Forget one <code>setText</code> and you ship a stale-looking screen. Your code swells with "when X changes, update view A, B, and C". If A depends on B which depends on C, the update order matters and bugs hide in the ordering. XML IDs are strings — typos compile fine and crash at runtime. Custom views need three files (XML attrs, Kotlin class, styled attributes) for anything non-trivial.</p>
+
+      <h4>2. What "declarative" actually means</h4>
+      <p>Declarative UI flips the model. Instead of holding View references and mutating them, you write a function that <strong>describes what the UI looks like for a given state</strong>. When the state changes, the framework re-runs your function and figures out what changed on screen.</p>
+      <p>You stop asking "which View do I need to update?" and start asking "what should the UI show right now?". The framework handles "how to get there from what's currently on screen". This is the same mental shift React brought to web development a decade ago, and SwiftUI brought to iOS.</p>
+      <p>Concretely: your UI becomes a <strong>function of state</strong>. Same state → same UI. No hidden side channels, no "update forgot to fire". If your state is correct, your UI is correct — guaranteed.</p>
+
+      <h4>3. Side-by-side — a counter</h4>
+      <p>Let's compare the two styles with a simple counter. A button that increments a number and a label that shows it.</p>
+
+      <p><strong>Old XML + View:</strong></p>
+      <pre><code>&lt;!-- res/layout/activity_counter.xml --&gt;
+&lt;LinearLayout ...&gt;
+    &lt;TextView android:id="@+id/count" android:text="0" /&gt;
+    &lt;Button android:id="@+id/plus" android:text="+" /&gt;
+&lt;/LinearLayout&gt;</code></pre>
+      <pre><code>class CounterActivity : AppCompatActivity() {
+    private var counter = 0
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_counter)
+        val textView = findViewById&lt;TextView&gt;(R.id.count)
+        val button   = findViewById&lt;Button&gt;(R.id.plus)
+        button.setOnClickListener {
+            counter++
+            textView.text = counter.toString()  // YOU update the View manually
+        }
+    }
+}</code></pre>
+      <p>Notice: XML + class + manual wiring. Three places to keep in sync. If you add a second label that should also show the count, you must add another <code>setText</code> call in the click handler. Miss one, bug ships.</p>
+
+      <p><strong>Compose:</strong></p>
+      <pre><code>@Composable
+fun Counter() {
+    var count by remember { mutableStateOf(0) }
+
+    Column {
+        Text("Count: $count")
+        Button(onClick = { count++ }) { Text("+") }
+    }
+}</code></pre>
+      <p>One function. No XML. No findViewById. No manual update. When you click the button, <code>count</code> changes; Compose notices that <code>Text("Count: $count")</code> READ that state, re-invokes it, and the screen updates. If I add a second <code>Text("Count: $count")</code> below, it "just works" — I didn't write a single line of synchronization code.</p>
+
+      <h4>4. Walking through the code line by line</h4>
+      <ul>
+        <li><code>@Composable</code> — annotation that marks this function as a composable. It tells the Compose compiler "this function emits UI and can call other composables". Only composables can call composables.</li>
+        <li><code>var count by remember { mutableStateOf(0) }</code> — three things happening.
+          <ul>
+            <li><code>mutableStateOf(0)</code> creates a special "observable" integer holder. Compose tracks who reads it and triggers them to update when it changes.</li>
+            <li><code>remember { ... }</code> caches this holder across recompositions, so the count isn't reset to 0 every time the function re-runs.</li>
+            <li><code>by</code> is Kotlin's property delegate syntax — it lets us write <code>count</code> instead of <code>countState.value</code>.</li>
+          </ul>
+        </li>
+        <li><code>Column { ... }</code> — a built-in composable that stacks its children vertically.</li>
+        <li><code>Text("Count: $count")</code> — emits a text label. Because we READ <code>count</code> inside the string template, Compose subscribes this specific Text to changes in <code>count</code>.</li>
+        <li><code>Button(onClick = { count++ })</code> — mutating <code>count</code> here is the ONLY thing we do. Everything else is automatic.</li>
+      </ul>
+
+      <h4>5. The mental model in one sentence</h4>
+      <p><strong>State in → UI out. When state changes, Compose re-runs the parts of your code that read that state and updates what's on screen.</strong> That's it. Every advanced feature (animations, navigation, side effects) is built on top of this single idea.</p>
+
+      <h4>6. What you gain beyond shorter code</h4>
+      <ul>
+        <li><strong>No sync bugs</strong> — UI and state can't drift because there's no "UI" object to forget to update.</li>
+        <li><strong>Type safety</strong> — no <code>findViewById</code> returning nullable, no string IDs. Bugs caught at compile time.</li>
+        <li><strong>Kotlin-native</strong> — you get the full language. For loops, when expressions, conditionals, collection operations — all inside your UI code without any weird XML escape hatch.</li>
+        <li><strong>Testable</strong> — composables are functions. Input state, assert output. No Activity, no Espresso bureaucracy for unit tests.</li>
+        <li><strong>Animations are effortless</strong> — change state, animate to it with a one-liner. No ValueAnimator / property holder plumbing.</li>
+        <li><strong>Reuse and composition</strong> — "UI is just functions" means sharing UI is literally just calling a function. No custom view inheritance hierarchies.</li>
+      </ul>
+
+      <h4>7. First-timer confusions to be aware of</h4>
+      <p>Because composables are functions and they re-run, things that look weird at first are actually by design:</p>
+      <ul>
+        <li><strong>"My function ran twice and printed twice!"</strong> — Yes. Composables may re-run on every state change. Never put side effects (network calls, writing logs, starting jobs) directly in the function body. We'll cover where to put them in Lesson 17.</li>
+        <li><strong>"I used <code>val count = 0</code> and it always shows 0."</strong> — Local variables reset on every recomposition. You need <code>remember</code> (Lesson 7) to preserve values across re-runs.</li>
+        <li><strong>"I updated the variable but nothing changed on screen."</strong> — Regular variables don't trigger recomposition. Only <code>mutableStateOf</code> (and its siblings) do.</li>
+      </ul>
+
+      <h4>8. When is Compose ready? (2026 answer: almost always)</h4>
+      <ul>
+        <li><strong>New projects</strong> — Compose is the default. Don't even think about XML.</li>
+        <li><strong>Existing XML apps</strong> — migrate incrementally, screen by screen. Compose interoperates with XML Views via <code>AndroidView</code> (show a View inside Compose) and <code>ComposeView</code> (show Compose inside XML/Fragment). We cover this in Lesson 24.</li>
+        <li><strong>Exceptions where you might still reach for XML</strong> — very rare. Some ultra-specific third-party widgets (certain ad SDKs, legacy chart libraries) still need Views, but you can embed them in Compose via <code>AndroidView</code>.</li>
+        <li><strong>Wear OS, TV, Widgets</strong> — all Compose-based in 2026 (<code>androidx.wear.compose</code>, <code>androidx.tv.material3</code>, Jetpack Glance for widgets).</li>
+      </ul>
+
+      <h4>9. What to do before the next lesson</h4>
+      <ol>
+        <li>Open Android Studio Hedgehog or newer. Create a new project using the "Empty Activity" template — it's Compose by default now.</li>
+        <li>Find the <code>Greeting</code> composable. Rename it to <code>Counter</code> and type the code above. Run it.</li>
+        <li>Try adding a second <code>Text</code> below the first — both show the count without any extra wiring. This is the "aha" moment. Feel it.</li>
+      </ol>
+
+      <div class="takeaway"><strong>Takeaway:</strong> Compose replaces "hold View references and mutate them" with "describe the UI for a given state". When state changes, the framework re-runs the parts that read that state and updates what's on screen. UI is a function of state. Every other lesson in this course is a consequence of this single idea.</div>
+    `
+  },
+  {
+    part: 1, level: 'beg',
+    title: "Your first Composable — setup and structure",
+    body: `
+      <div class="intro">A Composable is a Kotlin function annotated <code>@Composable</code>. It emits UI. Let's write one end-to-end.</div>
+      <h4>Project setup (2026)</h4>
+      <pre><code>// build.gradle.kts (app)
+android {
+    buildFeatures { compose = true }
+    composeOptions { kotlinCompilerExtensionVersion = "1.5.14" }  // only needed if NOT on Kotlin 2.0+
+}
+// Kotlin 2.0+ uses the Compose Compiler plugin directly:
+plugins { id("org.jetbrains.kotlin.plugin.compose") }
+
+dependencies {
+    implementation(platform("androidx.compose:compose-bom:2026.01.00"))
+    implementation("androidx.compose.ui:ui")
+    implementation("androidx.compose.material3:material3")
+    implementation("androidx.activity:activity-compose:1.9.0")
+    debugImplementation("androidx.compose.ui:ui-tooling")
+}</code></pre>
+      <h4>Hello World Activity</h4>
+      <pre><code>class MainActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContent {
+            MaterialTheme {
+                Greeting(name = "Bhupendra")
+            }
+        }
+    }
+}
+
+@Composable
+fun Greeting(name: String) {
+    Text(text = "Hello, $name!")
+}
+
+@Preview
+@Composable
+fun GreetingPreview() {
+    MaterialTheme { Greeting("Preview") }
+}</code></pre>
+      <h4>Two critical things about Composables</h4>
+      <ul>
+        <li><strong>They must start with a capital letter.</strong> <code>Greeting</code> ✅, <code>greeting</code> ❌ (convention enforced by lint).</li>
+        <li><strong>They don't return UI</strong> — they EMIT it into the composition. Return type is <code>Unit</code>.</li>
+      </ul>
+      <h4>@Preview — your friend</h4>
+      <p>The <code>@Preview</code> annotation renders your composable in Android Studio without running the app. Essential for fast iteration. Multiple previews per composable are fine — different states, different screen sizes, dark/light theme.</p>
+      <div class="tip"><strong>Tip:</strong> Use the <code>@Preview</code> annotation's parameters: <code>widthDp</code>, <code>uiMode = UI_MODE_NIGHT_YES</code>, <code>showSystemUi = true</code>. Test your UI against multiple states without running the emulator.</div>
+      <div class="takeaway"><strong>Takeaway:</strong> Composables are functions, named with capital letters, annotated <code>@Composable</code>, returning <code>Unit</code>, emitting UI via calls to other composables.</div>
+    `
+  },
+  {
+    part: 1, level: 'beg',
+    title: "Composition and Recomposition — how Compose updates the screen",
+    body: `
+      <div class="intro">When you call a Composable, Compose records what you emit — this is <strong>composition</strong>. When state changes, only the parts that READ that state get re-invoked — this is <strong>recomposition</strong>. Understanding this is 80% of using Compose well.</div>
+      <h4>The tree</h4>
+      <p>Every composable call creates a node in a virtual UI tree. Compose tracks which nodes read which state values. When a state value changes, Compose walks the tree and re-invokes ONLY the composables that read that specific state.</p>
+      <h4>Recomposition scope</h4>
+      <pre><code>@Composable
+fun Screen() {
+    var count by remember { mutableStateOf(0) }
+    println("Screen recomposed")
+    Column {
+        Header()                                 // doesn't read count — NOT recomposed
+        Text("Count: $count")                    // reads count — RECOMPOSED on change
+        Button(onClick = { count++ }) { Text("+") }
+    }
+}</code></pre>
+      <p>Click the button. <code>count</code> changes. Compose recomposes <code>Text("Count: $count")</code> — but NOT <code>Header()</code>, NOT <code>Button</code> itself. This is why Compose can update 1000-item lists cheaply.</p>
+      <h4>Skippability</h4>
+      <p>Compose can SKIP a composable entirely if its inputs haven't changed AND its inputs are stable (more on stability later). Stable types: primitives, <code>String</code>, data classes with all-stable fields, <code>@Immutable</code>-annotated types.</p>
+      <h4>Rules you'll internalize</h4>
+      <ul>
+        <li>Composables must be <strong>idempotent</strong> — same inputs, same output every time. No side effects during composition.</li>
+        <li>Composables can run in <strong>any order</strong>. Don't rely on execution order within a composable.</li>
+        <li>Composables can run <strong>frequently</strong>. Avoid expensive work directly in the function body — wrap with <code>remember { }</code> or move to side effect blocks.</li>
+        <li>Composables can be <strong>skipped</strong>. Don't rely on "this runs every frame".</li>
+      </ul>
+      <div class="warn"><strong>Anti-pattern:</strong> Mutating a variable outside the composable from inside it. <code>var clickCount = 0; @Composable fun X() { clickCount++; Text("...") }</code> — this breaks skippability and creates spooky bugs. State belongs in <code>remember</code> or a ViewModel.</div>
+      <div class="takeaway"><strong>Takeaway:</strong> Compose re-invokes only what it needs to. Your job is to keep composables pure (no side effects), stable (predictable inputs), and fast (heavy work outside composition).</div>
+    `
+  },
+  {
+    part: 1, level: 'beg',
+    title: "Modifiers — the one chain to rule them all",
+    body: `
+      <div class="intro">Modifiers are how you style, size, position, click, draw, animate — everything that's not "what composable to show". They chain, and <strong>order matters</strong>.</div>
+      <h4>Basic use</h4>
+      <pre><code>Box(
+    modifier = Modifier
+        .size(100.dp)
+        .background(Color.Red)
+        .padding(8.dp)
+        .clickable { println("clicked") }
+) { /* content */ }</code></pre>
+      <h4>Order matters — pad then background vs background then pad</h4>
+      <pre><code>Box(Modifier.padding(16.dp).background(Color.Red))  // red inside, padding outside (transparent)
+Box(Modifier.background(Color.Red).padding(16.dp))  // red also in padding area</code></pre>
+      <h4>Every composable should accept a modifier</h4>
+      <pre><code>@Composable
+fun ProductCard(
+    product: Product,
+    modifier: Modifier = Modifier   // always first, with default
+) {
+    Card(modifier = modifier.fillMaxWidth()) { /* ... */ }
+}
+
+// Caller can customize without forking:
+ProductCard(product, Modifier.padding(16.dp))</code></pre>
+      <h4>Common modifiers you'll use daily</h4>
+      <ul>
+        <li><code>Modifier.size(w, h)</code>, <code>fillMaxWidth()</code>, <code>fillMaxHeight()</code>, <code>wrapContentSize()</code> — sizing.</li>
+        <li><code>padding(all)</code>, <code>padding(horizontal, vertical)</code>, <code>padding(start, top, end, bottom)</code>.</li>
+        <li><code>background(color, shape)</code>.</li>
+        <li><code>border(width, color, shape)</code>.</li>
+        <li><code>clip(shape)</code> — clips content to a shape.</li>
+        <li><code>clickable { }</code>, <code>combinedClickable { }</code> — with ripple by default.</li>
+        <li><code>offset(x, y)</code> — visual offset without affecting layout.</li>
+        <li><code>graphicsLayer { scaleX = 2f }</code> — GPU-accelerated transforms.</li>
+        <li><code>weight(1f)</code> inside Row/Column — proportional sizing.</li>
+      </ul>
+      <div class="warn"><strong>Gotcha:</strong> <code>Modifier.padding(16.dp).clickable { }</code> — the padding area is NOT clickable. Click target is only the inner content. If you want a big tap target, swap the order: <code>clickable { }.padding(16.dp)</code>.</div>
+      <div class="takeaway"><strong>Takeaway:</strong> Modifiers are a chain. Order is left-to-right, outer-to-inner. Always accept <code>modifier: Modifier = Modifier</code> as your first parameter so callers can customize.</div>
+    `
+  },
+  {
+    part: 1, level: 'beg',
+    title: "Layouts — Column, Row, Box, Spacer",
+    body: `
+      <div class="intro">Compose has three core layouts: <strong>Column</strong> (vertical), <strong>Row</strong> (horizontal), <strong>Box</strong> (stacked, z-order). 99% of layouts are combinations of these.</div>
+      <h4>Column and Row</h4>
+      <pre><code>Column(
+    modifier = Modifier.fillMaxSize(),
+    verticalArrangement = Arrangement.Center,           // space between children vertically
+    horizontalAlignment = Alignment.CenterHorizontally  // how children align horizontally
+) {
+    Text("Top")
+    Text("Middle")
+    Text("Bottom")
+}
+
+Row(
+    horizontalArrangement = Arrangement.spacedBy(8.dp),
+    verticalAlignment = Alignment.CenterVertically
+) {
+    Icon(Icons.Default.Star, null)
+    Text("4.7 rating")
+}</code></pre>
+      <h4>Arrangement — space distribution</h4>
+      <ul>
+        <li><code>Arrangement.Start</code> / <code>End</code> / <code>Center</code> — pack at one end or center.</li>
+        <li><code>Arrangement.spacedBy(16.dp)</code> — fixed gap between children.</li>
+        <li><code>Arrangement.SpaceBetween</code> — distribute to ends, equal space between.</li>
+        <li><code>Arrangement.SpaceAround</code> — half-space at ends, full between.</li>
+        <li><code>Arrangement.SpaceEvenly</code> — equal space everywhere.</li>
+      </ul>
+      <h4>Box — stacking and absolute positioning</h4>
+      <pre><code>Box(modifier = Modifier.size(200.dp)) {
+    Image(painter, contentDescription = null, modifier = Modifier.fillMaxSize())
+    Text(
+        "NEW",
+        modifier = Modifier
+            .align(Alignment.TopEnd)
+            .padding(8.dp)
+            .background(Color.Red)
+    )
+}</code></pre>
+      <p>Later children stack on top of earlier ones. Use <code>Modifier.align()</code> to position within the Box.</p>
+      <h4>Weight — proportional sizing in Row/Column</h4>
+      <pre><code>Row {
+    Text("1", Modifier.weight(1f))   // takes 1/3 of row
+    Text("2", Modifier.weight(2f))   // takes 2/3 of row
+}</code></pre>
+      <h4>Spacer</h4>
+      <pre><code>Column {
+    Text("Top")
+    Spacer(Modifier.height(16.dp))
+    Text("Below with 16dp gap")
+    Spacer(Modifier.weight(1f))      // pushes next child to bottom
+    Text("Bottom")
+}</code></pre>
+      <div class="tip"><strong>Tip:</strong> Prefer <code>Arrangement.spacedBy(16.dp)</code> to scattering <code>Spacer</code>s. Cleaner and less error-prone.</div>
+      <div class="takeaway"><strong>Takeaway:</strong> Column (vertical), Row (horizontal), Box (stacked). Arrangement + alignment handle distribution. Weight for proportional sizing.</div>
+    `
+  },
+  {
+    part: 1, level: 'beg',
+    title: "Text, Button, Image — the common building blocks",
+    body: `
+      <div class="intro">Most UIs are just combinations of text, interactive elements, and images. Compose's Material 3 library gives you polished versions of all three.</div>
+      <h4>Text</h4>
+      <pre><code>Text(
+    text = "Hello Compose",
+    color = Color.White,
+    fontSize = 18.sp,
+    fontWeight = FontWeight.Bold,
+    textAlign = TextAlign.Center,
+    maxLines = 2,
+    overflow = TextOverflow.Ellipsis,
+    style = MaterialTheme.typography.titleLarge  // preferred over individual params
+)</code></pre>
+      <p>Use <code>MaterialTheme.typography</code> styles (<code>headlineLarge</code>, <code>bodyMedium</code>, etc.) instead of custom values — keeps your app consistent.</p>
+      <h4>AnnotatedString for rich text</h4>
+      <pre><code>Text(buildAnnotatedString {
+    append("Price: ")
+    withStyle(SpanStyle(fontWeight = FontWeight.Bold, color = Color.Red)) {
+        append("₹199")
+    }
+    append(" (was ₹299)")
+})</code></pre>
+      <h4>Buttons</h4>
+      <pre><code>Button(onClick = { }) { Text("Primary") }
+OutlinedButton(onClick = { }) { Text("Secondary") }
+TextButton(onClick = { }) { Text("Tertiary / link-like") }
+IconButton(onClick = { }) { Icon(Icons.Default.Close, "Close") }
+FloatingActionButton(onClick = { }) { Icon(Icons.Default.Add, "Add") }
+
+// Disabled state
+Button(onClick = { }, enabled = false) { Text("Disabled") }</code></pre>
+      <h4>Image — from resources</h4>
+      <pre><code>Image(
+    painter = painterResource(R.drawable.logo),
+    contentDescription = "App logo",   // for accessibility; null if decorative
+    modifier = Modifier.size(64.dp),
+    contentScale = ContentScale.Crop   // how to fit image in bounds
+)</code></pre>
+      <h4>Image — from network (Coil)</h4>
+      <pre><code>// implementation("io.coil-kt:coil-compose:2.6.0")
+AsyncImage(
+    model = "https://example.com/photo.jpg",
+    contentDescription = null,
+    placeholder = painterResource(R.drawable.placeholder),
+    error = painterResource(R.drawable.error_img),
+    contentScale = ContentScale.Crop,
+    modifier = Modifier.size(100.dp).clip(CircleShape)
+)</code></pre>
+      <h4>Icons</h4>
+      <pre><code>Icon(Icons.Default.Favorite, contentDescription = "Like")
+Icon(Icons.Outlined.Favorite, contentDescription = "Like")
+Icon(painterResource(R.drawable.ic_custom), null, tint = Color.Red)</code></pre>
+      <p>Material Icons (<code>Icons.Default.*</code>, <code>Icons.Outlined.*</code>, <code>Icons.Rounded.*</code>) are vector drawables — scale without pixelation.</p>
+      <div class="tip"><strong>Tip:</strong> Always set <code>contentDescription</code> for images and icons used for meaningful content. Pass <code>null</code> for purely decorative ones. Never pass empty string — TalkBack still announces "unlabeled image".</div>
+      <div class="takeaway"><strong>Takeaway:</strong> Use Material 3 components first. Prefer theme typography over custom sizes. Use Coil for network images with AsyncImage. Always set contentDescription for accessibility.</div>
+    `
+  },
+  {
+    part: 1, level: 'beg',
+    title: "State — remember and mutableStateOf",
+    body: `
+      <div class="intro">Compose re-invokes composables on state change. But Kotlin locals would reset on every call. <code>remember</code> + <code>mutableStateOf</code> together give you persistent, observed state.</div>
+      <h4>The pattern</h4>
+      <pre><code>@Composable
+fun Counter() {
+    var count by remember { mutableStateOf(0) }
+    Button(onClick = { count++ }) { Text("Count: $count") }
+}</code></pre>
+      <ul>
+        <li><code>mutableStateOf(0)</code> — creates observable state; reads are tracked, writes trigger recomposition.</li>
+        <li><code>remember { ... }</code> — caches the value across recompositions. Without it, <code>mutableStateOf(0)</code> would make a new state object every recomposition — the count would always be 0.</li>
+        <li><code>by</code> — Kotlin property delegation so you can use <code>count</code> directly instead of <code>count.value</code>.</li>
+      </ul>
+      <h4>remember with keys — invalidate when inputs change</h4>
+      <pre><code>@Composable
+fun SearchResults(query: String) {
+    val results = remember(query) {     // re-computes when query changes
+        expensiveSearch(query)
+    }
+    ResultList(results)
+}</code></pre>
+      <h4>Multiple state objects</h4>
+      <pre><code>var name by remember { mutableStateOf("") }
+var email by remember { mutableStateOf("") }
+var agreed by remember { mutableStateOf(false) }
+
+// Or group into a data class if they belong together:
+data class FormState(val name: String = "", val email: String = "", val agreed: Boolean = false)
+var form by remember { mutableStateOf(FormState()) }
+form = form.copy(name = "Bhupendra")</code></pre>
+      <h4>State types for other data</h4>
+      <ul>
+        <li><code>mutableStateOf(value)</code> — generic.</li>
+        <li><code>mutableIntStateOf(0)</code>, <code>mutableLongStateOf(0L)</code>, <code>mutableFloatStateOf(0f)</code> — avoid boxing for primitives. Use these in 2026.</li>
+        <li><code>mutableStateListOf&lt;T&gt;()</code> — observable list. Add/remove triggers recomposition.</li>
+        <li><code>mutableStateMapOf&lt;K, V&gt;()</code> — observable map.</li>
+      </ul>
+      <div class="warn"><strong>Common bug:</strong> <code>remember { mutableStateOf(list) }</code> where <code>list</code> changes externally — only the INITIAL value is captured. If you need the state to follow an external value, use <code>remember(list) { ... }</code> with key, or pass it as a parameter.</div>
+      <div class="takeaway"><strong>Takeaway:</strong> <code>remember { mutableStateOf(...) }</code> is the heartbeat. <code>remember</code> persists across recompositions; <code>mutableStateOf</code> triggers them on write. Use primitive variants to avoid boxing.</div>
+    `
+  },
+  {
+    part: 1, level: 'beg',
+    title: "State hoisting — the pattern every serious Compose app uses",
+    body: `
+      <div class="intro">The idea: <strong>stateless composables + state at one level up</strong>. Children take values and emit events; they don't own state. This makes them reusable, testable, and prevents "where does this state live?" chaos.</div>
+      <h4>Unhoisted — stateful child</h4>
+      <pre><code>@Composable
+fun ToggleCard() {
+    var expanded by remember { mutableStateOf(false) }  // state owned here
+    Card(Modifier.clickable { expanded = !expanded }) {
+        Text(if (expanded) "Less" else "More")
+    }
+}</code></pre>
+      <p>Works, but parent can't control or observe <code>expanded</code>. Hard to test. Can't make it controlled by URL / saved state.</p>
+      <h4>Hoisted — state up, events down</h4>
+      <pre><code>@Composable
+fun ToggleCard(
+    expanded: Boolean,                    // STATE comes in as param
+    onExpandedChange: (Boolean) -&gt; Unit   // EVENTS go out as callback
+) {
+    Card(Modifier.clickable { onExpandedChange(!expanded) }) {
+        Text(if (expanded) "Less" else "More")
+    }
+}
+
+// Caller owns the state:
+@Composable
+fun Parent() {
+    var expanded by remember { mutableStateOf(false) }
+    ToggleCard(expanded, onExpandedChange = { expanded = it })
+}</code></pre>
+      <h4>The rules</h4>
+      <ol>
+        <li><strong>Hoist state to the lowest common ancestor</strong> that needs it. Not higher, not lower.</li>
+        <li><strong>Pass values down, callbacks up</strong>. This is the React pattern.</li>
+        <li><strong>Wrap state in a value class / data class</strong> if there are many related fields.</li>
+        <li><strong>Prefer primitive types over state objects</strong> as params. <code>count: Int, onIncrement: () -&gt; Unit</code> is better than <code>state: MutableState&lt;Int&gt;</code>.</li>
+      </ol>
+      <h4>Controlled vs uncontrolled</h4>
+      <p>Hoisted = controlled (parent controls everything). Internal state = uncontrolled. For complex apps with navigation, process death, ViewModel integration — you want controlled. For simple local toggles (is dropdown open?) — internal is fine.</p>
+      <div class="tip"><strong>Tip:</strong> Default pattern — create TWO versions. <code>Foo(state, onStateChange)</code> stateless for reuse, and <code>Foo()</code> stateful that wraps it with <code>remember</code>. This gives callers the choice.</div>
+      <div class="takeaway"><strong>Takeaway:</strong> Stateless composables + hoisted state = testable, reusable, scalable UI. This pattern is used by every serious Compose codebase.</div>
+    `
+  },
+
+  // ============ PART 2: BUILDING REAL UIs ============
+  {
+    part: 2, level: 'int',
+    title: "Material 3 theming — colors, typography, shapes",
+    body: `
+      <div class="intro">MaterialTheme gives every composable access to your app's design tokens via CompositionLocals. Get it right once, every Composable inherits it.</div>
+      <h4>Define a theme</h4>
+      <pre><code>private val LightColors = lightColorScheme(
+    primary = Color(0xFF4ECDC4),
+    onPrimary = Color.White,
+    primaryContainer = Color(0xFFB2F2EB),
+    secondary = Color(0xFFA78BFA),
+    background = Color(0xFFFFFBFE),
+    surface = Color(0xFFFFFBFE),
+    error = Color(0xFFBA1A1A),
+    // ... ~25 tokens in Material 3
+)
+
+private val DarkColors = darkColorScheme(/* same keys, dark values */)
+
+private val AppTypography = Typography(
+    headlineLarge = TextStyle(fontSize = 32.sp, fontWeight = FontWeight.Bold),
+    bodyMedium = TextStyle(fontSize = 14.sp),
+    // ... override what you need, inherit defaults
+)
+
+@Composable
+fun AppTheme(
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable () -&gt; Unit
+) {
+    MaterialTheme(
+        colorScheme = if (darkTheme) DarkColors else LightColors,
+        typography = AppTypography,
+        content = content
+    )
+}</code></pre>
+      <h4>Reading theme in composables</h4>
+      <pre><code>@Composable
+fun MyCard() {
+    Card(
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        )
+    ) {
+        Text(
+            "Hello",
+            color = MaterialTheme.colorScheme.onSurface,
+            style = MaterialTheme.typography.titleMedium
+        )
+    }
+}</code></pre>
+      <h4>Dynamic Color (Android 12+)</h4>
+      <pre><code>@Composable
+fun AppTheme(content: @Composable () -&gt; Unit) {
+    val darkTheme = isSystemInDarkTheme()
+    val colors = when {
+        Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.S -&gt; {
+            val ctx = LocalContext.current
+            if (darkTheme) dynamicDarkColorScheme(ctx) else dynamicLightColorScheme(ctx)
+        }
+        darkTheme -&gt; DarkColors
+        else -&gt; LightColors
+    }
+    MaterialTheme(colorScheme = colors, content = content)
+}</code></pre>
+      <p>Dynamic Color pulls accent hues from the user's wallpaper — your app matches the system Material You theme.</p>
+      <h4>Custom design tokens</h4>
+      <p>For stuff Material 3 doesn't cover (brand-specific spacings, custom color roles), create your own CompositionLocal (covered in Part 3). Don't fight Material — extend it.</p>
+      <div class="tip"><strong>Tip:</strong> Use the <a href="https://m3.material.io/theme-builder" style="color:#6ea8fe">Material Theme Builder</a> to generate a full color scheme from a single seed color. Copy-paste into your code.</div>
+      <div class="takeaway"><strong>Takeaway:</strong> Theme once, use everywhere. Always reference <code>MaterialTheme.colorScheme.X</code> and <code>MaterialTheme.typography.X</code>, never hardcode colors or sizes in composables.</div>
+    `
+  },
+  {
+    part: 2, level: 'int',
+    title: "LazyColumn and LazyRow — performant scrollable lists",
+    body: `
+      <div class="intro">Column/Row render all children eagerly — fine for 10 items, awful for 10,000. LazyColumn and LazyRow only compose items that are (or are about to be) visible, like RecyclerView but with Compose ergonomics.</div>
+      <h4>Basic LazyColumn</h4>
+      <pre><code>LazyColumn(
+    modifier = Modifier.fillMaxSize(),
+    contentPadding = PaddingValues(16.dp),
+    verticalArrangement = Arrangement.spacedBy(8.dp)
+) {
+    items(
+        items = products,
+        key = { it.id },           // stable identity for recycling + animations
+        contentType = { "product" } // for view-type-style recycling
+    ) { product -&gt;
+        ProductCard(product)
+    }
+}</code></pre>
+      <h4>Different item types</h4>
+      <pre><code>LazyColumn {
+    item { Header() }                                      // single item
+    items(categories, key = { it.id }, contentType = { "category" }) { Category(it) }
+    item { Divider() }
+    items(products, key = { it.id }, contentType = { "product" }) { ProductCard(it) }
+    item { Footer() }
+}</code></pre>
+      <p><strong>Always provide <code>key</code></strong> for items. Without it, changes to the list (insert, remove, reorder) cause massive recomposition and broken animations.</p>
+      <h4>Sticky headers</h4>
+      <pre><code>LazyColumn {
+    groupedProducts.forEach { (category, items) -&gt;
+        stickyHeader { CategoryHeader(category) }
+        items(items, key = { it.id }) { ProductCard(it) }
+    }
+}</code></pre>
+      <h4>LazyVerticalGrid and LazyHorizontalGrid</h4>
+      <pre><code>LazyVerticalGrid(
+    columns = GridCells.Fixed(2),                              // or Adaptive(minSize = 160.dp)
+    contentPadding = PaddingValues(8.dp),
+    verticalArrangement = Arrangement.spacedBy(8.dp),
+    horizontalArrangement = Arrangement.spacedBy(8.dp)
+) {
+    items(products, key = { it.id }) { ProductCard(it) }
+}</code></pre>
+      <h4>Scroll state</h4>
+      <pre><code>val listState = rememberLazyListState()
+LazyColumn(state = listState) { /* items */ }
+
+// Observe scroll position
+val firstVisible = listState.firstVisibleItemIndex
+val isAtTop = listState.firstVisibleItemIndex == 0 && listState.firstVisibleItemScrollOffset == 0
+
+// Programmatically scroll
+val scope = rememberCoroutineScope()
+Button(onClick = { scope.launch { listState.animateScrollToItem(0) } }) { Text("Top") }</code></pre>
+      <h4>Paginated loading — show a spinner at the end</h4>
+      <pre><code>LazyColumn {
+    items(products, key = { it.id }) { ProductCard(it) }
+    item {
+        if (isLoadingMore) CircularProgressIndicator()
+        LaunchedEffect(Unit) { viewModel.loadMore() }
+    }
+}</code></pre>
+      <div class="warn"><strong>Perf killer:</strong> Forgetting <code>key</code>. Compose uses position as implicit key → insert at the start causes every item to recompose. Always provide a stable ID.</div>
+      <div class="takeaway"><strong>Takeaway:</strong> LazyColumn/Row/Grid for anything scrollable. Always pass <code>key</code>. Use <code>contentType</code> for heterogeneous lists. Use <code>rememberLazyListState</code> for scroll control.</div>
+    `
+  },
+  {
+    part: 2, level: 'int',
+    title: "rememberSaveable — surviving rotation and process death",
+    body: `
+      <div class="intro"><code>remember</code> survives recompositions but dies on configuration change (rotation) and process death. <code>rememberSaveable</code> survives both by saving to <code>Bundle</code>.</div>
+      <h4>Basic use</h4>
+      <pre><code>// Dies on rotation
+var tabIndex by remember { mutableStateOf(0) }
+
+// Survives rotation
+var tabIndex by rememberSaveable { mutableStateOf(0) }</code></pre>
+      <h4>What types are auto-saveable</h4>
+      <p>Anything that goes into a <code>Bundle</code>: primitives, <code>String</code>, <code>Parcelable</code>, arrays of those. Most data classes need a <code>Saver</code>.</p>
+      <h4>Custom Saver for a data class</h4>
+      <pre><code>data class FormState(val name: String = "", val email: String = "", val agreed: Boolean = false)
+
+val FormStateSaver: Saver&lt;FormState, Any&gt; = listSaver(
+    save = { listOf(it.name, it.email, it.agreed) },
+    restore = { FormState(it[0] as String, it[1] as String, it[2] as Boolean) }
+)
+
+@Composable
+fun Form() {
+    var form by rememberSaveable(stateSaver = FormStateSaver) {
+        mutableStateOf(FormState())
+    }
+    // ...
+}</code></pre>
+      <h4>Parcelize — the easier way for complex types</h4>
+      <pre><code>// build.gradle: id("kotlin-parcelize")
+@Parcelize
+data class FormState(
+    val name: String = "",
+    val email: String = "",
+    val agreed: Boolean = false
+) : Parcelable
+
+var form by rememberSaveable { mutableStateOf(FormState()) }  // auto-saved</code></pre>
+      <h4>What NOT to use rememberSaveable for</h4>
+      <ul>
+        <li><strong>Large data</strong> — Bundle has a ~500KB-1MB limit. Don't save lists or images.</li>
+        <li><strong>Business state</strong> — use ViewModel. rememberSaveable is for UI-local state (form input, scroll position, tab index, dialog open/closed).</li>
+        <li><strong>Derived state</strong> — save the inputs, derive the outputs.</li>
+      </ul>
+      <h4>Scroll position is free</h4>
+      <p><code>rememberLazyListState()</code> internally uses rememberSaveable — scroll position survives rotation automatically.</p>
+      <div class="tip"><strong>Tip:</strong> Default to <code>remember</code>, upgrade to <code>rememberSaveable</code> when you notice "my tab resets on rotation" bugs during testing. Don't blanket-use Saveable — Bundle overhead adds up.</div>
+      <div class="takeaway"><strong>Takeaway:</strong> <code>rememberSaveable</code> persists across rotation + process death via Bundle. Use for UI state (form inputs, tab index). Use Parcelize for complex types. ViewModel for everything bigger.</div>
+    `
+  },
+  {
+    part: 2, level: 'int',
+    title: "ViewModel + Compose — the right integration",
+    body: `
+      <div class="intro">ViewModels own business state and survive config changes. Compose reads ViewModel state via <code>StateFlow</code> + <code>collectAsStateWithLifecycle</code>. This is the pattern every production Compose app uses.</div>
+      <h4>A ViewModel with StateFlow</h4>
+      <pre><code>@HiltViewModel
+class CartViewModel @Inject constructor(
+    private val repo: CartRepo
+) : ViewModel() {
+    private val _state = MutableStateFlow(CartState())
+    val state: StateFlow&lt;CartState&gt; = _state.asStateFlow()
+
+    fun addItem(item: Item) {
+        viewModelScope.launch {
+            repo.add(item)
+            _state.update { it.copy(items = it.items + item) }
+        }
+    }
+}
+
+data class CartState(
+    val items: List&lt;Item&gt; = emptyList(),
+    val isLoading: Boolean = false
+)</code></pre>
+      <h4>Reading state in Compose</h4>
+      <pre><code>@Composable
+fun CartScreen(viewModel: CartViewModel = hiltViewModel()) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
+    Column {
+        if (state.isLoading) CircularProgressIndicator()
+        state.items.forEach { item -&gt;
+            ItemRow(item, onRemove = { viewModel.remove(item) })
+        }
+    }
+}</code></pre>
+      <h4>Why collectAsStateWithLifecycle (NOT collectAsState)</h4>
+      <p><code>collectAsState</code> collects as long as the composable is in composition — even when the screen is backgrounded. <code>collectAsStateWithLifecycle</code> stops collection when the Lifecycle is STOPPED, resuming when STARTED. Saves battery and prevents work for invisible UI. <strong>Always use collectAsStateWithLifecycle.</strong></p>
+      <pre><code>// Add: implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.0")</code></pre>
+      <h4>One-time events (navigation, toasts)</h4>
+      <p>These aren't state — replaying them on rotation is wrong. Use a <code>Channel</code> or <code>SharedFlow</code>:</p>
+      <pre><code>class MyViewModel : ViewModel() {
+    private val _events = Channel&lt;UiEvent&gt;()
+    val events = _events.receiveAsFlow()
+
+    fun submit() = viewModelScope.launch {
+        repo.save()
+        _events.send(UiEvent.NavigateToSuccess)
+    }
+}
+
+@Composable
+fun Screen(viewModel: MyViewModel) {
+    LaunchedEffect(Unit) {
+        viewModel.events.collect { event -&gt;
+            when (event) {
+                UiEvent.NavigateToSuccess -&gt; navController.navigate("success")
+            }
+        }
+    }
+}</code></pre>
+      <h4>Don't pass the ViewModel down</h4>
+      <p>Pass state and callbacks, not the ViewModel. Keeps child composables testable without Hilt.</p>
+      <pre><code>// Bad
+@Composable fun CartList(viewModel: CartViewModel) { ... }
+
+// Good
+@Composable fun CartList(items: List&lt;Item&gt;, onRemove: (Item) -&gt; Unit) { ... }</code></pre>
+      <div class="takeaway"><strong>Takeaway:</strong> ViewModel owns state via StateFlow. Compose reads via collectAsStateWithLifecycle. Channel/SharedFlow for one-time events. Pass state + callbacks down, never the ViewModel itself.</div>
+    `
+  },
+  {
+    part: 2, level: 'int',
+    title: "Navigation — Jetpack Navigation Compose with type-safe routes",
+    body: `
+      <div class="intro">Jetpack Navigation for Compose manages screen navigation, back stack, and passing arguments. Since 2024, Navigation supports type-safe routes using <code>@Serializable</code> Kotlin objects.</div>
+      <h4>Setup</h4>
+      <pre><code>// build.gradle
+implementation("androidx.navigation:navigation-compose:2.8.0")
+plugins { id("org.jetbrains.kotlin.plugin.serialization") }</code></pre>
+      <h4>Type-safe routes (2024+ way)</h4>
+      <pre><code>@Serializable object HomeRoute
+@Serializable data class DetailRoute(val productId: String)
+@Serializable object CartRoute
+
+@Composable
+fun AppNav() {
+    val navController = rememberNavController()
+    NavHost(navController, startDestination = HomeRoute) {
+        composable&lt;HomeRoute&gt; {
+            HomeScreen(onProduct = { id -&gt; navController.navigate(DetailRoute(id)) })
+        }
+        composable&lt;DetailRoute&gt; { backStack -&gt;
+            val args: DetailRoute = backStack.toRoute()
+            DetailScreen(productId = args.productId)
+        }
+        composable&lt;CartRoute&gt; { CartScreen() }
+    }
+}</code></pre>
+      <p>Type-safe: invalid routes fail at compile time. No string typos, no manual argument parsing.</p>
+      <h4>Back navigation</h4>
+      <pre><code>navController.popBackStack()
+navController.popBackStack(HomeRoute, inclusive = false)   // pop until Home
+
+// System back button — handled automatically by NavHost
+// For custom back handling:
+BackHandler(enabled = hasUnsavedChanges) {
+    showDiscardDialog = true
+}</code></pre>
+      <h4>Clearing stack on navigation (login → home)</h4>
+      <pre><code>navController.navigate(HomeRoute) {
+    popUpTo(LoginRoute) { inclusive = true }
+    launchSingleTop = true
+}</code></pre>
+      <h4>Sharing state across screens — nested NavHost scope</h4>
+      <pre><code>composable&lt;CheckoutRoute&gt; { backStack -&gt;
+    val parentEntry = remember(backStack) {
+        navController.getBackStackEntry&lt;ShoppingFlowRoute&gt;()
+    }
+    val flowViewModel: ShoppingFlowViewModel = hiltViewModel(parentEntry)
+    // flowViewModel is scoped to the ShoppingFlowRoute, shared across Checkout steps
+}</code></pre>
+      <h4>Deep links</h4>
+      <pre><code>composable&lt;DetailRoute&gt;(
+    deepLinks = listOf(navDeepLink&lt;DetailRoute&gt; {
+        uriPattern = "myapp://product/{productId}"
+    })
+) { backStack -&gt; DetailScreen(backStack.toRoute&lt;DetailRoute&gt;().productId) }</code></pre>
+      <h4>Animations between screens</h4>
+      <pre><code>composable&lt;DetailRoute&gt;(
+    enterTransition = { slideInHorizontally { it } + fadeIn() },
+    exitTransition = { fadeOut() }
+) { /* ... */ }</code></pre>
+      <div class="tip"><strong>Tip:</strong> Single-activity architecture is default in 2026. One <code>MainActivity</code>, one <code>NavHost</code>, many Composables. No Fragments needed unless you're integrating legacy code.</div>
+      <div class="takeaway"><strong>Takeaway:</strong> Jetpack Navigation Compose with @Serializable routes. NavController manages stack. hiltViewModel with parentEntry for shared flow state. Deep links via navDeepLink.</div>
+    `
+  },
+  {
+    part: 2, level: 'int',
+    title: "TextField, forms, and input validation",
+    body: `
+      <div class="intro"><code>TextField</code> is the standard input. Controlled via hoisted state. For performance-sensitive cases or custom styling, drop to <code>BasicTextField</code>.</div>
+      <h4>Basic TextField</h4>
+      <pre><code>var email by remember { mutableStateOf("") }
+
+OutlinedTextField(
+    value = email,
+    onValueChange = { email = it },
+    label = { Text("Email") },
+    leadingIcon = { Icon(Icons.Default.Email, null) },
+    singleLine = true,
+    keyboardOptions = KeyboardOptions(
+        keyboardType = KeyboardType.Email,
+        imeAction = ImeAction.Next
+    ),
+    keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Down) })
+)</code></pre>
+      <h4>Validation patterns</h4>
+      <pre><code>data class EmailState(val value: String = "", val error: String? = null) {
+    fun validate() = copy(
+        error = when {
+            value.isBlank() -&gt; "Required"
+            !value.contains("@") -&gt; "Invalid email"
+            else -&gt; null
+        }
+    )
+    val isValid get() = error == null && value.isNotBlank()
+}
+
+var emailState by remember { mutableStateOf(EmailState()) }
+
+OutlinedTextField(
+    value = emailState.value,
+    onValueChange = { emailState = EmailState(it) },   // reset error on edit
+    isError = emailState.error != null,
+    supportingText = emailState.error?.let { { Text(it, color = Color.Red) } },
+    // ...
+)
+
+Button(
+    onClick = {
+        emailState = emailState.validate()
+        if (emailState.isValid) submit(emailState.value)
+    }
+) { Text("Submit") }</code></pre>
+      <h4>Password field</h4>
+      <pre><code>var password by remember { mutableStateOf("") }
+var visible by remember { mutableStateOf(false) }
+
+OutlinedTextField(
+    value = password,
+    onValueChange = { password = it },
+    label = { Text("Password") },
+    visualTransformation = if (visible) VisualTransformation.None else PasswordVisualTransformation(),
+    trailingIcon = {
+        IconButton(onClick = { visible = !visible }) {
+            Icon(
+                if (visible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                contentDescription = if (visible) "Hide" else "Show"
+            )
+        }
+    },
+    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+)</code></pre>
+      <h4>Debounced search</h4>
+      <pre><code>var query by remember { mutableStateOf("") }
+LaunchedEffect(query) {
+    delay(300)    // debounce
+    if (query.isNotBlank()) viewModel.search(query)
+}</code></pre>
+      <h4>BasicTextField for custom styling</h4>
+      <p>When Material's look doesn't fit (OTP boxes, code editors), <code>BasicTextField</code> gives you raw input + you render the visuals.</p>
+      <h4>Focus management</h4>
+      <pre><code>val focusRequester = remember { FocusRequester() }
+val focusManager = LocalFocusManager.current
+
+OutlinedTextField(
+    value = x, onValueChange = { },
+    modifier = Modifier.focusRequester(focusRequester)
+)
+LaunchedEffect(Unit) { focusRequester.requestFocus() }  // auto-focus on appear
+focusManager.clearFocus()                               // dismiss keyboard</code></pre>
+      <div class="takeaway"><strong>Takeaway:</strong> Hoist state. Validate on submit, reset errors on edit. Use <code>imeAction</code> + <code>keyboardActions</code> to wire tab order. LaunchedEffect on query for debounced search.</div>
+    `
+  },
+  {
+    part: 2, level: 'int',
+    title: "Scaffold and app skeletons — TopAppBar, BottomBar, FAB, SnackBar",
+    body: `
+      <div class="intro"><code>Scaffold</code> is the Material structure for a screen — it gives you slots for top bar, bottom bar, FAB, snack bar host, and content. Most real screens start with it.</div>
+      <h4>Full Scaffold</h4>
+      <pre><code>@Composable
+fun HomeScreen() {
+    val snackbar = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Home") },
+                navigationIcon = {
+                    IconButton(onClick = { /* drawer */ }) {
+                        Icon(Icons.Default.Menu, "Menu")
+                    }
+                },
+                actions = {
+                    IconButton(onClick = { }) { Icon(Icons.Default.Search, "Search") }
+                }
+            )
+        },
+        bottomBar = {
+            NavigationBar {
+                NavigationBarItem(
+                    selected = true,
+                    onClick = { },
+                    icon = { Icon(Icons.Default.Home, null) },
+                    label = { Text("Home") }
+                )
+                NavigationBarItem(
+                    selected = false,
+                    onClick = { },
+                    icon = { Icon(Icons.Default.Person, null) },
+                    label = { Text("Profile") }
+                )
+            }
+        },
+        floatingActionButton = {
+            FloatingActionButton(onClick = {
+                scope.launch { snackbar.showSnackbar("Added!") }
+            }) { Icon(Icons.Default.Add, "Add") }
+        },
+        snackbarHost = { SnackbarHost(snackbar) }
+    ) { padding -&gt;
+        // THIS padding must be applied to your content
+        Content(Modifier.padding(padding))
+    }
+}</code></pre>
+      <h4>The padding parameter — don't ignore it</h4>
+      <p>Scaffold passes you a <code>PaddingValues</code> that accounts for top/bottom bars + system insets. You MUST apply it to your content, or content draws under the bars.</p>
+      <h4>Snackbar with action</h4>
+      <pre><code>scope.launch {
+    val result = snackbar.showSnackbar(
+        message = "Item removed",
+        actionLabel = "Undo",
+        duration = SnackbarDuration.Short
+    )
+    if (result == SnackbarResult.ActionPerformed) viewModel.undo()
+}</code></pre>
+      <h4>Collapsing TopAppBar (scroll behavior)</h4>
+      <pre><code>val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+
+Scaffold(
+    modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+    topBar = {
+        LargeTopAppBar(
+            title = { Text("Home") },
+            scrollBehavior = scrollBehavior
+        )
+    }
+) { padding -&gt;
+    LazyColumn(contentPadding = padding) { /* items */ }
+}</code></pre>
+      <h4>NavigationRail for wide screens</h4>
+      <p>On tablets/foldables, a vertical rail on the left is better UX than a bottom bar. Switch based on <code>WindowSizeClass</code>.</p>
+      <h4>Drawer (ModalNavigationDrawer)</h4>
+      <pre><code>val drawerState = rememberDrawerState(DrawerValue.Closed)
+ModalNavigationDrawer(
+    drawerState = drawerState,
+    drawerContent = { ModalDrawerSheet { /* drawer items */ } }
+) {
+    Scaffold(/* ... */) { /* ... */ }
+}</code></pre>
+      <div class="takeaway"><strong>Takeaway:</strong> Scaffold is your screen frame. ALWAYS apply the passed-in padding to content. SnackbarHostState via rememberCoroutineScope for showing snackbars. Use scrollBehavior for collapsing bars.</div>
+    `
+  },
+  {
+    part: 2, level: 'int',
+    title: "Handling async work — coroutines, Flow, loading and error states",
+    body: `
+      <div class="intro">Real screens load data. The job pattern: ViewModel runs coroutines, exposes a <code>StateFlow&lt;UiState&gt;</code> with loading/success/error, Compose renders based on state.</div>
+      <h4>Sealed UiState pattern</h4>
+      <pre><code>sealed interface UiState&lt;out T&gt; {
+    object Loading : UiState&lt;Nothing&gt;
+    data class Success&lt;T&gt;(val data: T) : UiState&lt;T&gt;
+    data class Error(val message: String) : UiState&lt;Nothing&gt;
+}</code></pre>
+      <h4>ViewModel</h4>
+      <pre><code>@HiltViewModel
+class ProductListViewModel @Inject constructor(private val repo: ProductRepo) : ViewModel() {
+    private val _state = MutableStateFlow&lt;UiState&lt;List&lt;Product&gt;&gt;&gt;(UiState.Loading)
+    val state = _state.asStateFlow()
+
+    init { load() }
+
+    fun load() = viewModelScope.launch {
+        _state.value = UiState.Loading
+        try {
+            _state.value = UiState.Success(repo.fetchProducts())
+        } catch (e: Exception) {
+            _state.value = UiState.Error(e.message ?: "Unknown")
+        }
+    }
+}</code></pre>
+      <h4>UI</h4>
+      <pre><code>@Composable
+fun ProductListScreen(viewModel: ProductListViewModel = hiltViewModel()) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    when (val s = state) {
+        is UiState.Loading -&gt; Box(Modifier.fillMaxSize(), Alignment.Center) {
+            CircularProgressIndicator()
+        }
+        is UiState.Success -&gt; LazyColumn { items(s.data, key = { it.id }) { ProductCard(it) } }
+        is UiState.Error -&gt; ErrorView(s.message, onRetry = { viewModel.load() })
+    }
+}</code></pre>
+      <h4>Pull-to-refresh (Material 3)</h4>
+      <pre><code>val refreshing by viewModel.isRefreshing.collectAsStateWithLifecycle()
+PullToRefreshBox(
+    isRefreshing = refreshing,
+    onRefresh = { viewModel.refresh() }
+) {
+    LazyColumn { /* items */ }
+}</code></pre>
+      <h4>Combining flows</h4>
+      <pre><code>// Combine multiple data sources into one UI state
+val state = combine(
+    productsFlow, cartFlow, filtersFlow
+) { products, cart, filters -&gt;
+    ScreenState(
+        products = products.filter { matchesFilters(it, filters) },
+        cartCount = cart.items.size
+    )
+}.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), ScreenState())</code></pre>
+      <h4>stateIn — why 5000?</h4>
+      <p><code>SharingStarted.WhileSubscribed(5000)</code> means: share the flow while there's at least one collector, and keep it alive for 5 seconds after the last collector leaves. This handles rotation (brief unsubscribe + resubscribe) without restarting the flow. <strong>Use this pattern for derived state in ViewModel.</strong></p>
+      <div class="takeaway"><strong>Takeaway:</strong> Sealed UiState for loading/success/error. ViewModel exposes StateFlow. Compose collects with collectAsStateWithLifecycle. Combine + stateIn(WhileSubscribed(5000)) for derived state.</div>
+    `
+  },
+  {
+    part: 2, level: 'int',
+    title: "Working with dialogs, bottom sheets, and alerts",
+    body: `
+      <div class="intro">Modal dialogs, full-screen dialogs, and bottom sheets are all just conditionally-shown Composables. No <code>DialogFragment</code>, no XML.</div>
+      <h4>AlertDialog</h4>
+      <pre><code>var showDelete by remember { mutableStateOf(false) }
+
+if (showDelete) {
+    AlertDialog(
+        onDismissRequest = { showDelete = false },
+        icon = { Icon(Icons.Default.Warning, null) },
+        title = { Text("Delete item?") },
+        text = { Text("This cannot be undone.") },
+        confirmButton = {
+            TextButton(onClick = { viewModel.delete(); showDelete = false }) {
+                Text("Delete")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = { showDelete = false }) { Text("Cancel") }
+        }
+    )
+}</code></pre>
+      <h4>Custom Dialog</h4>
+      <pre><code>if (showCustom) {
+    Dialog(onDismissRequest = { showCustom = false }) {
+        Card {
+            Column(Modifier.padding(24.dp)) {
+                Text("Custom content", style = MaterialTheme.typography.headlineSmall)
+                Spacer(Modifier.height(16.dp))
+                // any composables
+            }
+        }
+    }
+}</code></pre>
+      <h4>ModalBottomSheet (Material 3)</h4>
+      <pre><code>val sheetState = rememberModalBottomSheetState()
+var showSheet by remember { mutableStateOf(false) }
+val scope = rememberCoroutineScope()
+
+if (showSheet) {
+    ModalBottomSheet(
+        onDismissRequest = { showSheet = false },
+        sheetState = sheetState
+    ) {
+        // Content
+        Column(Modifier.padding(16.dp)) {
+            Text("Filter", style = MaterialTheme.typography.titleLarge)
+            // filter UI
+            Button(onClick = {
+                scope.launch {
+                    sheetState.hide()
+                }.invokeOnCompletion { showSheet = false }
+            }) { Text("Apply") }
+        }
+    }
+}</code></pre>
+      <h4>Full-screen bottom sheet — skipPartiallyExpanded</h4>
+      <pre><code>val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+// Sheet goes to full expansion immediately</code></pre>
+      <h4>Dropdown menu</h4>
+      <pre><code>var expanded by remember { mutableStateOf(false) }
+Box {
+    IconButton(onClick = { expanded = true }) { Icon(Icons.Default.MoreVert, "More") }
+    DropdownMenu(
+        expanded = expanded,
+        onDismissRequest = { expanded = false }
+    ) {
+        DropdownMenuItem(text = { Text("Edit") }, onClick = { /* ... */ expanded = false })
+        DropdownMenuItem(text = { Text("Delete") }, onClick = { /* ... */ expanded = false })
+    }
+}</code></pre>
+      <div class="tip"><strong>Tip:</strong> Dialogs/sheets should never survive process death. Hoist their state to the ViewModel if you want "show delete dialog after user returns". Otherwise let them die and re-show on explicit user action.</div>
+      <div class="takeaway"><strong>Takeaway:</strong> Dialogs and sheets are just conditional Composables controlled by boolean state. AlertDialog for simple confirmations, Dialog for custom content, ModalBottomSheet for anything richer.</div>
+    `
+  },
+
+  // ============ PART 3: ADVANCED ============
+  {
+    part: 3, level: 'adv',
+    title: "Side effects — LaunchedEffect, DisposableEffect, derivedStateOf, rememberUpdatedState",
+    body: `
+      <div class="intro">"Side effects" are anything that needs to happen in response to a composition — start a coroutine, register a listener, observe lifecycle. Compose has specific APIs so side effects work correctly with recomposition.</div>
+      <h4>LaunchedEffect — run suspend code tied to a key</h4>
+      <pre><code>LaunchedEffect(userId) {
+    // Runs when entering composition AND whenever userId changes
+    // Previous coroutine cancelled on key change / exit
+    val profile = api.fetchProfile(userId)
+    _profile.value = profile
+}</code></pre>
+      <p>Key is what triggers re-launch. <code>LaunchedEffect(Unit)</code> = run once on enter. Use the data that the effect depends on as the key.</p>
+      <h4>DisposableEffect — setup + cleanup</h4>
+      <pre><code>DisposableEffect(lifecycleOwner) {
+    val observer = LifecycleEventObserver { _, event -&gt;
+        if (event == Lifecycle.Event.ON_RESUME) analytics.screenView("home")
+    }
+    lifecycleOwner.lifecycle.addObserver(observer)
+    onDispose {
+        lifecycleOwner.lifecycle.removeObserver(observer)
+    }
+}</code></pre>
+      <p>The <code>onDispose</code> block runs when the composable leaves composition or the key changes. Essential for listener registration, BroadcastReceivers, AnalogSensors.</p>
+      <h4>rememberCoroutineScope — fire coroutines from callbacks</h4>
+      <pre><code>val scope = rememberCoroutineScope()
+
+Button(onClick = {
+    scope.launch {
+        // not suspend inside Composable body — use scope inside a callback
+        val result = api.submit()
+        snackbar.showSnackbar("Done: $result")
+    }
+}) { Text("Submit") }</code></pre>
+      <h4>derivedStateOf — memoize computed state</h4>
+      <pre><code>val showScrollToTop by remember {
+    derivedStateOf { listState.firstVisibleItemIndex &gt; 0 }
+}
+// Only triggers recomposition when the BOOLEAN changes, not on every scroll pixel</code></pre>
+      <p>Without derivedStateOf, reading <code>listState.firstVisibleItemIndex</code> in a composable would recompose on every scroll tick. With it, only when the derived boolean flips.</p>
+      <h4>rememberUpdatedState — capture latest value in a long-running effect</h4>
+      <pre><code>@Composable
+fun OnTimeout(timeoutSeconds: Int, onTimeout: () -&gt; Unit) {
+    val latestOnTimeout by rememberUpdatedState(onTimeout)
+    LaunchedEffect(timeoutSeconds) {                // keyed on seconds, not callback
+        delay(timeoutSeconds * 1000L)
+        latestOnTimeout()                           // always uses latest callback
+    }
+}</code></pre>
+      <p>Without <code>rememberUpdatedState</code>, the LaunchedEffect would capture the old <code>onTimeout</code> at launch and ignore later updates.</p>
+      <h4>SideEffect — publish Compose state to non-Compose code</h4>
+      <pre><code>SideEffect {
+    // Runs after every successful recomposition
+    // Good for: setting values on a mutable object, logging
+    analyticsManager.setScreen("Home")
+}</code></pre>
+      <div class="warn"><strong>Anti-pattern:</strong> Calling suspend functions or starting coroutines directly in a composable body. <code>@Composable fun X() { api.fetch() }</code> breaks everything. Always wrap with LaunchedEffect or put in a callback via rememberCoroutineScope.</div>
+      <div class="takeaway"><strong>Takeaway:</strong> LaunchedEffect for suspend work tied to composition. DisposableEffect for setup+cleanup. rememberCoroutineScope for callback-triggered coroutines. derivedStateOf for memoized booleans from other state. rememberUpdatedState when a long effect needs the latest callback.</div>
+    `
+  },
+  {
+    part: 3, level: 'adv',
+    title: "CompositionLocal — cross-cutting context",
+    body: `
+      <div class="intro">CompositionLocal passes values implicitly down the tree. Useful for cross-cutting concerns (theme, density, user) you don't want to thread through every parameter.</div>
+      <h4>Reading built-ins</h4>
+      <pre><code>val density = LocalDensity.current
+val ctx = LocalContext.current
+val layoutDir = LocalLayoutDirection.current
+val windowInfo = LocalWindowInfo.current
+val lifecycle = LocalLifecycleOwner.current</code></pre>
+      <h4>Providing your own</h4>
+      <pre><code>val LocalUser = compositionLocalOf&lt;User&gt; { error("No user provided") }
+
+@Composable
+fun App(user: User) {
+    CompositionLocalProvider(LocalUser provides user) {
+        HomeScreen()  // any descendant can read LocalUser.current
+    }
+}
+
+@Composable
+fun Header() {
+    val user = LocalUser.current
+    Text("Hi, ${user.name}")
+}</code></pre>
+      <h4>compositionLocalOf vs staticCompositionLocalOf</h4>
+      <ul>
+        <li><code>compositionLocalOf</code> — tracks reads; only readers recompose on value change. Use for values that change during app runtime.</li>
+        <li><code>staticCompositionLocalOf</code> — no read tracking; any value change recomposes the whole provider subtree. Use for session-stable values (theme, density). Cheaper at steady state.</li>
+      </ul>
+      <h4>Custom design tokens via CompositionLocal</h4>
+      <pre><code>data class AppSpacing(
+    val small: Dp = 4.dp,
+    val medium: Dp = 8.dp,
+    val large: Dp = 16.dp,
+    val xlarge: Dp = 32.dp
+)
+
+val LocalAppSpacing = staticCompositionLocalOf { AppSpacing() }
+
+@Composable
+fun AppTheme(content: @Composable () -&gt; Unit) {
+    CompositionLocalProvider(LocalAppSpacing provides AppSpacing()) {
+        MaterialTheme(content = content)
+    }
+}
+
+// Usage
+Box(Modifier.padding(LocalAppSpacing.current.medium))</code></pre>
+      <h4>When NOT to use CompositionLocal</h4>
+      <ul>
+        <li>For domain data — pass as parameters. Explicit is clearer.</li>
+        <li>Just to "save typing" — implicit deps hide coupling, hurt testability.</li>
+        <li>For one-off needs — if only two composables read it, pass it.</li>
+      </ul>
+      <div class="tip"><strong>Tip:</strong> Default in the <code>compositionLocalOf { error("...") }</code> idiom — fail fast if someone forgets the Provider, better than silent wrong behavior.</div>
+      <div class="takeaway"><strong>Takeaway:</strong> CompositionLocal for cross-cutting concerns (theme, session, density). staticCompositionLocalOf for session-stable values. Don't use for domain data — explicit params are clearer.</div>
+    `
+  },
+  {
+    part: 3, level: 'adv',
+    title: "Custom layouts with Layout and SubcomposeLayout",
+    body: `
+      <div class="intro">When Column/Row/Box don't fit — flow layouts, staggered grids, custom positioning — drop to the <code>Layout</code> composable. For layouts that need child size info BEFORE placement, use <code>SubcomposeLayout</code>.</div>
+      <h4>Layout — measure then place</h4>
+      <pre><code>@Composable
+fun TwoColumn(modifier: Modifier = Modifier, content: @Composable () -&gt; Unit) {
+    Layout(modifier = modifier, content = content) { measurables, constraints -&gt;
+        // 1. MEASURE children
+        val halfWidth = constraints.maxWidth / 2
+        val placeables = measurables.map { m -&gt;
+            m.measure(constraints.copy(maxWidth = halfWidth))
+        }
+        // 2. PLACE them
+        val totalHeight = placeables.chunked(2).sumOf { row -&gt; row.maxOf { it.height } }
+        layout(constraints.maxWidth, totalHeight) {
+            var x = 0; var y = 0
+            placeables.forEach { p -&gt;
+                p.placeRelative(x, y)
+                x += halfWidth
+                if (x &gt;= constraints.maxWidth) { x = 0; y += p.height }
+            }
+        }
+    }
+}</code></pre>
+      <p><strong>Rule:</strong> Measure each child exactly once. Measuring twice throws.</p>
+      <h4>SubcomposeLayout — when you need child size before composing siblings</h4>
+      <pre><code>@Composable
+fun HeaderOverContent(header: @Composable () -&gt; Unit, content: @Composable () -&gt; Unit) {
+    SubcomposeLayout { constraints -&gt;
+        val headerPlaceables = subcompose("header", header)
+            .map { it.measure(constraints) }
+        val headerHeight = headerPlaceables.maxOf { it.height }
+
+        val contentPlaceables = subcompose("content", content)
+            .map { it.measure(constraints.copy(maxHeight = constraints.maxHeight - headerHeight)) }
+
+        layout(constraints.maxWidth, constraints.maxHeight) {
+            headerPlaceables.forEach { it.placeRelative(0, 0) }
+            contentPlaceables.forEach { it.placeRelative(0, headerHeight) }
+        }
+    }
+}</code></pre>
+      <h4>Real examples that use SubcomposeLayout internally</h4>
+      <ul>
+        <li><code>BoxWithConstraints</code> — composes children with constraints as a parameter.</li>
+        <li><code>LazyColumn</code> — composes items on-demand as they scroll into view.</li>
+        <li><code>BottomSheetScaffold</code> — measures content before placing sheet.</li>
+      </ul>
+      <h4>Intrinsic measurements</h4>
+      <pre><code>Row(IntrinsicSize.Min) {
+    Text("Short")
+    Divider(Modifier.fillMaxHeight().width(1.dp))
+    Text("Much longer text here")
+}
+// Divider's fillMaxHeight works because Row queries intrinsic min height from children</code></pre>
+      <div class="warn"><strong>Perf warning:</strong> SubcomposeLayout is expensive — it runs composition during measurement. Don't use inside LazyColumn items. Custom Layout is cheap and should be preferred.</div>
+      <div class="takeaway"><strong>Takeaway:</strong> Custom Layout for any positioning Column/Row/Box can't express. SubcomposeLayout only when children's composition depends on measurement of siblings. Measure once per child; placements are free.</div>
+    `
+  },
+  {
+    part: 3, level: 'adv',
+    title: "Animations — the full toolkit",
+    body: `
+      <div class="intro">Compose has a ladder of animation APIs from tiny to orchestrated. Pick the simplest that does the job.</div>
+      <h4>animate*AsState — single value, fire-and-forget</h4>
+      <pre><code>val scale by animateFloatAsState(
+    targetValue = if (pressed) 0.95f else 1f,
+    animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy),
+    label = "scale"
+)
+Box(Modifier.graphicsLayer { scaleX = scale; scaleY = scale })
+
+// Variants: animateColorAsState, animateDpAsState, animateIntAsState, etc.</code></pre>
+      <h4>updateTransition — multiple values in sync</h4>
+      <pre><code>val transition = updateTransition(targetState = isExpanded, label = "expand")
+val color by transition.animateColor(label = "color") {
+    if (it) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surface
+}
+val size by transition.animateDp(label = "size") { if (it) 200.dp else 100.dp }
+val corner by transition.animateDp(label = "corner") { if (it) 0.dp else 16.dp }
+Box(Modifier.size(size).background(color, RoundedCornerShape(corner)))</code></pre>
+      <h4>AnimatedVisibility — enter/exit animations</h4>
+      <pre><code>AnimatedVisibility(
+    visible = showBanner,
+    enter = slideInVertically(initialOffsetY = { -it }) + fadeIn(),
+    exit = slideOutVertically(targetOffsetY = { -it }) + fadeOut()
+) {
+    Banner()
+}</code></pre>
+      <h4>AnimatedContent — swap content with transitions</h4>
+      <pre><code>AnimatedContent(
+    targetState = count,
+    transitionSpec = {
+        if (targetState &gt; initialState) {
+            slideInVertically { it } + fadeIn() togetherWith slideOutVertically { -it } + fadeOut()
+        } else {
+            slideInVertically { -it } + fadeIn() togetherWith slideOutVertically { it } + fadeOut()
+        }.using(SizeTransform(clip = false))
+    },
+    label = "count"
+) { c -&gt; Text("$c", fontSize = 48.sp) }</code></pre>
+      <h4>Crossfade — simplest content swap</h4>
+      <pre><code>Crossfade(targetState = currentScreen, label = "screen") { s -&gt;
+    when (s) {
+        Screen.Home -&gt; HomeScreen()
+        Screen.Profile -&gt; ProfileScreen()
+    }
+}</code></pre>
+      <h4>rememberInfiniteTransition — loading spinners, pulses</h4>
+      <pre><code>val transition = rememberInfiniteTransition(label = "pulse")
+val alpha by transition.animateFloat(
+    initialValue = 0.3f, targetValue = 1f,
+    animationSpec = infiniteRepeatable(tween(1000), RepeatMode.Reverse),
+    label = "alpha"
+)
+Box(Modifier.alpha(alpha).background(Color.Red).size(100.dp))</code></pre>
+      <h4>Specs — spring vs tween vs keyframes</h4>
+      <ul>
+        <li><code>spring()</code> — physics-based. Natural, good default.</li>
+        <li><code>tween(durationMillis = 300, easing = FastOutSlowInEasing)</code> — time-based curve.</li>
+        <li><code>keyframes { durationMillis = 500; 0.5f at 100; 1f at 500 }</code> — multi-stop.</li>
+        <li><code>snap()</code> — instant (no animation).</li>
+      </ul>
+      <div class="warn"><strong>Perf note:</strong> Animate via <code>graphicsLayer</code> properties (scale, alpha, translation) — they run on GPU without re-layout. Animating <code>size</code> or <code>padding</code> triggers re-layout and is expensive in deep trees.</div>
+      <div class="takeaway"><strong>Takeaway:</strong> animate*AsState (single value), updateTransition (multiple in sync), AnimatedContent (swap), AnimatedVisibility (show/hide), InfiniteTransition (loops). Prefer graphicsLayer animations for perf.</div>
+    `
+  },
+  {
+    part: 3, level: 'adv',
+    title: "Gestures — pointerInput for drag, swipe, custom interactions",
+    body: `
+      <div class="intro">Common gestures (click, long-press) are one-line modifiers. For anything custom — drag-to-dismiss, pinch, swipe — drop to <code>pointerInput</code> with <code>detect*</code> helpers or raw pointer events.</div>
+      <h4>Built-in modifier helpers</h4>
+      <pre><code>Modifier.clickable { }
+Modifier.combinedClickable(onClick = {}, onLongClick = {}, onDoubleClick = {})
+Modifier.toggleable(value = checked, onValueChange = { })
+Modifier.draggable(state = rememberDraggableState { delta -&gt; }, orientation = Horizontal)</code></pre>
+      <h4>pointerInput with detectTapGestures</h4>
+      <pre><code>Modifier.pointerInput(Unit) {
+    detectTapGestures(
+        onTap = { offset -&gt; },
+        onLongPress = { offset -&gt; },
+        onDoubleTap = { offset -&gt; },
+        onPress = { offset -&gt;
+            val released = tryAwaitRelease()     // suspend until finger lifts or cancels
+            // good for press-state animations
+        }
+    )
+}</code></pre>
+      <h4>Drag with position tracking</h4>
+      <pre><code>var offset by remember { mutableStateOf(Offset.Zero) }
+Box(
+    Modifier
+        .offset { IntOffset(offset.x.roundToInt(), offset.y.roundToInt()) }
+        .pointerInput(Unit) {
+            detectDragGestures(
+                onDragStart = { },
+                onDragEnd = { },
+                onDrag = { change, dragAmount -&gt;
+                    change.consume()   // consume so parents don't handle
+                    offset += dragAmount
+                }
+            )
+        }
+        .size(100.dp)
+        .background(Color.Red)
+)</code></pre>
+      <h4>Transform gestures — pinch + zoom + rotate</h4>
+      <pre><code>var scale by remember { mutableStateOf(1f) }
+var offset by remember { mutableStateOf(Offset.Zero) }
+var rotation by remember { mutableStateOf(0f) }
+
+Image(
+    painter = painter,
+    contentDescription = null,
+    modifier = Modifier
+        .graphicsLayer(
+            scaleX = scale, scaleY = scale,
+            translationX = offset.x, translationY = offset.y,
+            rotationZ = rotation
+        )
+        .pointerInput(Unit) {
+            detectTransformGestures { _, pan, zoom, rot -&gt;
+                scale *= zoom
+                offset += pan
+                rotation += rot
+            }
+        }
+)</code></pre>
+      <h4>Swipe-to-dismiss (Material 3)</h4>
+      <pre><code>val state = rememberSwipeToDismissBoxState(
+    confirmValueChange = { value -&gt;
+        if (value == SwipeToDismissBoxValue.EndToStart) {
+            onDelete(); true
+        } else false
+    }
+)
+SwipeToDismissBox(state = state, backgroundContent = { /* red bg */ }) {
+    ItemRow(item)
+}</code></pre>
+      <h4>Nested scrolling</h4>
+      <p>Collapsing toolbar + LazyColumn, bottom sheet over list — use <code>NestedScrollConnection</code>. Parent pre-consumes scroll delta before/after the child.</p>
+      <pre><code>val connection = remember {
+    object : NestedScrollConnection {
+        override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
+            // parent's chance to consume before child scrolls
+            return Offset.Zero
+        }
+    }
+}
+Box(Modifier.nestedScroll(connection)) {
+    LazyColumn { /* items */ }
+}</code></pre>
+      <div class="warn"><strong>Key your pointerInput correctly:</strong> The <code>key</code> arg matters. If it changes, the gesture coroutine restarts and in-flight gestures are lost. Pass <code>Unit</code> for once-only, pass stable state when you want to reset.</div>
+      <div class="takeaway"><strong>Takeaway:</strong> clickable/toggleable for common cases. pointerInput + detect* for custom. Always <code>change.consume()</code> in drag to prevent parent from also handling. nestedScroll for coordinated scrolling.</div>
+    `
+  },
+  {
+    part: 3, level: 'adv',
+    title: "Canvas and custom drawing",
+    body: `
+      <div class="intro">When no built-in composable matches — charts, progress rings, custom shapes, signatures — drop to <code>Canvas</code> for direct drawing.</div>
+      <h4>Basic Canvas</h4>
+      <pre><code>Canvas(Modifier.size(200.dp)) {
+    // 'this' is DrawScope
+    drawCircle(
+        color = Color.Red,
+        radius = size.minDimension / 2,
+        center = center
+    )
+    drawLine(
+        color = Color.White,
+        start = Offset(0f, 0f),
+        end = Offset(size.width, size.height),
+        strokeWidth = 4.dp.toPx()
+    )
+    drawRect(
+        color = Color.Blue,
+        topLeft = Offset(20f, 20f),
+        size = Size(100f, 100f)
+    )
+}</code></pre>
+      <h4>Circular progress ring</h4>
+      <pre><code>@Composable
+fun ProgressRing(progress: Float, modifier: Modifier = Modifier) {
+    Canvas(modifier) {
+        val stroke = 8.dp.toPx()
+        val diameter = size.minDimension - stroke
+        val topLeft = Offset((size.width - diameter) / 2, (size.height - diameter) / 2)
+
+        drawArc(
+            color = Color.Gray,
+            startAngle = -90f, sweepAngle = 360f, useCenter = false,
+            topLeft = topLeft, size = Size(diameter, diameter),
+            style = Stroke(stroke)
+        )
+        drawArc(
+            color = Color.Green,
+            startAngle = -90f, sweepAngle = 360f * progress, useCenter = false,
+            topLeft = topLeft, size = Size(diameter, diameter),
+            style = Stroke(stroke, cap = StrokeCap.Round)
+        )
+    }
+}</code></pre>
+      <h4>Path-based drawing (complex shapes)</h4>
+      <pre><code>Canvas(Modifier.size(100.dp)) {
+    val path = Path().apply {
+        moveTo(size.width / 2, 0f)
+        lineTo(size.width, size.height)
+        lineTo(0f, size.height)
+        close()
+    }
+    drawPath(path, color = Color.Magenta)
+}</code></pre>
+      <h4>Drawing text on a Canvas</h4>
+      <pre><code>val textMeasurer = rememberTextMeasurer()
+
+Canvas(Modifier.fillMaxSize()) {
+    val result = textMeasurer.measure(
+        text = AnnotatedString("Hello"),
+        style = TextStyle(fontSize = 24.sp, color = Color.White)
+    )
+    drawText(result, topLeft = Offset(20f, 20f))
+}</code></pre>
+      <h4>Modifier.drawBehind — draw on top of a composable</h4>
+      <pre><code>Box(
+    Modifier
+        .size(100.dp)
+        .drawBehind {
+            drawCircle(Color.Red.copy(alpha = 0.3f), radius = size.minDimension / 2)
+        }
+) {
+    // composables on top of the circle
+}</code></pre>
+      <h4>Modifier.drawWithCache — cache expensive draw setup</h4>
+      <pre><code>Modifier.drawWithCache {
+    val gradient = Brush.linearGradient(listOf(Color.Red, Color.Blue))
+    onDrawBehind {
+        drawRect(gradient)   // gradient object reused across redraws
+    }
+}</code></pre>
+      <div class="tip"><strong>Tip:</strong> Units in DrawScope are pixels, not dp. Convert: <code>8.dp.toPx()</code>. The DrawScope gives you <code>size</code>, <code>center</code>, <code>density</code> extension properties.</div>
+      <div class="takeaway"><strong>Takeaway:</strong> Canvas for custom drawing. Path for complex shapes. rememberTextMeasurer for text. drawBehind / drawWithCache for decorating existing composables. Convert dp → px manually.</div>
+    `
+  },
+  {
+    part: 3, level: 'adv',
+    title: "Compose performance — stability, skippable composables, Strong Skipping Mode",
+    body: `
+      <div class="intro">Compose can SKIP recomposing a composable if its inputs are stable and unchanged. Getting stability right is 80% of Compose performance.</div>
+      <h4>Stable types</h4>
+      <ul>
+        <li>Primitives (<code>Int</code>, <code>Boolean</code>, <code>Float</code>), <code>String</code> — always stable.</li>
+        <li><code>data class</code> with <code>val</code> and stable fields — stable.</li>
+        <li><code>MutableState</code>, <code>StateFlow</code> — stable.</li>
+        <li><code>@Immutable</code> or <code>@Stable</code> annotated types — stable by contract.</li>
+      </ul>
+      <h4>Unstable by default</h4>
+      <ul>
+        <li><code>List</code>, <code>Map</code>, <code>Set</code> interfaces — could be <code>MutableList</code> underneath.</li>
+        <li>Classes with <code>var</code> properties.</li>
+        <li>Classes from other modules — compiler can't prove stability across module boundaries (pre-Strong Skipping).</li>
+      </ul>
+      <h4>Fixes</h4>
+      <pre><code>// Use @Immutable to promise stability
+@Immutable
+data class ProductUiState(
+    val name: String,
+    val price: Double,
+    val tags: List&lt;String&gt;    // promise: never mutated
+)
+
+// Or use persistent collections
+import kotlinx.collections.immutable.ImmutableList
+data class Foo(val items: ImmutableList&lt;Item&gt;)
+
+// Or mark the whole class @Stable if it may change but equals() is reliable
+@Stable
+class ScrollObserver {
+    var position by mutableStateOf(0)
+}</code></pre>
+      <h4>Diagnosing with Compose Compiler Reports</h4>
+      <pre><code>// build.gradle.kts
+kotlin {
+    compilerOptions.freeCompilerArgs.addAll(
+        "-P", "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=$buildDir/compose-reports"
+    )
+}</code></pre>
+      <p>Reports list every composable as <strong>skippable</strong> / <strong>restartable</strong> / <strong>unstable</strong>. Target: every composable with inputs should be skippable. Look for <code>unstable</code> markers and fix them.</p>
+      <h4>Lambda stability</h4>
+      <pre><code>// Unstable — captures viewmodel
+Button(onClick = { vm.add(item) }) { ... }
+
+// Stable — method reference, compiler can cache
+Button(onClick = vm::add) { ... }
+
+// Stable via remember
+val onAdd = remember(item) { { vm.add(item) } }
+Button(onClick = onAdd) { ... }</code></pre>
+      <h4>Strong Skipping Mode (Compose 1.7+ / default in 2024+)</h4>
+      <p>Treats all parameters with stable SHAPES as stable, even without <code>@Immutable</code>. Dramatically reduces boilerplate. Enable in build.gradle:</p>
+      <pre><code>composeCompiler {
+    enableStrongSkippingMode = true   // default in newer versions
+}</code></pre>
+      <p>Even with Strong Skipping, still annotate your own types <code>@Immutable</code> for clarity.</p>
+      <h4>Layout Inspector — recomposition counts</h4>
+      <p>Android Studio's Layout Inspector has a "Recomposition Counts" overlay. Toggle on, interact with app — see which composables recompose too often. Diagnose visually without adding logs.</p>
+      <h4>Other perf tips</h4>
+      <ul>
+        <li><strong>Pass lambdas, not state values</strong>, when a deep child only needs to read state on click. Deferred reads = fewer recompositions.</li>
+        <li><strong>Use derivedStateOf</strong> for computed booleans from other state.</li>
+        <li><strong>Always provide <code>key</code></strong> in LazyColumn items.</li>
+        <li><strong>Prefer <code>graphicsLayer</code> animations</strong> over layout-triggering properties.</li>
+        <li><strong>Avoid <code>remember { heavyComputation() }</code> without a key</strong> — heavy one-time costs can be moved to ViewModel or LaunchedEffect.</li>
+      </ul>
+      <div class="takeaway"><strong>Takeaway:</strong> Stability = skippability = perf. Use @Immutable on your domain types. Enable Strong Skipping Mode. Diagnose with Compiler Reports + Layout Inspector. Lambda method references and remembered lambdas help stability.</div>
+    `
+  },
+  {
+    part: 3, level: 'adv',
+    title: "Compose ↔ XML Views interop — AndroidView and ComposeView",
+    body: `
+      <div class="intro">Real apps are rarely pure Compose. Legacy screens, third-party Views (MapView, ExoPlayer's PlayerView, WebView) — you'll bridge both directions.</div>
+      <h4>AndroidView — embed a View inside Compose</h4>
+      <pre><code>AndroidView(
+    factory = { ctx -&gt;
+        MapView(ctx).apply {
+            onCreate(null)
+            getMapAsync { /* setup */ }
+        }
+    },
+    update = { view -&gt;
+        // Re-runs whenever state read inside it changes
+        view.getMapAsync { map -&gt;
+            map.moveCamera(CameraUpdateFactory.newLatLng(location))
+        }
+    },
+    modifier = Modifier.fillMaxSize()
+)</code></pre>
+      <p><code>factory</code> runs once; <code>update</code> reruns when its captured state changes.</p>
+      <h4>Lifecycle forwarding (MapView, ExoPlayer)</h4>
+      <p>Views with their own lifecycle (onResume, onPause) need explicit forwarding. Use DisposableEffect with LocalLifecycleOwner:</p>
+      <pre><code>@Composable
+fun rememberMapViewWithLifecycle(): MapView {
+    val context = LocalContext.current
+    val mapView = remember { MapView(context).apply { onCreate(null) } }
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    DisposableEffect(lifecycle) {
+        val observer = LifecycleEventObserver { _, event -&gt;
+            when (event) {
+                Lifecycle.Event.ON_RESUME -&gt; mapView.onResume()
+                Lifecycle.Event.ON_PAUSE -&gt; mapView.onPause()
+                Lifecycle.Event.ON_DESTROY -&gt; mapView.onDestroy()
+                else -&gt; {}
+            }
+        }
+        lifecycle.addObserver(observer)
+        onDispose {
+            lifecycle.removeObserver(observer)
+            mapView.onDestroy()
+        }
+    }
+    return mapView
+}</code></pre>
+      <h4>ComposeView — put Compose inside XML or Fragment</h4>
+      <pre><code>&lt;!-- XML --&gt;
+&lt;androidx.compose.ui.platform.ComposeView
+    android:id="@+id/compose_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" /&gt;</code></pre>
+      <pre><code>// Fragment
+override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    binding.composeView.apply {
+        setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+        setContent {
+            AppTheme { MyComposableScreen() }
+        }
+    }
+}</code></pre>
+      <h4>ViewCompositionStrategy — match to lifecycle</h4>
+      <ul>
+        <li><strong>DisposeOnDetachedFromWindow</strong> (default) — fine for simple cases.</li>
+        <li><strong>DisposeOnLifecycleDestroyed(viewLifecycleOwner)</strong> — for Fragments, matches view lifecycle.</li>
+        <li><strong>DisposeOnViewTreeLifecycleDestroyed</strong> — generic, good default for Fragment children.</li>
+      </ul>
+      <h4>AbstractComposeView — custom View that hosts Compose</h4>
+      <pre><code>class ComposeToolbar(context: Context, attrs: AttributeSet?) : AbstractComposeView(context, attrs) {
+    var title by mutableStateOf("")
+
+    @Composable
+    override fun Content() {
+        TopAppBar(title = { Text(title) })
+    }
+}</code></pre>
+      <p>Ship reusable Views to non-Compose codebases. Callers use it like any View.</p>
+      <div class="warn"><strong>Performance:</strong> AndroidView has measurement cost. Don't nest deep ViewGroup trees inside Compose. Don't put AndroidView inside high-recomposition paths like LazyColumn items unless you need to. Compose 1.5+ added recycling support, but test.</div>
+      <div class="takeaway"><strong>Takeaway:</strong> AndroidView → View in Compose. ComposeView → Compose in XML/Fragment. Forward lifecycle for Views with their own lifecycle. Pick the right ViewCompositionStrategy based on host lifecycle.</div>
+    `
+  },
+
+  // ============ PART 4: COMPOSE IN 2026 ============
+  {
+    part: 4, level: 'adv',
+    title: "Baseline Profiles — 20-40% faster Compose startup",
+    body: `
+      <div class="intro">Baseline Profiles are AOT (ahead-of-time) compilation hints shipped in your APK. ART precompiles the listed methods at install, so first launches don't JIT-compile hot code. Compose-heavy apps see 20-40% startup improvements — essential in 2026.</div>
+      <h4>How they work</h4>
+      <ol>
+        <li>Write a Macrobenchmark test that exercises your critical paths (startup + first scroll).</li>
+        <li>Android Studio records the executed methods → outputs <code>baseline-prof.txt</code>.</li>
+        <li>Ship it in <code>src/main/</code>. Play Store also collects 'Cloud Profiles' from real users' first launches.</li>
+        <li>On install, ART precompiles those methods to native code.</li>
+      </ol>
+      <h4>Setup</h4>
+      <pre><code>// build.gradle (app)
+dependencies {
+    "baselineProfile"(project(":baselineprofile"))
+}
+// Creates src/main/baseline-prof.txt automatically when you run the generator</code></pre>
+      <h4>Write the generator</h4>
+      <pre><code>// :baselineprofile module
+@RunWith(AndroidJUnit4::class)
+class BaselineProfileGenerator {
+    @get:Rule val rule = BaselineProfileRule()
+
+    @Test
+    fun generate() = rule.collect(packageName = "com.myapp") {
+        pressHome()
+        startActivityAndWait()
+        // exercise cold-start + a few critical interactions
+        device.findObject(By.res("main_screen")).wait(Until.hasObject(By.text("Products")), 5_000)
+        device.findObject(By.text("Products")).click()
+        device.waitForIdle()
+    }
+}</code></pre>
+      <h4>Where the wins come from</h4>
+      <ul>
+        <li>Cold startup — 20-30% on mid-tier devices.</li>
+        <li>First frame on critical screens — include them in the benchmark.</li>
+        <li>Scroll smoothness — list items JIT-compile otherwise. Baseline Profile precompiles their drawing.</li>
+      </ul>
+      <h4>Verify it's working</h4>
+      <pre><code>// Macrobenchmark test
+@Test
+fun startup() = benchmarkRule.measureRepeated(
+    packageName = "com.myapp",
+    metrics = listOf(StartupTimingMetric()),
+    iterations = 10,
+    startupMode = StartupMode.COLD
+) {
+    pressHome()
+    startActivityAndWait()
+}</code></pre>
+      <p>Run with and without the baseline profile — compare startup times. Should see clear drop.</p>
+      <h4>Regenerate when</h4>
+      <ul>
+        <li>Major version bump (new features → new hot methods).</li>
+        <li>Big refactor that changed code paths.</li>
+        <li>Nightly CI — regenerate and commit if diff is non-trivial.</li>
+      </ul>
+      <div class="tip"><strong>Tip:</strong> Also add <strong>Startup Profiles</strong> — a sibling feature that optimizes dex layout (puts startup classes in the first dex file). Complementary 5-10% extra.</div>
+      <div class="takeaway"><strong>Takeaway:</strong> Baseline Profile is mandatory for any production Compose app. Set up once, regenerate periodically, 20-40% startup win. Shipping an app without one in 2026 leaves performance on the table.</div>
+    `
+  },
+  {
+    part: 4, level: 'adv',
+    title: "Shared Element Transitions — cross-screen animations",
+    body: `
+      <div class="intro">Shared Element Transitions (stable since 2024) animate an element smoothly from one screen to the next — list-to-detail hero image transition, thumbnail-to-fullscreen expand. A polished UX touch that took a week in XML is 20 lines in Compose.</div>
+      <h4>Setup</h4>
+      <pre><code>SharedTransitionLayout {
+    AnimatedContent(targetState = detailOpen, label = "detail") { open -&gt;
+        if (!open) {
+            ListScreen(
+                onProductClick = { product -&gt; detailOpen = product },
+                sharedTransitionScope = this@SharedTransitionLayout,
+                animatedVisibilityScope = this@AnimatedContent
+            )
+        } else {
+            DetailScreen(
+                product = open,
+                onBack = { detailOpen = null },
+                sharedTransitionScope = this@SharedTransitionLayout,
+                animatedVisibilityScope = this@AnimatedContent
+            )
+        }
+    }
+}</code></pre>
+      <h4>Mark shared elements</h4>
+      <pre><code>@OptIn(ExperimentalSharedTransitionApi::class)
+@Composable
+fun ProductCard(
+    product: Product,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope
+) {
+    with(sharedTransitionScope) {
+        Image(
+            painter = painter,
+            contentDescription = null,
+            modifier = Modifier
+                .sharedElement(
+                    state = rememberSharedContentState(key = "image-\${product.id}"),
+                    animatedVisibilityScope = animatedVisibilityScope
+                )
+                .size(100.dp)
+        )
+        Text(
+            product.name,
+            modifier = Modifier.sharedBounds(
+                sharedContentState = rememberSharedContentState(key = "title-\${product.id}"),
+                animatedVisibilityScope = animatedVisibilityScope
+            )
+        )
+    }
+}</code></pre>
+      <h4>sharedElement vs sharedBounds</h4>
+      <ul>
+        <li><strong>sharedElement</strong> — same content on both sides (image, icon). Content is kept; only position/size animates.</li>
+        <li><strong>sharedBounds</strong> — different content with matching identity (title text with different size/color). Bounds animate; content crossfades.</li>
+      </ul>
+      <h4>With Navigation</h4>
+      <pre><code>SharedTransitionLayout {
+    NavHost(navController, startDestination = ListRoute) {
+        composable&lt;ListRoute&gt; { backStack -&gt;
+            ListScreen(
+                sharedTransitionScope = this@SharedTransitionLayout,
+                animatedVisibilityScope = this                    // AnimatedContentScope from NavHost
+            )
+        }
+        composable&lt;DetailRoute&gt; { backStack -&gt;
+            DetailScreen(
+                sharedTransitionScope = this@SharedTransitionLayout,
+                animatedVisibilityScope = this
+            )
+        }
+    }
+}</code></pre>
+      <h4>Custom tweak — control the spec</h4>
+      <pre><code>Modifier.sharedElement(
+    state = rememberSharedContentState(key = "image"),
+    animatedVisibilityScope = scope,
+    boundsTransform = { _, _ -&gt; tween(durationMillis = 600) }
+)</code></pre>
+      <div class="warn"><strong>Common pitfall:</strong> Keys must be stable and unique per shared element. If two items on screen have the same key, the transition breaks. Include the product ID in the key: <code>"image-\${product.id}"</code>.</div>
+      <div class="takeaway"><strong>Takeaway:</strong> SharedTransitionLayout + AnimatedContent + Modifier.sharedElement = polished transitions. Use sharedElement for same content, sharedBounds for different. Keys must be unique per element.</div>
+    `
+  },
+  {
+    part: 4, level: 'adv',
+    title: "Adaptive layouts — foldables, tablets, and WindowSizeClass",
+    body: `
+      <div class="intro">Android in 2026 runs on phones (compact), foldables (medium), tablets, Chromebooks, and TV. Responsive UI via <code>WindowSizeClass</code> is the modern answer — don't rely on <code>sw600dp</code> resource qualifiers alone.</div>
+      <h4>WindowSizeClass</h4>
+      <pre><code>@Composable
+fun App() {
+    val activity = LocalActivity.current as ComponentActivity
+    val windowSize = calculateWindowSizeClass(activity)
+    when (windowSize.widthSizeClass) {
+        WindowWidthSizeClass.Compact  -&gt; PhoneLayout()       // &lt; 600dp
+        WindowWidthSizeClass.Medium   -&gt; FoldableLayout()    // 600-840dp
+        WindowWidthSizeClass.Expanded -&gt; TabletLayout()      // 840dp+
+    }
+}</code></pre>
+      <h4>List-Detail pattern</h4>
+      <pre><code>@Composable
+fun ProductScreen(windowSize: WindowSizeClass) {
+    var selectedId by remember { mutableStateOf&lt;String?&gt;(null) }
+    if (windowSize.widthSizeClass == WindowWidthSizeClass.Expanded) {
+        Row {
+            ProductList(Modifier.weight(1f), onSelect = { selectedId = it })
+            VerticalDivider()
+            selectedId?.let { id -&gt;
+                ProductDetail(id, Modifier.weight(2f))
+            } ?: EmptyDetail(Modifier.weight(2f))
+        }
+    } else {
+        if (selectedId == null) ProductList(onSelect = { selectedId = it })
+        else ProductDetail(selectedId!!, onBack = { selectedId = null })
+    }
+}</code></pre>
+      <h4>Canonical adaptive layouts (via androidx.compose.material3.adaptive)</h4>
+      <pre><code>implementation("androidx.compose.material3.adaptive:adaptive-navigation:1.0.0")
+
+val navigator = rememberListDetailPaneScaffoldNavigator&lt;Product&gt;()
+ListDetailPaneScaffold(
+    directive = navigator.scaffoldDirective,
+    value = navigator.scaffoldValue,
+    listPane = { AnimatedPane { ProductList(onSelect = { navigator.navigateTo(ListDetailPaneScaffoldRole.Detail, it) }) } },
+    detailPane = {
+        AnimatedPane {
+            navigator.currentDestination?.content?.let { ProductDetail(it) }
+        }
+    }
+)</code></pre>
+      <h4>Foldable-specific UX (tabletop mode)</h4>
+      <pre><code>val windowInfo = remember { WindowInfoTracker.getOrCreate(context) }
+val foldingFeature by remember {
+    windowInfo.windowLayoutInfo(activity).map { info -&gt;
+        info.displayFeatures.filterIsInstance&lt;FoldingFeature&gt;().firstOrNull()
+    }
+}.collectAsStateWithLifecycle(null)
+
+if (foldingFeature?.state == FoldingFeature.State.HALF_OPENED &&
+    foldingFeature?.orientation == FoldingFeature.Orientation.HORIZONTAL) {
+    // Tabletop — video on top half, controls on bottom
+    Column {
+        VideoPlayer(Modifier.weight(1f))
+        Controls(Modifier.weight(1f))
+    }
+} else {
+    VideoPlayer(Modifier.fillMaxSize())
+}</code></pre>
+      <h4>Config change is a real thing here</h4>
+      <p>Unfolding IS a configuration change — by default, Compose reruns the composition. ViewModel survives. If you have UI state that should NOT reset, put it in ViewModel or rememberSaveable. Activity restart behavior is your friend.</p>
+      <h4>Testing adaptively</h4>
+      <ul>
+        <li>Resizable emulator (Android Studio) — swap size at runtime.</li>
+        <li><code>@Preview(widthDp = 800)</code>, <code>@Preview(widthDp = 1200)</code> in code.</li>
+        <li>Use <code>DeviceController</code> in Compose tests to swap sizes.</li>
+      </ul>
+      <div class="takeaway"><strong>Takeaway:</strong> WindowSizeClass for three-tier responsive design. ListDetailPaneScaffold for canonical patterns. FoldingFeature for foldable-specific UX. Never assume phone-only.</div>
+    `
+  },
+  {
+    part: 4, level: 'adv',
+    title: "Compose Multiplatform — share UI across Android, iOS, Desktop, Web",
+    body: `
+      <div class="intro">Compose Multiplatform (CMP) hit iOS stable in May 2024 and is production-ready in 2026. Same Composable code renders on Android, iOS, Desktop (Mac/Win/Linux), and Web (Wasm). The deciding question isn't "can I" but "should I".</div>
+      <h4>Project structure (KMP)</h4>
+      <pre><code>shared/
+  src/commonMain/   ← Composables, ViewModels, repositories
+  src/androidMain/  ← Android-specific (Firebase, Camera)
+  src/iosMain/      ← iOS-specific (Keychain, CoreLocation)
+  src/desktopMain/  ← Desktop (if needed)
+androidApp/         ← Android entry
+iosApp/             ← Xcode project importing shared framework</code></pre>
+      <h4>Shared Composable</h4>
+      <pre><code>// shared/commonMain
+@Composable
+fun App() {
+    MaterialTheme {
+        Column(Modifier.fillMaxSize().padding(16.dp)) {
+            Text("Hello from Compose Multiplatform")
+            Button(onClick = { /* ... */ }) { Text("Tap me") }
+        }
+    }
+}</code></pre>
+      <h4>Use on Android</h4>
+      <pre><code>class MainActivity : ComponentActivity() {
+    override fun onCreate(state: Bundle?) {
+        super.onCreate(state)
+        setContent { App() }
+    }
+}</code></pre>
+      <h4>Use on iOS (from Swift)</h4>
+      <pre><code>// iosApp/ContentView.swift
+import SwiftUI
+import shared
+
+struct ContentView: View {
+    var body: some View {
+        ComposeView()
+            .ignoresSafeArea(.keyboard)
+    }
+}
+
+struct ComposeView: UIViewControllerRepresentable {
+    func makeUIViewController(context: Context) -&gt; UIViewController {
+        MainViewControllerKt.MainViewController()
+    }
+    func updateUIViewController(_ uiViewController: UIViewController, context: Context) {}
+}</code></pre>
+      <h4>What shares cleanly</h4>
+      <ul>
+        <li><strong>UI</strong> — all Composable + Material 3 components work.</li>
+        <li><strong>ViewModel</strong> — since lifecycle-runtime-compose 2.8+, multiplatform ViewModel is stable.</li>
+        <li><strong>Networking</strong> — Ktor Client.</li>
+        <li><strong>Storage</strong> — SQLDelight (multi-platform), Room KMP (stable 2024+).</li>
+        <li><strong>DI</strong> — Koin, Kotlin-inject (Hilt is Android-only).</li>
+        <li><strong>Coroutines + Flow + Serialization</strong> — all multiplatform.</li>
+      </ul>
+      <h4>What needs platform-specific code (expect/actual)</h4>
+      <pre><code>// commonMain
+expect class PlatformStorage() {
+    suspend fun save(key: String, value: String)
+    suspend fun load(key: String): String?
+}
+
+// androidMain
+actual class PlatformStorage { /* uses DataStore */ }
+
+// iosMain
+actual class PlatformStorage { /* uses Keychain/NSUserDefaults */ }</code></pre>
+      <h4>Tradeoffs</h4>
+      <ul>
+        <li><strong>Pros</strong> — 70-90% code share, single bug fix everywhere, faster feature delivery.</li>
+        <li><strong>Cons</strong> — UI looks more Android than native iOS. Stack traces in iOS debugging can be painful. Smaller iOS-dev community familiarity.</li>
+      </ul>
+      <h4>When CMP fits</h4>
+      <ul>
+        <li>Internal tools or B2B where UX uniformity matters more than native feel.</li>
+        <li>Consumer apps where your design system is custom enough that "native feel" isn't the reference.</li>
+        <li>Team is majority Kotlin, iOS team is small or cooperative.</li>
+      </ul>
+      <h4>When to stay native per platform</h4>
+      <ul>
+        <li>Truly consumer-grade apps where each platform's native UX conventions matter (Uber, Airbnb).</li>
+        <li>Performance-sensitive (games, AR).</li>
+        <li>iOS team doesn't want Kotlin in their codebase.</li>
+      </ul>
+      <div class="takeaway"><strong>Takeaway:</strong> CMP is production-ready. Share UI + business logic + data layer across all 4 platforms. Platform-specific code via expect/actual. Best ROI on internal tools + B2B; mixed fit for polish-critical consumer apps.</div>
+    `
+  },
+  {
+    part: 4, level: 'adv',
+    title: "Testing Compose — unit tests, UI tests, screenshot tests",
+    body: `
+      <div class="intro">Compose testing is cleaner than View testing. Three layers: unit tests on ViewModels/state, instrumented UI tests with the Compose test framework, and screenshot/golden tests for visual regression.</div>
+      <h4>ViewModel unit tests — fast, no Android</h4>
+      <pre><code>class CartViewModelTest {
+    private val repo = FakeCartRepo()
+    private val vm = CartViewModel(repo)
+
+    @Test fun `adding item updates state`() = runTest {
+        vm.add(Item("milk", 60))
+        val state = vm.state.first()
+        assertThat(state.items).containsExactly(Item("milk", 60))
+        assertThat(state.total).isEqualTo(60)
+    }
+}</code></pre>
+      <h4>Compose UI tests — androidTest</h4>
+      <pre><code>@RunWith(AndroidJUnit4::class)
+class ProductScreenTest {
+    @get:Rule val rule = createComposeRule()
+
+    @Test fun showsProductName() {
+        rule.setContent {
+            ProductCard(Product("milk", 60))
+        }
+        rule.onNodeWithText("milk").assertIsDisplayed()
+        rule.onNodeWithText("₹60").assertIsDisplayed()
+    }
+
+    @Test fun clickAddTriggersCallback() {
+        var clicked = false
+        rule.setContent {
+            ProductCard(Product("milk", 60), onAdd = { clicked = true })
+        }
+        rule.onNodeWithContentDescription("Add to cart").performClick()
+        assertThat(clicked).isTrue()
+    }
+}</code></pre>
+      <h4>Finders — nodes and semantics</h4>
+      <pre><code>rule.onNodeWithText("milk")                      // exact text match
+rule.onNodeWithContentDescription("Cart")        // semantics contentDescription
+rule.onNodeWithTag("checkout_button")            // testTag modifier
+rule.onAllNodesWithText("available")             // multiple matches
+
+// Tag a composable for tests
+Button(
+    onClick = { },
+    modifier = Modifier.testTag("checkout_button")
+) { Text("Checkout") }</code></pre>
+      <h4>Assertions</h4>
+      <pre><code>.assertIsDisplayed()
+.assertIsNotDisplayed()
+.assertIsEnabled()
+.assertIsSelected()
+.assertTextEquals("Expected")
+.assertHasClickAction()
+.assertCountEquals(5)   // for onAllNodes*</code></pre>
+      <h4>Actions</h4>
+      <pre><code>.performClick()
+.performScrollTo()
+.performTextInput("hello")
+.performTextClearance()
+.performImeAction()</code></pre>
+      <h4>Testing with state changes</h4>
+      <pre><code>@Test fun countIncrements() {
+    rule.setContent { Counter() }
+    rule.onNodeWithText("Count: 0").assertIsDisplayed()
+    rule.onNodeWithText("+").performClick()
+    rule.onNodeWithText("Count: 1").assertIsDisplayed()   // automatic sync
+}</code></pre>
+      <h4>Screenshot / Golden tests (2026)</h4>
+      <pre><code>// Android Studio Hedgehog+ has built-in Compose Preview Screenshot Testing
+// Run: ./gradlew validateDebugScreenshotTest
+
+// Or use libraries like Paparazzi (from Cash App) — pure JVM, no emulator
+class ProductCardScreenshotTest {
+    @get:Rule val paparazzi = Paparazzi()
+
+    @Test fun productCard() {
+        paparazzi.snapshot {
+            MaterialTheme { ProductCard(Product("milk", 60)) }
+        }
+    }
+}</code></pre>
+      <h4>Flaky test prevention</h4>
+      <ul>
+        <li><strong>Use <code>waitUntil</code></strong> for async UI: <code>rule.waitUntil { rule.onAllNodesWithText("Loaded").fetchSemanticsNodes().isNotEmpty() }</code></li>
+        <li><strong>Control animations</strong>: Compose auto-disables animations in tests via IdlingResources.</li>
+        <li><strong>Avoid <code>Thread.sleep</code></strong>: use <code>waitForIdle()</code> or <code>waitUntil</code>.</li>
+      </ul>
+      <div class="takeaway"><strong>Takeaway:</strong> Unit-test ViewModels (fast, no Android). UI-test with createComposeRule + testTag for structural assertions. Screenshot-test for visual regressions (Paparazzi or Android Studio Screenshot Testing). Avoid flakiness with waitUntil.</div>
+    `
+  }
+];
+
+// =============================================================================
+const byPart = {
+  1: document.getElementById('p1-container'),
+  2: document.getElementById('p2-container'),
+  3: document.getElementById('p3-container'),
+  4: document.getElementById('p4-container')
+};
+const tocByPart = {
+  1: document.getElementById('toc-p1'),
+  2: document.getElementById('toc-p2'),
+  3: document.getElementById('toc-p3'),
+  4: document.getElementById('toc-p4')
+};
+const counters = { 1: 0, 2: 0, 3: 0, 4: 0 };
+
+function render() {
+  Object.values(byPart).forEach(el => el.innerHTML = '');
+  Object.values(tocByPart).forEach(el => el.innerHTML = '');
+  Object.keys(counters).forEach(k => counters[k] = 0);
+
+  lessons.forEach((lesson, idx) => {
+    counters[lesson.part]++;
+    const num = counters[lesson.part];
+    const done = getDone(idx);
+    const levelLabel = lesson.level === 'beg' ? 'Beginner' : lesson.level === 'int' ? 'Intermediate' : 'Advanced';
+    const levelClass = lesson.level === 'beg' ? 'level-beg' : lesson.level === 'int' ? 'level-int' : 'level-adv';
+
+    const card = document.createElement('div');
+    card.className = 'lesson' + (done ? ' done' : '');
+    card.id = `lesson-${idx}`;
+    card.innerHTML = `
+      <div class="lesson-header" data-toggle="${idx}">
+        <div class="lesson-num">L${num}</div>
+        <div class="lesson-title">${lesson.title}<span class="level-tag ${levelClass}">${levelLabel}</span></div>
+        <div class="lesson-actions">
+          <button class="btn btn-view" data-toggle="${idx}">Open</button>
+          <button class="btn btn-done ${done ? 'active' : ''}" data-done="${idx}">${done ? '✓ Done' : 'Mark Done'}</button>
+        </div>
+      </div>
+      <div class="lesson-body" id="body-${idx}">${lesson.body}</div>
+    `;
+    byPart[lesson.part].appendChild(card);
+
+    const tocItem = document.createElement('li');
+    tocItem.innerHTML = `<a href="#lesson-${idx}">L${num}. ${lesson.title}</a>`;
+    tocByPart[lesson.part].appendChild(tocItem);
+  });
+
+  document.querySelectorAll('[data-toggle]').forEach(el => {
+    el.onclick = (e) => {
+      e.stopPropagation();
+      const idx = el.dataset.toggle;
+      const body = document.getElementById('body-' + idx);
+      body.classList.toggle('open');
+    };
+  });
+  document.querySelectorAll('[data-done]').forEach(btn => {
+    btn.onclick = (e) => {
+      e.stopPropagation();
+      toggleDone(parseInt(btn.dataset.done));
+      render();
+    };
+  });
+  updateProgress();
+}
+
+function getDone(idx) {
+  const list = JSON.parse(localStorage.getItem('compose_lessons_done') || '[]');
+  return list.includes(idx);
+}
+function toggleDone(idx) {
+  let list = JSON.parse(localStorage.getItem('compose_lessons_done') || '[]');
+  if (list.includes(idx)) list = list.filter(i => i !== idx); else list.push(idx);
+  localStorage.setItem('compose_lessons_done', JSON.stringify(list));
+}
+function updateProgress() {
+  const list = JSON.parse(localStorage.getItem('compose_lessons_done') || '[]');
+  const total = lessons.length, done = list.length;
+  const pct = total ? (done / total * 100) : 0;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = `${done} of ${total} lessons completed (${Math.round(pct)}%)`;
+}
+function resetProgress() {
+  if (confirm('Reset all lesson progress?')) {
+    localStorage.removeItem('compose_lessons_done');
+    render();
+  }
+}
+render();
+</script>
+</body>
+</html>

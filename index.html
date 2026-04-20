@@ -186,9 +186,49 @@
     font-size: 12px;
   }
 
+  .feature-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin: 0 0 32px;
+    padding: 22px 24px;
+    background: linear-gradient(135deg, rgba(78, 205, 196, 0.12), rgba(167, 139, 250, 0.08));
+    border: 1px solid rgba(78, 205, 196, 0.35);
+    border-radius: 14px;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 120ms ease, border-color 120ms ease, background 120ms ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .feature-banner:hover {
+    transform: translateY(-2px);
+    border-color: #4ecdc4;
+    background: linear-gradient(135deg, rgba(78, 205, 196, 0.18), rgba(167, 139, 250, 0.12));
+  }
+  .feature-banner .lhs { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 0; }
+  .feature-banner .eye {
+    font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+    color: #4ecdc4; font-weight: 700;
+  }
+  .feature-banner h2 {
+    font-size: 22px; font-weight: 800;
+    background: linear-gradient(135deg, #4ecdc4, #95e1d3, #a78bfa);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .feature-banner p { font-size: 13.5px; color: var(--text-dim); }
+  .feature-banner .arrow-lg {
+    font-size: 28px; color: #4ecdc4; font-weight: 700;
+    flex-shrink: 0;
+    transition: transform 120ms ease;
+  }
+  .feature-banner:hover .arrow-lg { transform: translateX(4px); }
+
   @media (max-width: 520px) {
     header h1 { font-size: 26px; }
     body { padding: 28px 14px 60px; }
+    .feature-banner { flex-direction: column; text-align: center; }
   }
 </style>
 </head>
@@ -204,6 +244,15 @@
         <span class="chip">by <strong>Bhupendra</strong></span>
       </div>
     </header>
+
+    <a href="learn_compose.html" class="feature-banner">
+      <div class="lhs">
+        <span class="eye">New · Learning Guide</span>
+        <h2>Learn Jetpack Compose →</h2>
+        <p>25 lessons from basics to 2026 advanced — Material 3, animations, custom layouts, Compose Multiplatform, Baseline Profiles, testing.</p>
+      </div>
+      <span class="arrow-lg">→</span>
+    </a>
 
     <main>
       <div class="grid" id="phaseGrid"></div>
