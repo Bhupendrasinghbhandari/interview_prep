@@ -1,0 +1,8 @@
+# Personal resume — not for public repo
+*.pdf
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

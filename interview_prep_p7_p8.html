@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SDE-2 Android Interview Prep · Phase 7 & 8</title>
+<style>
+  :root {
+    --bg: #0b0f17;
+    --card: #121826;
+    --card-hover: #1a2236;
+    --border: #232b3d;
+    --text: #e6edf7;
+    --text-dim: #8a94a7;
+    --accent: #6ea8fe;
+    --accent-hover: #90bcff;
+    --success: #3fb950;
+    --success-bg: #0f2a1a;
+    --warn: #f0b429;
+    --code-bg: #0a0e15;
+    --phase7: #f78da7;
+    --phase8: #a78bfa;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg); color: var(--text); line-height: 1.6;
+    padding: 24px 16px 80px;
+  }
+  .container { max-width: 960px; margin: 0 auto; }
+  header { text-align: center; margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid var(--border); }
+  header h1 {
+    font-size: 28px; font-weight: 700; margin-bottom: 8px;
+    background: linear-gradient(135deg, var(--phase7), var(--phase8));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  header p { color: var(--text-dim); font-size: 14px; }
+  .progress-bar { margin-top: 16px; background: var(--card); border-radius: 999px; height: 8px; overflow: hidden; border: 1px solid var(--border); }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--phase7), var(--phase8)); width: 0%; transition: width 0.4s ease; }
+  .progress-text { margin-top: 8px; font-size: 13px; color: var(--text-dim); }
+  .phase-header { margin: 40px 0 20px; padding: 16px 20px; background: var(--card); border-left: 4px solid var(--phase7); border-radius: 8px; }
+  .phase-header.phase-8 { border-left-color: var(--phase8); }
+  .phase-header h2 { font-size: 20px; margin-bottom: 4px; }
+  .phase-header p { color: var(--text-dim); font-size: 13px; }
+  .question-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 12px; overflow: hidden; transition: all 0.2s ease; }
+  .question-card:hover { border-color: var(--accent); }
+  .question-card.done { background: var(--success-bg); border-color: var(--success); opacity: 0.75; }
+  .question-card.done .question-text { text-decoration: line-through; color: var(--text-dim); }
+  .question-header { display: flex; align-items: flex-start; gap: 12px; padding: 16px 20px; }
+  .question-number { background: var(--bg); color: var(--accent); font-weight: 600; font-size: 13px; padding: 4px 10px; border-radius: 6px; border: 1px solid var(--border); flex-shrink: 0; min-width: 48px; text-align: center; }
+  .question-text { flex: 1; font-size: 15px; font-weight: 500; padding-top: 2px; }
+  .tag { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 4px; margin-left: 6px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+  .tag-hard { background: rgba(248, 81, 73, 0.15); color: #f85149; }
+  .tag-med { background: rgba(240, 180, 41, 0.15); color: var(--warn); }
+  .tag-easy { background: rgba(63, 185, 80, 0.15); color: var(--success); }
+  .actions { display: flex; gap: 8px; flex-shrink: 0; }
+  .btn { background: var(--bg); color: var(--text); border: 1px solid var(--border); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 500; transition: all 0.15s ease; white-space: nowrap; }
+  .btn:hover { background: var(--card-hover); border-color: var(--accent); }
+  .btn-view { color: var(--accent); }
+  .btn-done { color: var(--success); }
+  .btn-done.active { background: var(--success); color: white; border-color: var(--success); }
+  .answer { display: none; padding: 0 20px 20px 20px; border-top: 1px solid var(--border); margin-top: 4px; padding-top: 16px; color: var(--text); }
+  .answer.open { display: block; }
+  .answer .opener { background: rgba(110, 168, 254, 0.08); border-left: 3px solid var(--accent); padding: 10px 14px; margin-bottom: 14px; border-radius: 4px; font-size: 14px; font-style: italic; }
+  .answer .opener strong { color: var(--accent); font-style: normal; }
+  .answer h4 { color: var(--accent); font-size: 14px; margin: 16px 0 6px; font-weight: 600; }
+  .answer p { margin-bottom: 10px; font-size: 14px; }
+  .answer ul, .answer ol { margin: 8px 0 12px 20px; font-size: 14px; }
+  .answer li { margin-bottom: 5px; }
+  .answer code { background: var(--code-bg); padding: 2px 6px; border-radius: 4px; font-family: 'SF Mono', Monaco, Consolas, monospace; font-size: 13px; color: #ffa657; }
+  .answer pre { background: var(--code-bg); padding: 12px 14px; border-radius: 6px; overflow-x: auto; margin: 10px 0; border: 1px solid var(--border); }
+  .answer pre code { background: none; padding: 0; color: var(--text); font-size: 13px; line-height: 1.5; }
+  .answer strong { color: var(--accent-hover); }
+  .gotcha { background: rgba(240, 180, 41, 0.08); border-left: 3px solid var(--warn); padding: 10px 14px; margin: 12px 0; border-radius: 4px; font-size: 13px; }
+  .gotcha strong { color: var(--warn); }
+  .star { background: rgba(167, 139, 250, 0.08); border-left: 3px solid var(--phase8); padding: 10px 14px; margin: 12px 0; border-radius: 4px; font-size: 13px; }
+  .star strong { color: var(--phase8); }
+  .reset-btn { position: fixed; bottom: 20px; right: 20px; background: var(--card); border: 1px solid var(--border); color: var(--text-dim); padding: 8px 14px; border-radius: 999px; cursor: pointer; font-size: 12px; }
+  .reset-btn:hover { color: var(--text); }
+  @media (max-width: 600px) {
+    .question-header { flex-wrap: wrap; }
+    .actions { width: 100%; justify-content: flex-end; margin-top: 8px; }
+    header h1 { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>SDE-2 Android Interview Prep</h1>
+    <p>Phase 7 & 8 · Modern Android 2026 + Behavioral · The last mile</p>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-text" id="progressText">0 of 0 completed</div>
+  </header>
+
+  <div class="phase-header">
+    <h2 id="phase-7">Phase 7 · Modern Android (2026 Market Standards)</h2>
+    <p>What's actually shipping in big companies right now — KMP with Compose Multiplatform, Baseline Profiles, on-device AI (Gemini Nano / AICore), Play Integrity, Credential Manager, Predictive Back. This is how you show you're current.</p>
+  </div>
+  <div id="phase7-container"></div>
+
+  <div class="phase-header phase-8">
+    <h2 id="phase-8">Phase 8 · Behavioral & Leadership</h2>
+    <p>The round most engineers under-prep and it's worth 30% of your leveling decision. STAR format, concrete stories, and answers that signal SDE-2 ownership.</p>
+  </div>
+  <div id="phase8-container"></div>
+</div>
+
+<button class="reset-btn" onclick="resetProgress()">↻ Reset Progress</button>
+
+<script>
+const questions = [
+  // ============ PHASE 7: MODERN ANDROID 2026 ============
+  {
+    phase: 7,
+    difficulty: 'med',
+    q: "Kotlin Multiplatform (KMP) — when should a team adopt it in 2026?",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "KMP went stable in Nov 2023 and Compose Multiplatform (iOS) hit stable in May 2025. In 2026, it's a real production choice — not experimental. But 'adopt KMP' isn't binary; you pick the sharing depth."</div>
+      <h4>Sharing layers — bottom-up</h4>
+      <ol>
+        <li><strong>Business logic only</strong> (easiest) — models, network, repositories shared. Each platform keeps its own UI. Best first step.</li>
+        <li><strong>+ Local storage</strong> — SQLDelight or Room-KMP (stable since 2024). Same schema on both platforms.</li>
+        <li><strong>+ Networking</strong> — Ktor client shared, typed APIs.</li>
+        <li><strong>+ ViewModel layer</strong> — <code>ViewModel</code> is now multiplatform (androidx.lifecycle 2.8+). Share state holders.</li>
+        <li><strong>+ UI (Compose Multiplatform)</strong> — full UI sharing. Good for internal tools or apps where pixel-perfect native feel is secondary.</li>
+      </ol>
+      <h4>Pick KMP when</h4>
+      <ul>
+        <li>Maintaining two codebases with the same business logic is killing you.</li>
+        <li>Team has strong Kotlin skills.</li>
+        <li>iOS team is open to consuming a Kotlin-generated framework.</li>
+      </ul>
+      <h4>Avoid KMP when</h4>
+      <ul>
+        <li>Platform-specific UX is critical (think Uber — different enough per platform).</li>
+        <li>iOS team is small and doesn't want to debug Kotlin stack traces.</li>
+        <li>You have tight iOS-specific performance (gaming, AR) — native Swift wins.</li>
+      </ul>
+      <h4>Tooling stack in 2026</h4>
+      <ul>
+        <li><strong>Ktor Client</strong> — networking.</li>
+        <li><strong>SQLDelight</strong> or <strong>Room-KMP</strong> — DB.</li>
+        <li><strong>Koin</strong> or <strong>Kotlin-inject</strong> — DI (Hilt is Android-only).</li>
+        <li><strong>kotlinx-serialization</strong> — JSON/Protobuf.</li>
+        <li><strong>kotlinx-coroutines</strong> — async (already multiplatform).</li>
+        <li><strong>Compose Multiplatform</strong> — UI if you go that far.</li>
+      </ul>
+      <div class="gotcha"><strong>iOS interop:</strong> Kotlin <code>sealed class</code> doesn't map cleanly to Swift enums. Kotlin <code>Flow</code> needs wrappers (SKIE plugin helps). Plan the KMP<->iOS boundary carefully.</div>
+    `
+  },
+  {
+    phase: 7,
+    difficulty: 'med',
+    q: "Baseline Profiles — what are they, and how do you add one?",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Baseline Profiles are AOT compilation hints shipped with your APK. They tell ART 'precompile these methods' so the first few launches after install don't JIT-compile hot code. Real impact: 20-40% faster startup."</div>
+      <h4>How they work</h4>
+      <ol>
+        <li>You write a Macrobenchmark test that exercises app startup + key flows.</li>
+        <li>Android Studio records methods executed → produces <code>baseline-prof.txt</code>.</li>
+        <li>You ship that file in <code>src/main/</code>.</li>
+        <li>At install (and via Play Store Cloud Profiles), ART precompiles those methods.</li>
+      </ol>
+      <h4>Setup</h4>
+      <pre><code>// :baselineprofile module
+@ExperimentalBaselineProfilesApi
+class StartupBaselineProfile {
+    @get:Rule val rule = BaselineProfileRule()
+    @Test
+    fun generate() = rule.collectBaselineProfile(
+        packageName = "com.app.countrydelight"
+    ) {
+        pressHome()
+        startActivityAndWait()
+        // exercise cold-start critical flows
+        device.findObject(By.text("Subscribe")).click()
+    }
+}</code></pre>
+      <h4>Where the wins are</h4>
+      <ul>
+        <li><strong>Cold startup</strong> — 20-30% on mid-tier devices.</li>
+        <li><strong>First-frame of critical screens</strong> — include these in the benchmark.</li>
+        <li><strong>Compose-heavy apps</strong> — Compose has a lot of method calls, huge impact.</li>
+      </ul>
+      <h4>Startup Profiles (sibling feature)</h4>
+      <p>Dex layout optimization — moves startup classes into the first dex file. Complementary to Baseline Profiles; measurable extra ~5-10%.</p>
+      <h4>Regenerate when</h4>
+      <ul>
+        <li>Major version bump (new features → new hot methods).</li>
+        <li>Big refactor changed code paths.</li>
+        <li>CI — regenerate nightly, compare to previous for drift.</li>
+      </ul>
+      <div class="gotcha"><strong>Must run on a rooted emulator / configured physical device:</strong> Macrobenchmark needs profileable/debuggable flags set correctly. Can't just run on any device.</div>
+    `
+  },
+  {
+    phase: 7,
+    difficulty: 'hard',
+    q: "Compose performance — explain @Stable, @Immutable, and skippable composables.",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Compose recomposes function calls when parameters change. 'Skippable' means: Compose can skip a call if all params are equal. 'Stable' means: Compose can trust equals(). Getting these right is 80% of Compose performance."</div>
+      <h4>Stability rules</h4>
+      <ul>
+        <li><strong>Primitives</strong> (Int, String, Boolean) — always stable.</li>
+        <li><strong>data class with stable fields</strong> — stable if all fields are stable and val.</li>
+        <li><strong>List / Map / Set</strong> — UNSTABLE by default (could be MutableList under the interface).</li>
+        <li><strong>MutableState</strong> — stable (Compose knows how to observe).</li>
+        <li><strong>Function types (lambdas)</strong> — stable IF they capture only stable refs.</li>
+      </ul>
+      <h4>The fix: @Stable / @Immutable</h4>
+      <pre><code>@Immutable
+data class CartUiState(
+    val items: List&lt;Item&gt;,       // you PROMISE this List never mutates
+    val total: Double
+)</code></pre>
+      <p>You're promising the compiler. If you lie and mutate, UI won't update. Use <code>ImmutableList</code> from kotlinx.collections.immutable for safety.</p>
+      <h4>Lambda stability</h4>
+      <pre><code>// Unstable — captures ViewModel
+Button(onClick = { vm.addItem(id) }) { ... }
+
+// Stable — referenced as a method ref
+Button(onClick = vm::addItem) { ... }
+// or use remember
+val onAdd = remember(vm) { { vm.addItem(id) } }</code></pre>
+      <h4>Diagnosing with Compose Compiler Reports</h4>
+      <pre><code>// build.gradle
+tasks.withType&lt;KotlinCompile&gt;().configureEach {
+    compilerOptions.freeCompilerArgs.addAll(
+        "-P", "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=$buildDir/compose-reports"
+    )
+}</code></pre>
+      <p>Reports list every composable: skippable / restartable / stable. Your target: every composable with params should be skippable.</p>
+      <h4>When to use derivedStateOf vs remember</h4>
+      <ul>
+        <li><code>derivedStateOf</code> — expensive computation from multiple state reads, only recompute when result actually changes.</li>
+        <li><code>remember</code> — cache any value keyed on some input. Doesn't track state changes.</li>
+      </ul>
+      <div class="gotcha"><strong>Strong skipping mode (Compose 1.7+):</strong> Treats all stable-shaped types as stable even without annotation. Default in new apps from 2024. Reduces the need for <code>@Immutable</code> but still good practice to annotate domain types.</div>
+    `
+  },
+  {
+    phase: 7,
+    difficulty: 'med',
+    q: "Play Integrity API — why did it replace SafetyNet, and how do you integrate it?",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "SafetyNet Attestation deprecated Jan 2024, shut down Jan 2025. Play Integrity is its successor. It tells your backend whether the app is genuine (not tampered), running on a genuine Android device, and installed from Play. Critical for fintech, gaming, commerce."</div>
+      <h4>Three verdicts it returns</h4>
+      <ul>
+        <li><strong>appIntegrity</strong> — Is the APK unmodified and signed by the Play-recognized key?</li>
+        <li><strong>deviceIntegrity</strong> — Is the device uncompromised (unlocked bootloader → flags)?</li>
+        <li><strong>accountDetails</strong> — Is the Play account genuine and licensed?</li>
+      </ul>
+      <h4>Integration flow</h4>
+      <ol>
+        <li>Client — <code>IntegrityManager.requestIntegrityToken(nonce)</code> → opaque token.</li>
+        <li>Client → your backend with the token.</li>
+        <li>Backend — call Play API with the token → decoded verdict.</li>
+        <li>Backend decides: allow / challenge / deny.</li>
+      </ol>
+      <pre><code>val req = IntegrityTokenRequest.builder()
+    .setNonce(serverNonce)          // bind to server request
+    .setCloudProjectNumber(PROJECT_NUMBER)
+    .build()
+val token = integrityManager.requestIntegrityToken(req).await()
+api.verify(token)</code></pre>
+      <h4>Standard vs Classic request</h4>
+      <ul>
+        <li><strong>Classic</strong> — heavier, every call. Use for one-off high-value actions (withdrawal, purchase).</li>
+        <li><strong>Standard</strong> — cached, lightweight. Use for repeated checks.</li>
+      </ul>
+      <h4>What NOT to do</h4>
+      <ul>
+        <li>Don't verify on the client — anyone can tamper with client code. Server-side only.</li>
+        <li>Don't block users with weak signals — false positives on rooted devices are common. Treat it as a risk score, not a gate.</li>
+        <li>Don't skip the nonce — without it, replay attacks trivially bypass integrity.</li>
+      </ul>
+      <div class="gotcha"><strong>Quota:</strong> Play Integrity has strict quotas. Classic requests are capped. Use Standard for most checks, escalate to Classic for sensitive ops. Plan this with your backend team.</div>
+    `
+  },
+  {
+    phase: 7,
+    difficulty: 'med',
+    q: "Credential Manager + Passkeys — why is this the 2026 auth standard?",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Credential Manager is the unified auth API introduced in Android 14 (2023), backporting to API 19. It handles passkeys, passwords, and Sign in with Google through one API. Passkeys are phishing-resistant, public-key based, and on track to replace passwords."</div>
+      <h4>Why passkeys</h4>
+      <ul>
+        <li>No password to phish, leak, or reuse.</li>
+        <li>Biometric-gated on device.</li>
+        <li>Synced via Google Password Manager / iCloud — user keeps them across devices.</li>
+        <li>WebAuthn standard — works across Android, iOS, Web.</li>
+      </ul>
+      <h4>Integration (sign-up flow)</h4>
+      <pre><code>// Create passkey
+val request = CreatePublicKeyCredentialRequest(
+    requestJson = challengeJson   // server provides
+)
+val result = credentialManager.createCredential(context, request)
+// Send result.registrationResponseJson back to server</code></pre>
+      <h4>Sign-in flow</h4>
+      <pre><code>val getRequest = GetCredentialRequest(
+    listOf(
+        GetPublicKeyCredentialOption(challengeJson),   // passkeys
+        GetPasswordOption(),                            // fallback
+        GetGoogleIdOption.Builder()                     // Sign in w/ Google
+            .setServerClientId(WEB_CLIENT_ID)
+            .build()
+    )
+)
+val response = credentialManager.getCredential(activity, getRequest)</code></pre>
+      <h4>Server side</h4>
+      <p>Implement WebAuthn — libraries like <code>webauthn4j</code> (Java) or FIDO Alliance's SDKs. You store the public key, challenge state, and verify the signed assertion.</p>
+      <h4>When to adopt in 2026</h4>
+      <ul>
+        <li>Any new auth flow — start with Credential Manager.</li>
+        <li>Existing password app — add passkey as an option, leave password as fallback for 1-2 years.</li>
+      </ul>
+      <div class="gotcha"><strong>Digital Asset Links required:</strong> Host <code>assetlinks.json</code> at <code>https://yourdomain.com/.well-known/assetlinks.json</code>, bind app package + SHA fingerprint to the domain. Without it, passkeys silently fail.</div>
+    `
+  },
+  {
+    phase: 7,
+    difficulty: 'med',
+    q: "Predictive back gesture — what is it and what do I need to do?",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Predictive back is a UX feature from Android 13 that became default opt-in on Android 14+ and mandatory-friendly from 2024 onward. As the user drags the back gesture, the system shows a preview of what's behind — the previous screen or home launcher. Apps must opt in and handle back via <code>OnBackPressedCallback</code>, not <code>onBackPressed()</code>."</div>
+      <h4>Opt in</h4>
+      <pre><code>&lt;!-- AndroidManifest --&gt;
+&lt;application android:enableOnBackInvokedCallback="true" ...&gt;</code></pre>
+      <h4>Handle back — Activity</h4>
+      <pre><code>onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+    override fun handleOnBackStarted(backEvent: BackEventCompat) {
+        // user started gesture — animate preview
+    }
+    override fun handleOnBackProgressed(backEvent: BackEventCompat) {
+        // progress 0f..1f — update your animation
+    }
+    override fun handleOnBackPressed() {
+        // gesture committed — do the actual back
+    }
+    override fun handleOnBackCancelled() {
+        // user let go before commit — undo animation
+    }
+})</code></pre>
+      <h4>In Compose</h4>
+      <pre><code>BackHandler(enabled = sheetOpen) { sheetOpen = false }
+// For predictive animation:
+PredictiveBackHandler(enabled = sheetOpen) { progress -&gt;
+    try {
+        progress.collect { ev -&gt; offset = ev.progress * width }
+        // committed
+        sheetOpen = false
+    } catch (e: CancellationException) {
+        // user cancelled — animate back
+    }
+}</code></pre>
+      <h4>What breaks if you ignore it</h4>
+      <ul>
+        <li><code>onBackPressed()</code> overrides — deprecated; won't get progress events.</li>
+        <li>Custom back-stacks with single-Activity Navigation — work fine IF using <code>OnBackPressedDispatcher</code>.</li>
+        <li>Intercepting back for "are you sure?" dialogs — rewrite using <code>OnBackPressedCallback</code> with enabled toggle.</li>
+      </ul>
+      <div class="gotcha"><strong>Testing it:</strong> Developer options → "Predictive back animations." Forces the preview on all supported apps. Test on real 14+ device — emulator behavior can differ.</div>
+    `
+  },
+  {
+    phase: 7,
+    difficulty: 'hard',
+    q: "On-device AI — Gemini Nano / AICore. When would you use it?",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "AICore is the system service on Pixel 8 Pro+ (and expanding in 2025-26) that runs Gemini Nano locally. You get LLM capabilities — summarization, rewriting, classification — with zero network, zero cost, and private data. Pair with ML Kit GenAI APIs for a simpler surface."</div>
+      <h4>What on-device AI is good for</h4>
+      <ul>
+        <li>Text summarization (notifications, emails).</li>
+        <li>Smart reply suggestions.</li>
+        <li>Classification (toxic content, sentiment).</li>
+        <li>Spell/grammar correction.</li>
+        <li>Short-context Q&A.</li>
+      </ul>
+      <h4>What it's NOT for</h4>
+      <ul>
+        <li>Long-context (32k+ tokens) — stays in the cloud.</li>
+        <li>Retrieval augmented generation (RAG) requiring big vector DBs — cloud.</li>
+        <li>Multimodal beyond simple image captioning.</li>
+      </ul>
+      <h4>Hybrid strategy (recommended)</h4>
+      <pre><code>suspend fun summarize(text: String): String {
+    return if (text.length &lt; 1000 && aiCore.isAvailable()) {
+        aiCore.generate(text)                // on-device, free
+    } else {
+        geminiCloudApi.generate(text)        // server-side fallback
+    }
+}</code></pre>
+      <h4>ML Kit GenAI APIs (preview through 2025, going GA)</h4>
+      <ul>
+        <li><code>Summarization</code></li>
+        <li><code>ProofreadingRewriter</code></li>
+        <li><code>ImageDescription</code></li>
+        <li><code>SmartReply</code></li>
+      </ul>
+      <h4>Device availability check</h4>
+      <pre><code>val provider = when {
+    Build.VERSION.SDK_INT &gt;= 31 && AICore.isAvailable() -&gt; OnDevice
+    else -&gt; Cloud
+}</code></pre>
+      <h4>Privacy pitch</h4>
+      <p>"For sensitive features — health queries, personal note summarization — on-device is the only acceptable approach. I'd use AICore for those and keep cloud for non-sensitive heavy work."</p>
+      <div class="gotcha"><strong>Fragmentation reality:</strong> In 2026, on-device GenAI is still Pixel + some Samsung + a few OEMs. Design as progressive enhancement — core UX must work without it.</div>
+    `
+  },
+  {
+    phase: 7,
+    difficulty: 'med',
+    q: "Jetpack Glance — what changed for widgets?",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Glance is the Compose-style API for App Widgets. Before Glance, widgets required XML <code>RemoteViews</code> with a fixed set of view types. Glance lets you write widgets in Kotlin with Compose syntax — but compiles down to RemoteViews under the hood."</div>
+      <h4>A Glance widget</h4>
+      <pre><code>class CartWidget : GlanceAppWidget() {
+    override suspend fun provideGlance(context: Context, id: GlanceId) {
+        provideContent { CartWidgetContent() }
+    }
+}
+
+@Composable
+fun CartWidgetContent() {
+    val count = currentState&lt;Preferences&gt;()[CART_COUNT] ?: 0
+    Column(modifier = GlanceModifier.fillMaxSize()
+        .background(GlanceTheme.colors.background)
+        .padding(12.dp)
+        .clickable(actionStartActivity&lt;MainActivity&gt;())) {
+        Text("Items: $count", style = TextStyle(fontSize = 16.sp))
+    }
+}</code></pre>
+      <h4>Limitations (inherit from RemoteViews)</h4>
+      <ul>
+        <li>No arbitrary Composables — only the subset Glance supports.</li>
+        <li>State must be in <code>GlanceStateDefinition</code> (e.g., DataStore) — ViewModel not available.</li>
+        <li>Actions are declarative — <code>actionRunCallback</code>, <code>actionStartActivity</code> — no lambdas.</li>
+      </ul>
+      <h4>Update strategies</h4>
+      <ul>
+        <li><code>CartWidget().update(context, id)</code> — explicit re-render.</li>
+        <li>WorkManager — periodic refresh from data source.</li>
+        <li>From app code — observe domain state → call <code>update</code>.</li>
+      </ul>
+      <h4>Android 12+ features to use</h4>
+      <ul>
+        <li>Dynamic color (<code>GlanceTheme</code> follows Material You).</li>
+        <li>Resizable widgets with <code>sizeMode = SizeMode.Responsive</code>.</li>
+        <li>Lock screen / home screen parity.</li>
+      </ul>
+      <div class="gotcha"><strong>Widgets don't get ViewModels or Hilt directly:</strong> Inject via <code>EntryPointAccessors</code> on the <code>Context</code>. Your data layer must be usable without an Activity.</div>
+    `
+  },
+  {
+    phase: 7,
+    difficulty: 'med',
+    q: "Adaptive layouts for foldables and tablets — what do you do differently?",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Android in 2026 runs on phones (compact), foldables (unfolded → medium/expanded), tablets, Chromebooks, and even Auto. Responsive layout via <code>WindowSizeClass</code> is the modern answer — don't rely on <code>sw600dp</code> resource qualifiers alone."</div>
+      <h4>WindowSizeClass</h4>
+      <pre><code>@Composable
+fun App() {
+    val windowSize = calculateWindowSizeClass(LocalActivity.current)
+    when (windowSize.widthSizeClass) {
+        WindowWidthSizeClass.Compact -&gt; PhoneLayout()
+        WindowWidthSizeClass.Medium  -&gt; FoldableLayout()
+        WindowWidthSizeClass.Expanded -&gt; TabletLayout()  // list-detail side by side
+    }
+}</code></pre>
+      <h4>Canonical layouts</h4>
+      <ul>
+        <li><strong>List-Detail</strong> — split pane on expanded, full screen on compact. Use <code>NavigableListDetailPaneScaffold</code>.</li>
+        <li><strong>Supporting Pane</strong> — main + helper column (shopping cart next to item).</li>
+        <li><strong>Feed</strong> — column count grows with width (1 → 2 → 3).</li>
+      </ul>
+      <h4>Foldable-specific</h4>
+      <pre><code>val windowInfo = WindowInfoTracker.getOrCreate(context)
+windowInfo.windowLayoutInfo(activity).collect { info -&gt;
+    val foldingFeature = info.displayFeatures
+        .filterIsInstance&lt;FoldingFeature&gt;().firstOrNull()
+    if (foldingFeature?.state == FoldingFeature.State.HALF_OPENED) {
+        // Tabletop mode — show video top, controls bottom
+    }
+}</code></pre>
+      <h4>Configuration change behavior</h4>
+      <p>Unfolding IS a config change. <code>ViewModel</code> survives; UI state should not live in Activity instance state. This catches teams that "never rotate."</p>
+      <h4>Testing</h4>
+      <ul>
+        <li>Resizable emulator (Android Studio Hedgehog+) — swap size classes at runtime.</li>
+        <li>Preview in different widths: <code>@Preview(widthDp = 800)</code>.</li>
+        <li>Espresso / Compose test with <code>DeviceController</code> to switch density/size.</li>
+      </ul>
+      <div class="gotcha"><strong>Don't hard-code nav drawer width:</strong> On expanded widths, drawer should be permanent (rail or nav drawer). On compact, modal. Use Material 3's adaptive nav components — they handle it.</div>
+    `
+  },
+  {
+    phase: 7,
+    difficulty: 'med',
+    q: "Media3 / ExoPlayer — what replaced what, and why?",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Media3 is the unified Jetpack library that consolidated ExoPlayer, MediaSession, and MediaBrowser into one coherent stack (GA 2023). For 2026, ExoPlayer is the Media3 ExoPlayer — same engine, new home, better API."</div>
+      <h4>Why the consolidation</h4>
+      <ul>
+        <li>ExoPlayer, MediaSession, MediaBrowser used to be three libraries with overlapping concepts.</li>
+        <li>Media3 gives <strong>one</strong> <code>Player</code> interface — usable from UI, Service, Wear OS, Cast.</li>
+        <li>First-class support for background playback, notifications, Cast, Auto.</li>
+      </ul>
+      <h4>Basic player setup</h4>
+      <pre><code>val player = ExoPlayer.Builder(context).build().apply {
+    setMediaItem(MediaItem.fromUri(url))
+    prepare()
+    playWhenReady = true
+}
+// Compose UI
+AndroidView(factory = { PlayerView(it).apply { this.player = player } })</code></pre>
+      <h4>MediaSessionService for background audio</h4>
+      <pre><code>class PlaybackService : MediaSessionService() {
+    private var mediaSession: MediaSession? = null
+    override fun onCreate() {
+        super.onCreate()
+        val player = ExoPlayer.Builder(this).build()
+        mediaSession = MediaSession.Builder(this, player).build()
+    }
+    override fun onGetSession(info: ControllerInfo) = mediaSession
+}</code></pre>
+      <p>Android system handles the notification, lock-screen controls, Auto integration — all via MediaSession.</p>
+      <h4>Adaptive streaming</h4>
+      <p>HLS and DASH support built-in. Media3 picks the quality based on bandwidth (<code>AdaptiveTrackSelection</code>). Set min/max bitrate caps to save data on cellular.</p>
+      <h4>DRM</h4>
+      <p>Widevine L1/L3 for premium content. Configure with <code>MediaItem.DrmConfiguration</code>.</p>
+      <h4>Caching</h4>
+      <pre><code>val cache = SimpleCache(File(cacheDir, "media"), LeastRecentlyUsedCacheEvictor(100L * 1024 * 1024), StandaloneDatabaseProvider(context))
+val dataSourceFactory = CacheDataSource.Factory()
+    .setCache(cache)
+    .setUpstreamDataSourceFactory(DefaultHttpDataSource.Factory())
+val player = ExoPlayer.Builder(context)
+    .setMediaSourceFactory(DefaultMediaSourceFactory(dataSourceFactory))
+    .build()</code></pre>
+      <div class="gotcha"><strong>Release is non-negotiable:</strong> Player holds codec instances, surface textures, hardware decoder slots. Missing <code>player.release()</code> in <code>onDestroy</code> → memory leak + "MediaCodec stuck" bugs.</div>
+    `
+  },
+  {
+    phase: 7,
+    difficulty: 'med',
+    q: "What's new in Compose that everyone should know in 2026?",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Compose has matured fast. In 2026 these 5 things are standard: Strong Skipping Mode, movableContentOf, LazyColumn v2 performance, Shared Element Transitions, and Compose Multiplatform parity."</div>
+      <h4>1. Strong Skipping Mode (default in new projects)</h4>
+      <p>Compose compiler treats all parameters with stable shapes as stable, even without <code>@Immutable</code>. Reduces boilerplate dramatically.</p>
+      <h4>2. movableContentOf — preserve state across positions</h4>
+      <pre><code>val movableItem = remember { movableContentOf { Item() } }
+if (isWide) Row { movableItem(); OtherStuff() }
+else Column { OtherStuff(); movableItem() }
+// Item retains internal state across layout change</code></pre>
+      <h4>3. LazyColumn performance</h4>
+      <ul>
+        <li>Provide <code>key</code> for stable items.</li>
+        <li>Provide <code>contentType</code> to recycle by type.</li>
+        <li><code>rememberLazyListState</code> is cheap — scroll position survives rotation.</li>
+      </ul>
+      <h4>4. Shared Element Transitions (stable 2024)</h4>
+      <pre><code>SharedTransitionLayout {
+    AnimatedContent(targetState = detailOpen) { open -&gt;
+        if (!open) ListScreen(onClick = { /* set open */ },
+            Modifier.sharedElement(rememberSharedContentState("thumb"), this))
+        else DetailScreen(
+            Modifier.sharedElement(rememberSharedContentState("thumb"), this))
+    }
+}</code></pre>
+      <h4>5. Compose Multiplatform parity</h4>
+      <p>As of 2025, iOS target is stable. Same Composable on Android + iOS + Desktop + Web (Wasm). Text, input, accessibility all work.</p>
+      <h4>Other 2026-current things to know</h4>
+      <ul>
+        <li><strong>SaveableStateHolder</strong> for nav preserving state.</li>
+        <li><strong>PullToRefreshBox</strong> — Material 3 built-in.</li>
+        <li><strong>BasicTextField2</strong> (now <code>BasicTextField</code>) — replaces legacy, fixes IME issues.</li>
+        <li><strong>HorizontalPager / VerticalPager</strong> — stable, ViewPager2 replacement.</li>
+        <li><strong>Adaptive Material 3</strong> components for nav.</li>
+      </ul>
+      <div class="gotcha"><strong>Keep Compose BOM pinned:</strong> <code>implementation(platform(libs.androidx.compose.bom))</code>. Mixing Compose artifact versions causes subtle bugs. BOM keeps them aligned.</div>
+    `
+  },
+  {
+    phase: 7,
+    difficulty: 'med',
+    q: "KSP vs KAPT — why does everyone say switch?",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "KAPT generates Java stubs for every Kotlin class, then runs annotation processors on those stubs. That's slow. KSP (Kotlin Symbol Processing) reads Kotlin directly and runs processors against it. 2x build speed improvement is common."</div>
+      <h4>Migration status of major processors (as of 2026)</h4>
+      <ul>
+        <li>Hilt — KSP stable since 2024.</li>
+        <li>Room — KSP stable.</li>
+        <li>Moshi — KSP stable.</li>
+        <li>Dagger — KSP stable.</li>
+        <li>Glide / some older libs — may still need KAPT.</li>
+      </ul>
+      <h4>Migration (simple cases)</h4>
+      <pre><code>// before
+kapt("com.google.dagger:hilt-compiler:$hiltVersion")
+// after
+ksp("com.google.dagger:hilt-compiler:$hiltVersion")</code></pre>
+      <p>Plus apply the KSP plugin: <code>id("com.google.devtools.ksp")</code>.</p>
+      <h4>What KSP isn't</h4>
+      <ul>
+        <li>It's not a bytecode-level hook (no ASM). You generate new Kotlin/Java source.</li>
+        <li>Some old APT features (AutoValue) don't have KSP equivalents — may need to stay on KAPT for those.</li>
+      </ul>
+      <h4>Measurable impact</h4>
+      <p>On a 30-module app, we saw clean build go from 4m20s to 2m40s after full KSP migration. Incremental builds improved ~30%.</p>
+      <div class="gotcha"><strong>Can mix KSP + KAPT</strong> if you have one stubborn library. Keep KAPT only for that module. Don't go all-or-nothing and miss the perf win.</div>
+    `
+  },
+  {
+    phase: 7,
+    difficulty: 'hard',
+    q: "NFC authentication — explain HCE (Host Card Emulation) and how you'd build a contactless auth app.",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Android NFC has three modes — Reader, HCE, and P2P (deprecated). For contactless auth where the phone acts like a badge, HCE is the answer. The phone pretends to be a contactless smart card; the enterprise reader thinks it's a physical card."</div>
+      <h4>HCE service</h4>
+      <pre><code>class AuthHceService : HostApduService() {
+    override fun processCommandApdu(apdu: ByteArray, extras: Bundle?): ByteArray {
+        return when (classifyApdu(apdu)) {
+            SELECT_AID -&gt; okResponse()
+            GET_CHALLENGE -&gt; nonceResponse()
+            AUTHENTICATE -&gt; signChallenge(apdu)
+            else -&gt; errorResponse()
+        }
+    }
+}</code></pre>
+      <p>Manifest registers an AID (Application Identifier) — the reader addresses my service by AID. Multiple AIDs per service supported.</p>
+      <h4>The auth flow</h4>
+      <ol>
+        <li><strong>Enrollment</strong> — app generates a keypair, private key stored in <strong>Android Keystore</strong> (hardware-backed on Pixel/Samsung), public key sent to backend.</li>
+        <li>User taps phone on reader at the door.</li>
+        <li>Reader sends GET_CHALLENGE → HCE returns a server-signed nonce.</li>
+        <li>Reader sends AUTHENTICATE → HCE signs the challenge with the Keystore key.</li>
+        <li>Reader validates signature via backend → opens door.</li>
+      </ol>
+      <h4>Security properties</h4>
+      <ul>
+        <li><strong>Private key never leaves the device</strong> — hardware-isolated on modern devices.</li>
+        <li><strong>Replay resistance</strong> — server nonces are single-use.</li>
+        <li><strong>Biometric gate</strong> — require <code>BiometricPrompt</code> to authorize the signing operation. Without biometric, a stolen unlocked phone is not enough.</li>
+        <li><strong>Revocation</strong> — backend keeps a revoked-keys list. Device loss = single DB update.</li>
+      </ul>
+      <h4>Gotchas</h4>
+      <ul>
+        <li>HCE only works when screen is on and unlocked (unless 'off-host' routing is configured by OS).</li>
+        <li>APDU processing has ~5 second timeout — offload heavy work to pre-computed state.</li>
+        <li>OEM quirks on Xiaomi/OPPO — test on actual devices, not just Pixel.</li>
+        <li>Background service is killed aggressively — HCE service has special OS privilege but still test on low-memory devices.</li>
+      </ul>
+      <div class="gotcha"><strong>Common misconception:</strong> HCE doesn't require NFC Secure Element access — that's a separate (locked-down) pipeline used by Google Pay for EMV payments. Regular apps can't touch SE, but HCE gives 95% of what most enterprise auth needs.</div>
+    `
+  },
+  {
+    phase: 7,
+    difficulty: 'med',
+    q: "Android TV / Firestick apps — what's different from phone app architecture?",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "TV apps use the same Android but the UX is fundamentally different — no touch, no portrait, no short-attention scrolling. The two biggest differences are focus-based navigation and '10-foot UI'. Let me walk through."</div>
+      <h4>UI framework</h4>
+      <p>Historically Leanback (<code>BrowseFragment</code>, <code>DetailsFragment</code>). Since 2024, <strong>Compose for TV</strong> (<code>androidx.tv.material3</code>) is the go-to — components designed around focus-first navigation. Use Compose for TV if you're starting fresh.</p>
+      <h4>Focus — the hardest thing</h4>
+      <p>On TV you don't tap — you move focus via D-pad. Every interactive element needs:</p>
+      <ul>
+        <li>Focusable with a clear focus highlight (scale transform, border, elevation).</li>
+        <li>Explicit focus preservation on content reloads — if a row refreshes, focus must not vanish.</li>
+        <li>Spatial nav hints — <code>nextFocusRight</code>/<code>Down</code> when default axis-aligned focus isn't right.</li>
+      </ul>
+      <p>One unfocusable button breaks the entire app UX. Test every interactive path with D-pad only.</p>
+      <h4>Input handling</h4>
+      <p>D-pad events come as <code>KeyEvent</code>. Intercept <code>KEYCODE_DPAD_*</code> and media keys (<code>KEYCODE_MEDIA_PLAY_PAUSE</code>, etc.). Some remotes have voice — goes through Google Assistant integration.</p>
+      <h4>Firestick specifics</h4>
+      <p>Firestick runs Fire OS (Amazon fork of Android). No Google Play, no Firebase, no Maps SDK — use Amazon equivalents. Apps distribute through Amazon Appstore. Deep links work but via Fire OS intent filters.</p>
+      <h4>Phone-to-TV remote via Wi-Fi</h4>
+      <p>I built this at Paras. Discovery via <strong>Network Service Discovery (NSD)</strong> — phone broadcasts mDNS query, TV responds with IP + port. Once paired, phone sends commands over TCP socket — tiny messages like 'KEY_UP', 'VOLUME_DOWN', 'VOICE: search term'. Latency target under 50ms or it doesn't feel like a real remote.</p>
+      <h4>Performance</h4>
+      <ul>
+        <li>TV chips are often weaker than mid-tier phones — optimize aggressively.</li>
+        <li>Long sessions — memory leaks compound fast. LeakCanary during dev.</li>
+        <li>4K poster art — always downsample to actual display size.</li>
+        <li>Landscape-only — no portrait orientation config.</li>
+      </ul>
+      <h4>Manifest must-have</h4>
+      <pre><code>&lt;intent-filter&gt;
+    &lt;action android:name="android.intent.action.MAIN" /&gt;
+    &lt;category android:name="android.intent.category.LEANBACK_LAUNCHER" /&gt;
+&lt;/intent-filter&gt;
+&lt;uses-feature android:name="android.software.leanback" android:required="true" /&gt;</code></pre>
+      <p>Without the LEANBACK_LAUNCHER category, your app doesn't show up on Android TV launchers. Easy miss.</p>
+      <div class="gotcha"><strong>Orientation trap:</strong> TV is landscape only. If your app has any <code>orientation="portrait"</code> anywhere, rotation will look broken. Set <code>landscape</code> explicitly or use <code>unspecified</code> with TV-specific layouts.</div>
+    `
+  },
+
+  // ============ PHASE 8: BEHAVIORAL + LEADERSHIP ============
+  {
+    phase: 8,
+    difficulty: 'med',
+    q: "Tell me about a time you disagreed with your tech lead or manager.",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "I disagree respectfully, with data. My goal is to find the best decision for the product, not to win. Let me walk through a specific example."</div>
+      <div class="star"><strong>S</strong>ituation — At Country Delight, my tech lead wanted to ship the new VIP pre-purchase screen using LiveData because the rest of the module used it. We were already on Compose + Flow for new features.</div>
+      <div class="star"><strong>T</strong>ask — I needed to align on architecture for a 3-week feature, knowing wrong choice meant 6 months of regret.</div>
+      <div class="star"><strong>A</strong>ction — I drafted a one-page comparison: migration cost, testability, team familiarity, Compose readiness. I booked a 30-min meeting — not to push my view, but to talk through tradeoffs. I admitted Compose-Flow had a learning curve for two team members.</div>
+      <div class="star"><strong>R</strong>esult — We agreed on a hybrid: new ViewModel state in StateFlow, but kept one LiveData bridge for legacy XML consumers. 3 weeks later, the new screen had 4× test coverage of older modules and the team was comfortable with Flow. My tech lead later used this pattern as a template for other migrations.</div>
+      <h4>What I'd signal through this answer</h4>
+      <ul>
+        <li>I back opinions with data, not "I think."</li>
+        <li>I can compromise on implementation while holding the line on direction.</li>
+        <li>I'm not a "my way or highway" engineer.</li>
+      </ul>
+      <div class="gotcha"><strong>Red flags to avoid:</strong> "My tech lead was wrong" / "I went around them." These signal you won't scale. Frame as collaborative problem-solving.</div>
+    `
+  },
+  {
+    phase: 8,
+    difficulty: 'med',
+    q: "Describe a bug that took you days to find. What did you learn?",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "One that stuck with me — a crash that only happened on Samsung devices running Android 10, and only after 30+ min of app use. Three days of hunting taught me a lot about systematic debugging."</div>
+      <div class="star"><strong>S</strong>ituation — Firebase Crashlytics showed a sudden uptick of <code>OutOfMemoryError</code> in our checkout flow, exclusively on Samsung Android 10 devices.</div>
+      <div class="star"><strong>T</strong>ask — Reproduce, root-cause, fix. Checkout revenue was bleeding.</div>
+      <div class="star"><strong>A</strong>ction —
+        <ol>
+          <li>I could NOT reproduce on my Pixel. Pulled the oldest Samsung from our device lab.</li>
+          <li>Systematic: Android Studio Profiler → heap dump → compared to Pixel heap.</li>
+          <li>Found 300+ <code>BitmapDrawable</code> instances rooted in our ImageView cache that Samsung's skin kept alive longer.</li>
+          <li>Actual bug: a <code>WeakReference</code> held by a static Map wasn't getting collected because Samsung's launcher kept the Activity task around. Classic context leak through a singleton cache.</li>
+          <li>Fix: moved cache to Application context + explicit eviction on low memory.</li>
+        </ol>
+      </div>
+      <div class="star"><strong>R</strong>esult — OOMs dropped 85% next release. Samsung-specific crash rate dropped too. I wrote a team doc on "singletons holding Activity context" that prevented 2 similar bugs later.</div>
+      <h4>What I learned</h4>
+      <ul>
+        <li>Don't assume the bug is in your code — OEMs skin Android heavily.</li>
+        <li>Heap dumps are underused. Learn the Profiler deeply.</li>
+        <li>"Can't reproduce on my device" is a hypothesis, not a closure.</li>
+        <li>Turn a painful bug into team-wide leverage (doc, lint rule).</li>
+      </ul>
+      <div class="gotcha"><strong>SDE-2 signal:</strong> Interviewers want to see methodical debugging + learning → prevention. Not "we found it eventually."</div>
+    `
+  },
+  {
+    phase: 8,
+    difficulty: 'med',
+    q: "Tell me about your biggest technical mistake.",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "I've made a few. The one I learned most from — shipping a background service without proper battery audit, and getting user complaints about phone drain."</div>
+      <div class="star"><strong>S</strong>ituation — I built a location-tracking feature for delivery slot accuracy. Used a Service with <code>PRIORITY_HIGH_ACCURACY</code> polling every 30s, 24×7.</div>
+      <div class="star"><strong>T</strong>ask — Should have validated battery impact end-to-end before release.</div>
+      <div class="star"><strong>A</strong>ction (what went wrong) — Shipped based on functional tests only. Within a week, playstore reviews: "app drains my battery." Internal dogfooding showed 4-7% extra drain per day — unacceptable.</div>
+      <div class="star"><strong>A</strong>ction (fix) —
+        <ol>
+          <li>Hotfix: switched to <code>PRIORITY_BALANCED</code> + geofence-triggered updates (zero poll, system wakes us).</li>
+          <li>Added Battery Historian profiling to our release checklist — every feature with background work must show a baseline comparison.</li>
+          <li>Wrote a team lint rule flagging <code>PRIORITY_HIGH_ACCURACY</code> without an explicit comment justifying it.</li>
+        </ol>
+      </div>
+      <div class="star"><strong>R</strong>esult — Battery drain dropped to &lt;0.5%. Location data quality actually IMPROVED because geofences are more stable than polling. Playstore rating recovered.</div>
+      <h4>What I learned</h4>
+      <ul>
+        <li>Non-functional requirements (battery, network, memory) are as real as functional ones.</li>
+        <li>"Works on my device" isn't QA.</li>
+        <li>Process fixes (checklist, lint) outlast single-bug fixes.</li>
+      </ul>
+      <div class="gotcha"><strong>Show real ownership:</strong> Don't describe a mistake that was "technically not my fault." Pick one where YOU made the call. Then show you changed as a result.</div>
+    `
+  },
+  {
+    phase: 8,
+    difficulty: 'med',
+    q: "How do you mentor juniors or do code reviews?",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Mentorship is how I scale beyond my own output. My approach — teach the 'why', not just the 'what.' For code reviews, I optimize for learning, not gate-keeping."</div>
+      <h4>1-on-1 mentorship</h4>
+      <ul>
+        <li>I set up a biweekly 30-min with junior teammates. Open agenda — their questions, not mine.</li>
+        <li>When they ask "how do I do X?" I ask back: "What have you tried? What's your hypothesis?" Build the muscle, don't hand the answer.</li>
+        <li>Pair programming for complex changes — I narrate my decision-making out loud. "I'd check the Flow builder docs before committing to conflate vs buffer."</li>
+      </ul>
+      <h4>Code review philosophy</h4>
+      <ol>
+        <li><strong>Separate opinion from requirement.</strong> "<strong>Nit:</strong> I'd rename this" vs "<strong>Block:</strong> this leaks the ViewModel context." Juniors can't tell which is which if you don't say.</li>
+        <li><strong>Ask, don't tell.</strong> "What's the behavior if this Flow emits twice in rapid succession?" — leads them to the bug.</li>
+        <li><strong>Praise good decisions.</strong> "This extracted helper made this readable — nice." Positive reviews aren't fluff; they teach pattern recognition.</li>
+        <li><strong>Approve with suggestions</strong> if blockers are small. Don't force another round trip for nits.</li>
+        <li><strong>Do it fast.</strong> A 4-hour turnaround beats a 3-day perfectionist review. PR rot blocks the team.</li>
+      </ol>
+      <h4>Real impact</h4>
+      <p>"At CD, I owned onboarding for two new engineers. I created a 'First week' doc with our architecture decisions and the top 10 review comments I give. Their first PRs were cleaner than my own first PRs 3 years prior."</p>
+      <div class="gotcha"><strong>Red flag:</strong> "I rewrite their code myself." That's not mentorship; it's skipping the hard work. Push back, explain, let them fix it.</div>
+    `
+  },
+  {
+    phase: 8,
+    difficulty: 'med',
+    q: "Describe a system you owned end-to-end.",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "At Country Delight, I owned the VIP membership pre-purchase experience — end-to-end from API contract to release to post-launch metrics. This is the kind of ownership SDE-2 is defined by."</div>
+      <div class="star"><strong>S</strong>ituation — Business wanted to revamp VIP pre-purchase to increase conversion. Existing screens were old XML, mixed state, no A/B test framework.</div>
+      <div class="star"><strong>T</strong>ask — Design, build, ship, measure. Four weeks. Mobile team of 2 (one Android, one iOS).</div>
+      <div class="star"><strong>A</strong>ction —
+        <ol>
+          <li><strong>Spec</strong> — wrote a 2-page tech spec: API changes needed, module boundary (new <code>:feature:vip</code>), Compose-first, A/B via existing feature flag system.</li>
+          <li><strong>API alignment</strong> — worked with backend in 3 meetings to land the response contract. Pushed back on a chatty design — 1 call per section was wasteful; collapsed to 1 call with the whole page model.</li>
+          <li><strong>Build</strong> — Compose screens, MVI state machine, offline cached via Room. Wrote unit + UI tests as I went (not after).</li>
+          <li><strong>Rollout</strong> — 5% → 25% → 50% → 100% over 2 weeks. Shipped behind a flag so I could kill it instantly if metrics regressed.</li>
+          <li><strong>Measure</strong> — hooked into our analytics. Daily dashboard of conversion, latency, crash rate.</li>
+        </ol>
+      </div>
+      <div class="star"><strong>R</strong>esult — Conversion increased 14% vs control. Launch was crash-free. Screen load time cut from 1.8s to 700ms due to the API consolidation. I ran the postmortem retrospective and shared lessons across Android pod.</div>
+      <h4>What 'ownership' means at SDE-2</h4>
+      <ul>
+        <li>You drove the API shape, not just consumed it.</li>
+        <li>You designed rollout + rollback, not just "merged to main."</li>
+        <li>You measured outcomes, not just wrote code.</li>
+        <li>You shared learnings beyond your feature.</li>
+      </ul>
+      <div class="gotcha"><strong>Senior vs junior pattern:</strong> Junior answer stops at "I built the screen." SDE-2 answer includes API, rollout, metrics, postmortem. Show the full arc.</div>
+    `
+  },
+  {
+    phase: 8,
+    difficulty: 'med',
+    q: "How do you prioritize tech debt vs feature work?",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Tech debt isn't the opposite of features — it's the cost of future features. I evaluate debt on two axes: blast radius (how many features does it slow?) and urgency (will it get worse?). Then I negotiate capacity."</div>
+      <h4>My framework</h4>
+      <table style="width:100%; font-size:13px; border-collapse: collapse; margin: 8px 0;">
+        <tr style="border-bottom:1px solid var(--border)"><th style="padding:6px;text-align:left;">Type</th><th style="padding:6px;text-align:left;">When to pay it</th></tr>
+        <tr><td style="padding:6px;">Blocking (breaks feature work)</td><td>Now. Non-negotiable.</td></tr>
+        <tr><td style="padding:6px;">Decaying (gets worse fast)</td><td>Next sprint. Set a deadline.</td></tr>
+        <tr><td style="padding:6px;">Stable (annoying but not spreading)</td><td>Bundle with adjacent feature work.</td></tr>
+        <tr><td style="padding:6px;">Cosmetic (code style)</td><td>Only if you're already in the file.</td></tr>
+      </table>
+      <h4>How I negotiate with PM/EM</h4>
+      <ol>
+        <li>Quantify. "Test suite takes 12 min per PR × 40 PRs a week = 8 hours engineering time weekly. A 1-week refactor gets us to 4 min."</li>
+        <li>Attach to business metrics where possible. "Cart screen's state soup caused 3 bugs last quarter — refactor saves ~2 weeks of future firefighting."</li>
+        <li>Offer options. "I can do this in Sprint X (blocks nothing) OR combine with the upcoming payments feature (adds 20% time but cleans as we go)."</li>
+      </ol>
+      <h4>The "20% tax" rule</h4>
+      <p>On my team we reserved ~20% of every sprint for tech debt / refactors / infra. Not a slush fund — tracked in the same backlog. Prevents big-bang rewrites by paying down continuously.</p>
+      <h4>Real example</h4>
+      <p>"Our networking module had 6 interceptors with overlapping logic. Instead of a rewrite sprint (impossible sell), I did it over 3 features — each one migrated one interceptor. Took longer calendar-wise, zero blocked feature work, no rollback risk."</p>
+      <div class="gotcha"><strong>Wrong answer:</strong> "I always push for refactors" (naive) or "I never touch debt" (incompetent). The art is in picking which debt, when, and how to sell it.</div>
+    `
+  },
+  {
+    phase: 8,
+    difficulty: 'med',
+    q: "Tell me about a time you pushed back on a product requirement.",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "I push back when the cost-benefit isn't right — either technically infeasible, harmful to UX, or disproportionately expensive for the value. I pushed back twice last year; here's the one with biggest impact."</div>
+      <div class="star"><strong>S</strong>ituation — PM wanted a 'featured products' carousel on the home screen that auto-rotated every 3 seconds with animated transitions.</div>
+      <div class="star"><strong>T</strong>ask — Ship it in a 2-week sprint.</div>
+      <div class="star"><strong>A</strong>ction — I pushed back with three concerns:
+        <ol>
+          <li><strong>Accessibility</strong> — auto-rotating carousels fail WCAG guidelines for motion. A meaningful % of our users use TalkBack.</li>
+          <li><strong>Scroll recomposition</strong> — a Compose animator on home screen would trigger rerenders every 3s, hurting scroll performance.</li>
+          <li><strong>Analytics data</strong> — team's own data showed users scrolled past home in 2s. Auto-rotate = users never see slide 2.</li>
+        </ol>
+        I proposed alternative: tappable static carousel, user-controlled navigation, visible "2 of 5" indicator. Same business goal, better UX.
+      </div>
+      <div class="star"><strong>R</strong>esult — PM agreed. Static carousel shipped in 1 week (half the estimate). CTR was actually higher than a dogfooded auto-rotate prototype. Accessibility audit passed.</div>
+      <h4>How I push back productively</h4>
+      <ul>
+        <li>Start with <strong>"yes, and..."</strong>, not "no, because."</li>
+        <li>Bring <strong>alternatives</strong>, not just objections.</li>
+        <li>Use <strong>data</strong> — their own analytics ideally.</li>
+        <li>Frame it as a <strong>shared goal</strong> — "We both want conversion up."</li>
+      </ul>
+      <div class="gotcha"><strong>Red flag:</strong> "PM doesn't understand tech." That's arrogant and wrong — PMs understand users better than you. Find the intersection.</div>
+    `
+  },
+  {
+    phase: 8,
+    difficulty: 'med',
+    q: "Tell me about a time you led without authority.",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Leading without authority is daily at SDE-2 — you're not the EM, but you're expected to set technical direction. My story is how I drove our Compose migration without being the lead."</div>
+      <div class="star"><strong>S</strong>ituation — 40% of our Android code was XML with legacy View patterns. Team acknowledged Compose migration was needed but no one owned it.</div>
+      <div class="star"><strong>T</strong>ask — Self-assigned: drive the migration without being asked.</div>
+      <div class="star"><strong>A</strong>ction —
+        <ol>
+          <li><strong>Built a strawman</strong> — migrated one mid-size screen to Compose over a weekend. Measurable: 40% less code, 2× tests.</li>
+          <li><strong>Socialized, didn't mandate</strong> — shared the PR in team channel, ran a 20-min demo. Asked for input.</li>
+          <li><strong>Wrote a migration playbook</strong> — "how to migrate a Fragment-based screen in 4 steps." Made it safe to try.</li>
+          <li><strong>Offered pairing</strong> — for the first 3 teammates' first migration.</li>
+          <li><strong>Measured</strong> — tracked % migrated monthly, shared with EM as a success metric.</li>
+        </ol>
+      </div>
+      <div class="star"><strong>R</strong>esult — 6 months later, 70% of new screens were Compose. Team's crash rate dropped (fewer View-lifecycle bugs). EM formalized me as the migration lead post-fact. I didn't wait for the title.</div>
+      <h4>Lessons</h4>
+      <ul>
+        <li>Show, don't tell. Prototype first.</li>
+        <li>Make it easy for others to join, not a mandate.</li>
+        <li>Track and celebrate — momentum matters.</li>
+      </ul>
+      <div class="gotcha"><strong>Signals at SDE-2:</strong> "I see problems and drive fixes without being told." Avoid "I asked my manager what to do." That's SDE-1 behavior.</div>
+    `
+  },
+  {
+    phase: 8,
+    difficulty: 'med',
+    q: "Why are you leaving your current job? / Why this company?",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Honestly — I've grown a lot at my current place, and I've hit the ceiling of what I can learn here. I'm looking for [specific thing] that your team offers, not running from anything."</div>
+      <h4>Structure — 3 parts</h4>
+      <ol>
+        <li><strong>What I've gained</strong> — credit where due. "At CD I shipped X, owned Y, learned Z."</li>
+        <li><strong>What I'm looking for</strong> — concrete, forward-looking. "Larger-scale systems / deeper technical challenges / modern Android stack / multi-platform experience."</li>
+        <li><strong>Why THIS company, specifically</strong> — do your homework. Reference their tech blog, their OSS, their scale.</li>
+      </ol>
+      <h4>Example (if interviewing at Google)</h4>
+      <p>"At CD I built a 20M-user delivery app, loved the consumer mobile craft. But I'm curious about scale problems I can't see here — billion-user search queries, multi-region replication, on-device ML at scale. Your Compose and AndroidX teams are where that work happens. I'd rather be a contributor to the platform than a consumer of it."</p>
+      <h4>What NOT to say</h4>
+      <ul>
+        <li>"My manager is toxic." (Even if true, unprofessional and unverifiable.)</li>
+        <li>"Better pay." (Fine privately; not your lead answer.)</li>
+        <li>"More flexibility." (Sounds lazy.)</li>
+        <li>"I'm bored." (Reads as low initiative — couldn't YOU make it interesting?)</li>
+      </ul>
+      <h4>If you were laid off / let go</h4>
+      <p>Be matter-of-fact: "Company restructured the Android team. I'm using the time to interview deliberately rather than jumping at the first offer." Don't overexplain.</p>
+      <div class="gotcha"><strong>Specificity test:</strong> If your "Why this company" answer could be copy-pasted to any company, it's too generic. Name a team, product, tech decision, engineer, or blog post.</div>
+    `
+  },
+  {
+    phase: 8,
+    difficulty: 'easy',
+    q: "What questions should I ask my interviewer at the end?",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Always ask questions. Interviewers judge you on what you ASK too — it signals what you care about. Prepare 3-5 so you have one for each loop."</div>
+      <h4>Great questions (SDE-2 level)</h4>
+      <ul>
+        <li>"What's the biggest technical challenge this team is facing right now?"</li>
+        <li>"How are big technical decisions made here — EM, staff+, team consensus?"</li>
+        <li>"What would a successful first 6 months look like for someone in this role?"</li>
+        <li>"How do code reviews work — are they a bottleneck?"</li>
+        <li>"What's the cadence of releases? How do you handle rollback?"</li>
+        <li>"What's the team's approach to tech debt vs feature velocity?"</li>
+        <li>"What's one thing you wish was different about working here?" (reveals real culture)</li>
+      </ul>
+      <h4>To the EM / hiring manager</h4>
+      <ul>
+        <li>"How do you evaluate SDE-2 vs senior here — what's the bar for promotion?"</li>
+        <li>"How does your team split between platform work and feature work?"</li>
+        <li>"What's your management philosophy?"</li>
+      </ul>
+      <h4>To a senior/staff engineer</h4>
+      <ul>
+        <li>"Walk me through a recent architecture decision you wrestled with."</li>
+        <li>"What's broken in the codebase that you'd fix if given a quarter?"</li>
+        <li>"How's the on-call rotation?"</li>
+      </ul>
+      <h4>Questions to avoid</h4>
+      <ul>
+        <li>"What does the company do?" — Should already know.</li>
+        <li>"How much vacation do I get?" — Wait for offer stage.</li>
+        <li>"Is this role hybrid/remote?" — Check job description first, ask recruiter.</li>
+      </ul>
+      <div class="gotcha"><strong>Listen to the answer:</strong> Don't just read your list. Their answer should spark a follow-up. It's a conversation.</div>
+    `
+  },
+  {
+    phase: 8,
+    difficulty: 'hard',
+    q: "Your resume says 10M+ installs and 4.7 rating. What did YOU specifically contribute to those numbers?",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Fair challenge — those are the app's numbers, not mine personally. Let me be precise about where my contribution starts and ends."</div>
+      <h4>The honest framing</h4>
+      <p>"The 10M installs and 4.7 rating are the product's numbers — reflecting years of team effort before I joined and parallel work across Android, iOS, backend, and product. What I can speak to is my direct contribution since I joined — specifically the VIP, product, and ordering modules."</p>
+      <h4>My measurable contributions</h4>
+      <ul>
+        <li>Owned the VIP/Subscription module end-to-end — design, build, rollout, metrics. Walked through architecture earlier.</li>
+        <li>Cut product list recomposition by ~60% after Compose tuning — jank reports on that screen dropped.</li>
+        <li>Optimized order history query — p75 from ~500ms to &lt;50ms via index + projection.</li>
+        <li>Kept crash-free rate on my modules above 99.5% release-over-release.</li>
+      </ul>
+      <h4>Indirect contribution</h4>
+      <ul>
+        <li>PR reviews that compound — catching patterns before they spread.</li>
+        <li>Mentoring juniors — their velocity rises, which lifts team velocity.</li>
+        <li>Testing culture — unit + UI coverage grew on modules I touched.</li>
+      </ul>
+      <h4>What I'm NOT claiming</h4>
+      <p>"I didn't build the app from scratch. I didn't lead Android for the whole company. The 4.7 rating is a multi-year team achievement. I contributed significantly to specific modules — and I'm proud of that scope without inflating it."</p>
+      <div class="gotcha"><strong>This is the #1 resume trap at senior rounds.</strong> Candidates who claim company-wide numbers lose credibility. Candidates who say "my module" / "my feature" / "I owned" gain it. Always specify YOUR contribution, never the app's.</div>
+    `
+  },
+  {
+    phase: 8,
+    difficulty: 'hard',
+    q: "You claim 'sub-second response times' on your resume. Walk me through exactly how you measured that.",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Good question. 'Sub-second' is how I talk about it informally — let me be specific about what I measured, with what tools, and what the number actually was."</div>
+      <h4>What I instrumented</h4>
+      <p>Firebase Performance Monitoring with custom traces around key operations:</p>
+      <ul>
+        <li><code>ProductList_firstFrame</code> — from tap on Products tab to first product visible.</li>
+        <li><code>Checkout_open</code> — from cart tap to first frame of checkout screen.</li>
+        <li><code>Cart_add</code> — from add button tap to cart count update visible.</li>
+      </ul>
+      <p>Firebase reports p50 and p90 out of the box. JankStats library logs any frames that miss the 16ms budget.</p>
+      <h4>Actual ranges</h4>
+      <p>"For product list first-frame, p50 was in the 300ms range, p90 ~800ms. For checkout open, p50 ~500ms, p90 ~1.1s. So 'sub-second' is accurate for p50 on primary flows, but the p90 tail runs a bit over on slow devices / poor networks — I'd call that out honestly rather than hide it."</p>
+      <h4>Instrumentation code</h4>
+      <pre><code>val trace = FirebasePerformance.getInstance().newTrace("ProductList_firstFrame")
+trace.start()
+// navigate; on first frame:
+trace.stop()</code></pre>
+      <h4>Supporting perf work</h4>
+      <ul>
+        <li>Baseline Profile covering cold-start and the critical screen paths.</li>
+        <li>Room query audits (<code>EXPLAIN QUERY PLAN</code>) for anything over 50ms.</li>
+        <li>Compose Compiler Reports to find unstable composables.</li>
+        <li>Macrobenchmark tests gated on CI so regressions are caught before release.</li>
+      </ul>
+      <div class="gotcha"><strong>If they push for exact numbers you don't remember:</strong> "I don't have the exact figure in front of me — I'd pull from our Firebase Performance dashboard. Directionally, p50 was well under a second on the primary flows." Always better than inventing.</div>
+    `
+  },
+  {
+    phase: 8,
+    difficulty: 'med',
+    q: "What's your biggest technical weakness?",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Honestly — backend systems at scale. I've been deep in mobile for 4+ years. I understand API contracts, I can design client/server protocols, but I haven't personally shipped server infrastructure — no distributed systems, no k8s, no database-at-scale work."</div>
+      <h4>Why it matters at senior level</h4>
+      <p>"At senior/staff level at big companies, the bar is you can reason beyond mobile — especially in cross-functional design discussions. If a backend engineer proposes a design that'll bite us on mobile (chatty API, no pagination, no idempotency), I want to push back with backend depth, not just mobile concerns."</p>
+      <h4>How I'm actively closing it</h4>
+      <ul>
+        <li>Reading 'Designing Data-Intensive Applications' — about 60% through.</li>
+        <li>Pairing with backend engineers on API design at CD — I contribute meaningfully to contracts now.</li>
+        <li>Built a small Ktor server side-project with auth, rate limiting, persistence — to feel the other side.</li>
+        <li>System design prep — I can design distributed systems at the whiteboard level, but I'd want production experience before claiming it.</li>
+      </ul>
+      <h4>Second honest weakness if they push</h4>
+      <p>"I've done mentorship informally, close-proximity. Cross-team influence in a 100+ engineer org is something I'm looking forward to learning. I've influenced a 15-person team; scaling that skill to larger orgs is my growth edge."</p>
+      <div class="gotcha"><strong>Don't give a fake weakness</strong> ('I work too hard', 'I care too much'). Interviewers mark you down — it reads as lack of self-awareness. A real weakness + concrete plan to close it is the strongest signal of senior judgment.</div>
+    `
+  }
+];
+
+const p7 = document.getElementById('phase7-container');
+const p8 = document.getElementById('phase8-container');
+
+function render() {
+  p7.innerHTML = ''; p8.innerHTML = '';
+  let c7 = 0, c8 = 0;
+  questions.forEach((item, idx) => {
+    const done = getDone(idx);
+    const diffLabel = item.difficulty === 'hard' ? 'Hard' : item.difficulty === 'med' ? 'Medium' : 'Easy';
+    const diffClass = item.difficulty === 'hard' ? 'tag-hard' : item.difficulty === 'med' ? 'tag-med' : 'tag-easy';
+    if (item.phase === 7) c7++; else c8++;
+    const qNum = item.phase === 7 ? c7 : c8;
+
+    const card = document.createElement('div');
+    card.className = 'question-card' + (done ? ' done' : '');
+    card.innerHTML = `
+      <div class="question-header">
+        <div class="question-number">Q${qNum}</div>
+        <div class="question-text">${item.q}<span class="tag ${diffClass}">${diffLabel}</span></div>
+        <div class="actions">
+          <button class="btn btn-view" data-idx="${idx}">View Answer</button>
+          <button class="btn btn-done ${done ? 'active' : ''}" data-done="${idx}">${done ? '✓ Done' : 'Mark Done'}</button>
+        </div>
+      </div>
+      <div class="answer" id="answer-${idx}">${item.a}</div>
+    `;
+    (item.phase === 7 ? p7 : p8).appendChild(card);
+  });
+
+  document.querySelectorAll('[data-idx]').forEach(btn => {
+    btn.onclick = (e) => {
+      const idx = e.target.dataset.idx;
+      const ans = document.getElementById('answer-' + idx);
+      const open = ans.classList.toggle('open');
+      e.target.textContent = open ? 'Hide Answer' : 'View Answer';
+    };
+  });
+  document.querySelectorAll('[data-done]').forEach(btn => {
+    btn.onclick = (e) => {
+      const idx = parseInt(e.target.dataset.done);
+      toggleDone(idx); render();
+    };
+  });
+  updateProgress();
+}
+function getDone(idx) {
+  const list = JSON.parse(localStorage.getItem('prep_done_p7p8') || '[]');
+  return list.includes(idx);
+}
+function toggleDone(idx) {
+  let list = JSON.parse(localStorage.getItem('prep_done_p7p8') || '[]');
+  if (list.includes(idx)) list = list.filter(i => i !== idx); else list.push(idx);
+  localStorage.setItem('prep_done_p7p8', JSON.stringify(list));
+}
+function updateProgress() {
+  const list = JSON.parse(localStorage.getItem('prep_done_p7p8') || '[]');
+  const total = questions.length, done = list.length;
+  const pct = total ? (done / total * 100) : 0;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = `${done} of ${total} completed (${Math.round(pct)}%)`;
+}
+function resetProgress() {
+  if (confirm('Reset all progress?')) { localStorage.removeItem('prep_done_p7p8'); render(); }
+}
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,1512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SDE-2 Android Interview Prep · Phase 5 & 6</title>
+<style>
+  :root {
+    --bg: #0b0f17;
+    --card: #121826;
+    --card-hover: #1a2236;
+    --border: #232b3d;
+    --text: #e6edf7;
+    --text-dim: #8a94a7;
+    --accent: #6ea8fe;
+    --accent-hover: #90bcff;
+    --success: #3fb950;
+    --success-bg: #0f2a1a;
+    --warn: #f0b429;
+    --code-bg: #0a0e15;
+    --phase5: #9ef07a;
+    --phase6: #ffd166;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg); color: var(--text); line-height: 1.6;
+    padding: 24px 16px 80px;
+  }
+  .container { max-width: 960px; margin: 0 auto; }
+  header {
+    text-align: center; margin-bottom: 32px;
+    padding-bottom: 24px; border-bottom: 1px solid var(--border);
+  }
+  header h1 {
+    font-size: 28px; font-weight: 700; margin-bottom: 8px;
+    background: linear-gradient(135deg, var(--phase5), var(--phase6));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  header p { color: var(--text-dim); font-size: 14px; }
+  .progress-bar {
+    margin-top: 16px; background: var(--card); border-radius: 999px;
+    height: 8px; overflow: hidden; border: 1px solid var(--border);
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--phase5), var(--phase6));
+    width: 0%; transition: width 0.4s ease;
+  }
+  .progress-text { margin-top: 8px; font-size: 13px; color: var(--text-dim); }
+  .phase-header {
+    margin: 40px 0 20px; padding: 16px 20px;
+    background: var(--card); border-left: 4px solid var(--phase5); border-radius: 8px;
+  }
+  .phase-header.phase-6 { border-left-color: var(--phase6); }
+  .phase-header h2 { font-size: 20px; margin-bottom: 4px; }
+  .phase-header p { color: var(--text-dim); font-size: 13px; }
+  .question-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 10px; margin-bottom: 12px; overflow: hidden; transition: all 0.2s ease;
+  }
+  .question-card:hover { border-color: var(--accent); }
+  .question-card.done { background: var(--success-bg); border-color: var(--success); opacity: 0.75; }
+  .question-card.done .question-text { text-decoration: line-through; color: var(--text-dim); }
+  .question-header { display: flex; align-items: flex-start; gap: 12px; padding: 16px 20px; }
+  .question-number {
+    background: var(--bg); color: var(--accent); font-weight: 600; font-size: 13px;
+    padding: 4px 10px; border-radius: 6px; border: 1px solid var(--border);
+    flex-shrink: 0; min-width: 48px; text-align: center;
+  }
+  .question-text { flex: 1; font-size: 15px; font-weight: 500; padding-top: 2px; }
+  .tag {
+    display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 4px;
+    margin-left: 6px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .tag-hard { background: rgba(248, 81, 73, 0.15); color: #f85149; }
+  .tag-med { background: rgba(240, 180, 41, 0.15); color: var(--warn); }
+  .tag-easy { background: rgba(63, 185, 80, 0.15); color: var(--success); }
+  .actions { display: flex; gap: 8px; flex-shrink: 0; }
+  .btn {
+    background: var(--bg); color: var(--text); border: 1px solid var(--border);
+    padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px;
+    font-weight: 500; transition: all 0.15s ease; white-space: nowrap;
+  }
+  .btn:hover { background: var(--card-hover); border-color: var(--accent); }
+  .btn-view { color: var(--accent); }
+  .btn-done { color: var(--success); }
+  .btn-done.active { background: var(--success); color: white; border-color: var(--success); }
+  .answer {
+    display: none; padding: 0 20px 20px 20px;
+    border-top: 1px solid var(--border); margin-top: 4px; padding-top: 16px; color: var(--text);
+  }
+  .answer.open { display: block; }
+  .answer .opener {
+    background: rgba(110, 168, 254, 0.08); border-left: 3px solid var(--accent);
+    padding: 10px 14px; margin-bottom: 14px; border-radius: 4px; font-size: 14px; font-style: italic;
+  }
+  .answer .opener strong { color: var(--accent); font-style: normal; }
+  .answer h4 { color: var(--accent); font-size: 14px; margin: 16px 0 6px; font-weight: 600; }
+  .answer p { margin-bottom: 10px; font-size: 14px; }
+  .answer ul, .answer ol { margin: 8px 0 12px 20px; font-size: 14px; }
+  .answer li { margin-bottom: 5px; }
+  .answer code {
+    background: var(--code-bg); padding: 2px 6px; border-radius: 4px;
+    font-family: 'SF Mono', Monaco, Consolas, monospace; font-size: 13px; color: #ffa657;
+  }
+  .answer pre {
+    background: var(--code-bg); padding: 12px 14px; border-radius: 6px;
+    overflow-x: auto; margin: 10px 0; border: 1px solid var(--border);
+  }
+  .answer pre code { background: none; padding: 0; color: var(--text); font-size: 13px; line-height: 1.5; }
+  .answer strong { color: var(--accent-hover); }
+  .gotcha {
+    background: rgba(240, 180, 41, 0.08); border-left: 3px solid var(--warn);
+    padding: 10px 14px; margin: 12px 0; border-radius: 4px; font-size: 13px;
+  }
+  .gotcha strong { color: var(--warn); }
+  .reset-btn {
+    position: fixed; bottom: 20px; right: 20px; background: var(--card);
+    border: 1px solid var(--border); color: var(--text-dim);
+    padding: 8px 14px; border-radius: 999px; cursor: pointer; font-size: 12px;
+  }
+  .reset-btn:hover { color: var(--text); }
+  @media (max-width: 600px) {
+    .question-header { flex-wrap: wrap; }
+    .actions { width: 100%; justify-content: flex-end; margin-top: 8px; }
+    header h1 { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>SDE-2 Android Interview Prep</h1>
+    <p>Phase 5 & 6 · DSA + Mobile System Design & LLD · 2026 market standards</p>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-text" id="progressText">0 of 0 completed</div>
+  </header>
+
+  <div class="phase-header">
+    <h2 id="phase-5">Phase 5 · Data Structures & Algorithms</h2>
+    <p>Patterns that actually show up in FAANG + Indian unicorn rounds (Meta, Google, Amazon, Swiggy, Flipkart, CRED, PhonePe). Focus on talking through your thinking, not memorizing solutions.</p>
+  </div>
+  <div id="phase5-container"></div>
+
+  <div class="phase-header phase-6">
+    <h2 id="phase-6">Phase 6 · Mobile System Design & LLD</h2>
+    <p>Mobile system design is THE differentiator between SDE-1 and SDE-2 at product companies. Offline-first, sync, modularization, battery, and object-oriented design.</p>
+  </div>
+  <div id="phase6-container"></div>
+</div>
+
+<button class="reset-btn" onclick="resetProgress()">↻ Reset Progress</button>
+
+<script>
+const questions = [
+  // ============ PHASE 5: DSA ============
+  {
+    phase: 5,
+    difficulty: 'easy',
+    q: "How do you approach a DSA question in an interview? Walk me through your framework.",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "I treat a DSA question as a conversation, not a race. I want to show the interviewer how I think — clarify, design, analyze, then code. Jumping straight to code is the #1 mistake."</div>
+      <h4>My 5-step framework</h4>
+      <ol>
+        <li><strong>Clarify</strong> — Restate the problem. Ask about input ranges, edge cases (empty, negative, duplicates), output format. "Can the array be empty? Are values unique? What should I return if there's no answer?"</li>
+        <li><strong>Example</strong> — Walk through 1-2 concrete inputs by hand. This catches misunderstandings early.</li>
+        <li><strong>Brute force first</strong> — State the naive O(n²) or O(n³) solution with Big-O. Shows you understand the problem. Never skip this.</li>
+        <li><strong>Optimize</strong> — "What's repeated work? Can a hashmap / sorting / two pointers / DP remove it?" State new Big-O and why it works.</li>
+        <li><strong>Code + test</strong> — Write clean code. Dry-run it with an example. Talk through edge cases.</li>
+      </ol>
+      <h4>What interviewers grade you on</h4>
+      <ul>
+        <li><strong>Communication (40%)</strong> — Thinking out loud, taking hints.</li>
+        <li><strong>Problem solving (30%)</strong> — Finding the optimal approach.</li>
+        <li><strong>Coding (20%)</strong> — Clean, correct code.</li>
+        <li><strong>Testing (10%)</strong> — Catching your own bugs.</li>
+      </ul>
+      <div class="gotcha"><strong>Big mistake:</strong> Silence. If you go quiet for 2 minutes, the interviewer thinks you're stuck. Narrate: "I'm thinking whether a heap or a sort would be cheaper here..."</div>
+    `
+  },
+  {
+    phase: 5,
+    difficulty: 'easy',
+    q: "Solve Two Sum. Walk through your thought process from brute force to optimal.",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Two Sum is the classic hashmap problem. Given an array and a target, return indices of two numbers that sum to the target. I'll start brute force, then show the optimization."</div>
+      <h4>Brute force — O(n²)</h4>
+      <pre><code>fun twoSum(nums: IntArray, target: Int): IntArray {
+    for (i in nums.indices)
+        for (j in i+1 until nums.size)
+            if (nums[i] + nums[j] == target) return intArrayOf(i, j)
+    return intArrayOf()
+}</code></pre>
+      <p>"Works, but we're re-scanning the array for every element. The repeated work is: for each <code>i</code>, we're asking 'does <code>target - nums[i]</code> exist later?'"</p>
+      <h4>Optimal — O(n) with a HashMap</h4>
+      <pre><code>fun twoSum(nums: IntArray, target: Int): IntArray {
+    val seen = HashMap&lt;Int, Int&gt;()  // value -&gt; index
+    for (i in nums.indices) {
+        val need = target - nums[i]
+        if (seen.containsKey(need)) return intArrayOf(seen[need]!!, i)
+        seen[nums[i]] = i
+    }
+    return intArrayOf()
+}</code></pre>
+      <h4>Why this works</h4>
+      <p>We trade O(n) memory for O(n) time. Each lookup is O(1) average. The invariant: "by the time I'm at index i, every value before i is in the map."</p>
+      <div class="gotcha"><strong>Follow-ups they'll ask:</strong> (1) What if array is sorted? → two pointers, O(1) space. (2) 3Sum? → fix one, two-pointer the rest → O(n²). (3) What if there are duplicates? → still works because we return on first match.</div>
+    `
+  },
+  {
+    phase: 5,
+    difficulty: 'med',
+    q: "Explain the sliding window pattern. Solve 'Longest Substring Without Repeating Characters'.",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Sliding window is for contiguous sub-array/substring problems where brute force is O(n²). We maintain a window [L, R], expand R, and shrink L when a constraint breaks. Time drops to O(n)."</div>
+      <h4>The pattern</h4>
+      <ol>
+        <li>Two pointers <code>l</code> and <code>r</code>, both start at 0.</li>
+        <li>Expand <code>r</code> — add nums[r] to window state.</li>
+        <li>While window is invalid — shrink from <code>l</code>.</li>
+        <li>Record answer. Move on.</li>
+      </ol>
+      <h4>Longest substring without repeating chars — O(n)</h4>
+      <pre><code>fun lengthOfLongestSubstring(s: String): Int {
+    val seen = HashMap&lt;Char, Int&gt;()   // char -&gt; last index seen
+    var l = 0; var best = 0
+    for (r in s.indices) {
+        val c = s[r]
+        if (seen.containsKey(c) && seen[c]!! &gt;= l) {
+            l = seen[c]!! + 1          // jump left past the duplicate
+        }
+        seen[c] = r
+        best = maxOf(best, r - l + 1)
+    }
+    return best
+}</code></pre>
+      <h4>Other classic sliding window problems</h4>
+      <ul>
+        <li><strong>Minimum window substring</strong> — Hard. Track char frequency.</li>
+        <li><strong>Longest repeating char replacement</strong> — replace k chars, longest valid window.</li>
+        <li><strong>Max sum subarray of size k</strong> — fixed window.</li>
+        <li><strong>Fruit into baskets</strong> — at most 2 distinct.</li>
+      </ul>
+      <div class="gotcha"><strong>Fixed vs dynamic window:</strong> Fixed-size (k) — just slide. Dynamic — shrink while invalid. Recognizing which one is half the battle.</div>
+    `
+  },
+  {
+    phase: 5,
+    difficulty: 'med',
+    q: "Explain two pointers. Solve 3Sum.",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Two pointers work on sorted arrays (or palindromes). One pointer from each end converges to the answer. Classic examples: 2Sum on sorted array, 3Sum, container with most water, palindrome check."</div>
+      <h4>3Sum — find all triplets that sum to 0</h4>
+      <pre><code>fun threeSum(nums: IntArray): List&lt;List&lt;Int&gt;&gt; {
+    nums.sort()                             // O(n log n)
+    val res = mutableListOf&lt;List&lt;Int&gt;&gt;()
+    for (i in nums.indices) {
+        if (i &gt; 0 && nums[i] == nums[i-1]) continue   // skip dupes on i
+        var l = i + 1; var r = nums.size - 1
+        while (l &lt; r) {
+            val sum = nums[i] + nums[l] + nums[r]
+            when {
+                sum &lt; 0 -&gt; l++
+                sum &gt; 0 -&gt; r--
+                else -&gt; {
+                    res.add(listOf(nums[i], nums[l], nums[r]))
+                    while (l &lt; r && nums[l] == nums[l+1]) l++
+                    while (l &lt; r && nums[r] == nums[r-1]) r--
+                    l++; r--
+                }
+            }
+        }
+    }
+    return res
+}</code></pre>
+      <h4>Complexity</h4>
+      <p>O(n²). The sort is O(n log n), but the dominant part is n iterations of an n-time two-pointer scan.</p>
+      <h4>When two pointers fit</h4>
+      <ul>
+        <li>Array is sorted (or can be sorted).</li>
+        <li>You're looking for a pair (or triplet) matching some condition.</li>
+        <li>Palindrome/reverse problems.</li>
+      </ul>
+      <div class="gotcha"><strong>Dedup is where people lose points:</strong> Remember to skip duplicates on <code>i</code> AND after finding a triplet, skip dup <code>l</code> and <code>r</code>. Missing that gives duplicate triplets.</div>
+    `
+  },
+  {
+    phase: 5,
+    difficulty: 'med',
+    q: "Reverse a linked list. Show both iterative and recursive. When would you use each?",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Reversing a linked list is about re-pointing <code>next</code> pointers. Iterative is O(1) space; recursive is O(n) stack space. Iterative wins in production."</div>
+      <h4>Iterative — O(n) time, O(1) space</h4>
+      <pre><code>fun reverse(head: Node?): Node? {
+    var prev: Node? = null
+    var curr = head
+    while (curr != null) {
+        val next = curr.next
+        curr.next = prev
+        prev = curr
+        curr = next
+    }
+    return prev
+}</code></pre>
+      <h4>Recursive — O(n) time, O(n) stack</h4>
+      <pre><code>fun reverse(head: Node?): Node? {
+    if (head?.next == null) return head
+    val newHead = reverse(head.next)   // recurse
+    head.next!!.next = head            // 1 -&gt; 2 becomes 2 -&gt; 1
+    head.next = null
+    return newHead
+}</code></pre>
+      <h4>When recursive makes sense</h4>
+      <p>When you're only reversing <em>part</em> of the list (e.g., reverse-in-groups-of-k, reverse-between-m-and-n), the recursion naturally captures the structure. For full reversal, iterative.</p>
+      <div class="gotcha"><strong>Classic trap:</strong> Save <code>curr.next</code> BEFORE re-pointing <code>curr.next = prev</code>, or you'll lose the rest of the list.</div>
+    `
+  },
+  {
+    phase: 5,
+    difficulty: 'med',
+    q: "Detect a cycle in a linked list. Explain Floyd's algorithm (tortoise and hare).",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Two approaches: HashSet (O(n) space) or Floyd's two-pointer (O(1) space). Floyd's is the 'correct' answer in interviews."</div>
+      <h4>Floyd's algorithm</h4>
+      <pre><code>fun hasCycle(head: Node?): Boolean {
+    var slow = head; var fast = head
+    while (fast?.next != null) {
+        slow = slow!!.next
+        fast = fast.next!!.next
+        if (slow === fast) return true
+    }
+    return false
+}</code></pre>
+      <h4>Why it works</h4>
+      <p>If there's a cycle, the fast pointer (2 steps) laps the slow pointer (1 step) — they must meet inside the loop. If no cycle, fast hits null.</p>
+      <h4>Finding the cycle start (Floyd's full algorithm)</h4>
+      <ol>
+        <li>Detect meeting point with slow/fast.</li>
+        <li>Reset one pointer to head. Move both one step at a time.</li>
+        <li>They meet at the cycle start.</li>
+      </ol>
+      <p>Mathematically: distance from head to cycle-start == distance from meeting point to cycle-start (going through the cycle).</p>
+      <div class="gotcha"><strong>Null-check order:</strong> Check <code>fast?.next != null</code> BEFORE advancing fast by 2. Otherwise you NPE on odd-length non-cyclic lists.</div>
+    `
+  },
+  {
+    phase: 5,
+    difficulty: 'hard',
+    q: "Design and implement an LRU cache. (Asked at Google, Meta, Amazon.)",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "LRU cache needs O(1) get and O(1) put. That means HashMap (for lookup) + Doubly Linked List (for ordering). Every access moves the node to the head; evictions come from the tail."</div>
+      <h4>Implementation</h4>
+      <pre><code>class LRUCache(private val capacity: Int) {
+    private class Node(val k: Int, var v: Int, var prev: Node? = null, var next: Node? = null)
+
+    private val map = HashMap&lt;Int, Node&gt;()
+    private val head = Node(0, 0)     // dummy
+    private val tail = Node(0, 0)     // dummy
+
+    init { head.next = tail; tail.prev = head }
+
+    fun get(key: Int): Int {
+        val node = map[key] ?: return -1
+        moveToHead(node)
+        return node.v
+    }
+    fun put(key: Int, value: Int) {
+        map[key]?.let { it.v = value; moveToHead(it); return }
+        val node = Node(key, value)
+        map[key] = node
+        addToHead(node)
+        if (map.size &gt; capacity) {
+            val lru = tail.prev!!
+            remove(lru); map.remove(lru.k)
+        }
+    }
+    private fun addToHead(n: Node) {
+        n.prev = head; n.next = head.next
+        head.next!!.prev = n; head.next = n
+    }
+    private fun remove(n: Node) { n.prev!!.next = n.next; n.next!!.prev = n.prev }
+    private fun moveToHead(n: Node) { remove(n); addToHead(n) }
+}</code></pre>
+      <h4>Why dummy head/tail nodes?</h4>
+      <p>Avoids null-checking edge cases in every add/remove. Cleaner code.</p>
+      <h4>Android real-world</h4>
+      <p>"This is exactly how Glide/Coil memory caches and Android's <code>LruCache</code> class work internally. Bitmap caches, network response caches, ViewHolder pools."</p>
+      <div class="gotcha"><strong>Follow-up:</strong> "What about LFU (least frequently used)?" → Needs frequency buckets + a min-frequency pointer. Harder — discuss the tradeoff (LRU has temporal locality; LFU has frequency locality; most real systems use LRU).</div>
+    `
+  },
+  {
+    phase: 5,
+    difficulty: 'med',
+    q: "BFS vs DFS — when do you use which? Walk through binary tree level-order traversal.",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "BFS uses a queue and explores level-by-level. DFS uses stack/recursion and goes deep first. Choice depends on what the problem is asking — shortest path, level grouping → BFS. Path existence, connected components, subtree properties → DFS."</div>
+      <h4>Level order (BFS)</h4>
+      <pre><code>fun levelOrder(root: TreeNode?): List&lt;List&lt;Int&gt;&gt; {
+    if (root == null) return emptyList()
+    val res = mutableListOf&lt;List&lt;Int&gt;&gt;()
+    val q: ArrayDeque&lt;TreeNode&gt; = ArrayDeque()
+    q.add(root)
+    while (q.isNotEmpty()) {
+        val level = mutableListOf&lt;Int&gt;()
+        repeat(q.size) {                       // snapshot level size
+            val n = q.removeFirst()
+            level.add(n.`val`)
+            n.left?.let { q.add(it) }
+            n.right?.let { q.add(it) }
+        }
+        res.add(level)
+    }
+    return res
+}</code></pre>
+      <h4>Picking between them</h4>
+      <table style="width:100%; font-size:13px; margin: 8px 0; border-collapse: collapse;">
+        <tr style="border-bottom: 1px solid var(--border)"><th style="text-align:left; padding: 6px;">Problem type</th><th style="text-align:left; padding: 6px;">Pick</th></tr>
+        <tr><td style="padding: 6px;">Shortest path in unweighted graph</td><td>BFS</td></tr>
+        <tr><td style="padding: 6px;">Level-by-level processing</td><td>BFS</td></tr>
+        <tr><td style="padding: 6px;">Path sum / tree diameter</td><td>DFS</td></tr>
+        <tr><td style="padding: 6px;">Detect cycle / topo sort</td><td>DFS</td></tr>
+        <tr><td style="padding: 6px;">Word ladder, min steps</td><td>BFS</td></tr>
+      </table>
+      <div class="gotcha"><strong>BFS memory trap:</strong> Queue can hold the entire widest level — for a balanced tree of N nodes that's N/2. For deep skinny trees, DFS (recursion stack) can be smaller than BFS. Know the tradeoff.</div>
+    `
+  },
+  {
+    phase: 5,
+    difficulty: 'med',
+    q: "Number of Islands — solve 3 ways: DFS, BFS, and Union-Find.",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Classic grid problem. Count connected components of 1s in a 2D grid. DFS is the simplest; Union-Find is the scalable answer if the grid updates over time."</div>
+      <h4>DFS — simplest, in-place marking</h4>
+      <pre><code>fun numIslands(grid: Array&lt;CharArray&gt;): Int {
+    var count = 0
+    for (r in grid.indices) for (c in grid[0].indices) {
+        if (grid[r][c] == '1') { dfs(grid, r, c); count++ }
+    }
+    return count
+}
+private fun dfs(g: Array&lt;CharArray&gt;, r: Int, c: Int) {
+    if (r !in g.indices || c !in g[0].indices || g[r][c] != '1') return
+    g[r][c] = '0'  // mark visited
+    dfs(g, r+1, c); dfs(g, r-1, c); dfs(g, r, c+1); dfs(g, r, c-1)
+}</code></pre>
+      <p>O(m×n) time, O(m×n) recursion stack worst case.</p>
+      <h4>BFS — same complexity, iterative</h4>
+      <p>Replace recursion with a queue. Useful when grid is huge (avoids stack overflow).</p>
+      <h4>Union-Find — when islands can be added/removed dynamically</h4>
+      <pre><code>class UnionFind(size: Int) {
+    private val parent = IntArray(size) { it }
+    private val rank = IntArray(size)
+    fun find(x: Int): Int {
+        if (parent[x] != x) parent[x] = find(parent[x])   // path compression
+        return parent[x]
+    }
+    fun union(a: Int, b: Int): Boolean {
+        val ra = find(a); val rb = find(b)
+        if (ra == rb) return false
+        if (rank[ra] &lt; rank[rb]) parent[ra] = rb
+        else if (rank[ra] &gt; rank[rb]) parent[rb] = ra
+        else { parent[rb] = ra; rank[ra]++ }
+        return true
+    }
+}</code></pre>
+      <p>"For 'Islands II' (add land one cell at a time), Union-Find is O(α(n)) amortized — effectively constant."</p>
+      <div class="gotcha"><strong>Don't mutate input grid</strong> if the interviewer says it must stay const. Use a separate <code>visited</code> set — mention the tradeoff.</div>
+    `
+  },
+  {
+    phase: 5,
+    difficulty: 'med',
+    q: "Course Schedule (topological sort). Explain cycle detection in a DAG.",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Course Schedule: given prerequisites, can you finish all courses? Equivalent to: is this directed graph acyclic? Two approaches — Kahn's algorithm (BFS on in-degrees) and DFS with colors."</div>
+      <h4>Kahn's algorithm — BFS</h4>
+      <pre><code>fun canFinish(n: Int, prereqs: Array&lt;IntArray&gt;): Boolean {
+    val graph = Array(n) { mutableListOf&lt;Int&gt;() }
+    val inDegree = IntArray(n)
+    for ((a, b) in prereqs) { graph[b].add(a); inDegree[a]++ }
+
+    val q: ArrayDeque&lt;Int&gt; = ArrayDeque()
+    for (i in 0 until n) if (inDegree[i] == 0) q.add(i)
+    var processed = 0
+    while (q.isNotEmpty()) {
+        val node = q.removeFirst(); processed++
+        for (next in graph[node]) {
+            if (--inDegree[next] == 0) q.add(next)
+        }
+    }
+    return processed == n   // if cycle, some nodes never hit in-degree 0
+}</code></pre>
+      <h4>DFS with 3-color marking</h4>
+      <p>White = unvisited, Gray = in current path, Black = fully explored. If DFS hits a Gray node, there's a cycle.</p>
+      <h4>When topo sort matters in real life</h4>
+      <ul>
+        <li>Build systems (Gradle task graph).</li>
+        <li>Dependency injection (Dagger compile-time).</li>
+        <li>Package installation ordering.</li>
+        <li>Spreadsheet formula recalc.</li>
+      </ul>
+      <div class="gotcha"><strong>Course Schedule II</strong> asks for the ORDER, not just possibility. Same Kahn's — just collect nodes as you pop them.</div>
+    `
+  },
+  {
+    phase: 5,
+    difficulty: 'med',
+    q: "Coin Change — classic DP. Walk me through the recurrence.",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Given coin denominations and an amount, find minimum coins needed. Classic unbounded-knapsack DP. The recurrence: <code>dp[i] = 1 + min(dp[i - coin])</code> for each coin."</div>
+      <h4>Bottom-up DP — O(amount × coins)</h4>
+      <pre><code>fun coinChange(coins: IntArray, amount: Int): Int {
+    val dp = IntArray(amount + 1) { Int.MAX_VALUE }
+    dp[0] = 0
+    for (i in 1..amount) {
+        for (c in coins) {
+            if (c &lt;= i && dp[i - c] != Int.MAX_VALUE) {
+                dp[i] = minOf(dp[i], dp[i - c] + 1)
+            }
+        }
+    }
+    return if (dp[amount] == Int.MAX_VALUE) -1 else dp[amount]
+}</code></pre>
+      <h4>How to identify DP in an interview</h4>
+      <ol>
+        <li>"Find the optimal X" (min/max/count).</li>
+        <li>Choices at each step (take/skip, pick from set).</li>
+        <li>Overlapping subproblems (same subproblem appears many times in recursion).</li>
+      </ol>
+      <h4>DP framework — 5 steps</h4>
+      <ol>
+        <li>State: what does <code>dp[i]</code> mean? ("min coins to make amount i")</li>
+        <li>Base case: <code>dp[0] = 0</code>.</li>
+        <li>Transition: how dp[i] builds from dp[smaller].</li>
+        <li>Order: bottom-up or top-down memo.</li>
+        <li>Answer: <code>dp[amount]</code>.</li>
+      </ol>
+      <div class="gotcha"><strong>Greedy fails here.</strong> For coins {1, 3, 4} and amount 6, greedy picks 4+1+1=3 coins; optimal is 3+3=2. Always DP for coin change.</div>
+    `
+  },
+  {
+    phase: 5,
+    difficulty: 'med',
+    q: "Kth Largest Element — compare heap vs Quickselect.",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Two classic approaches. Min-heap of size k is O(n log k) and streaming-friendly. Quickselect is O(n) average but O(n²) worst case and needs the whole array."</div>
+      <h4>Min-heap approach — O(n log k)</h4>
+      <pre><code>fun findKthLargest(nums: IntArray, k: Int): Int {
+    val heap = PriorityQueue&lt;Int&gt;()      // min-heap
+    for (n in nums) {
+        heap.offer(n)
+        if (heap.size &gt; k) heap.poll()   // keep only top k
+    }
+    return heap.peek()
+}</code></pre>
+      <h4>Quickselect — O(n) average</h4>
+      <p>Like quicksort, but recurse only into the partition containing the kth element. Random pivot prevents adversarial O(n²).</p>
+      <h4>Pick heap when</h4>
+      <ul>
+        <li>Streaming data (can't see it all at once).</li>
+        <li>k is small relative to n.</li>
+        <li>You need top-k, not just kth.</li>
+      </ul>
+      <h4>Pick Quickselect when</h4>
+      <ul>
+        <li>Array fits in memory.</li>
+        <li>Need single value, not the full top-k.</li>
+        <li>Interviewer pushes for O(n) average.</li>
+      </ul>
+      <div class="gotcha"><strong>"Kth largest" vs "K largest":</strong> Kth is one number. K largest is a list. Read carefully — costs you a full rewrite otherwise.</div>
+    `
+  },
+  {
+    phase: 5,
+    difficulty: 'hard',
+    q: "Merge K sorted lists. Two approaches — which scales?",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Two approaches: min-heap over K list heads — O(N log K). Divide-and-conquer pairwise merging — also O(N log K). Heap is cleaner and more common in interviews."</div>
+      <h4>Min-heap approach</h4>
+      <pre><code>fun mergeKLists(lists: Array&lt;Node?&gt;): Node? {
+    val heap = PriorityQueue&lt;Node&gt; { a, b -&gt; a.v - b.v }
+    for (node in lists) node?.let { heap.offer(it) }
+    val dummy = Node(0); var tail = dummy
+    while (heap.isNotEmpty()) {
+        val min = heap.poll()
+        tail.next = min; tail = min
+        min.next?.let { heap.offer(it) }
+    }
+    return dummy.next
+}</code></pre>
+      <p>Total nodes N, heap size K → each of N pops costs log K → O(N log K).</p>
+      <h4>Real Android parallel</h4>
+      <p>"This shows up when merging paginated responses from multiple endpoints, or combining events from multiple Flow sources in order. <code>flow.merge()</code> is unordered; for ordered merge you either use a heap or sequence timestamps."</p>
+      <div class="gotcha"><strong>Naive mistake:</strong> Merge list[0] with list[1], then result with list[2]... That's O(NK), not O(N log K). Do pairwise tournament merge or heap.</div>
+    `
+  },
+  {
+    phase: 5,
+    difficulty: 'hard',
+    q: "Trapping Rain Water — solve with two pointers AND monotonic stack. Compare.",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Water trapped above index i = min(maxLeft, maxRight) - height[i]. Two approaches: precompute maxLeft/maxRight arrays (O(n) space), or two-pointer (O(1) space)."</div>
+      <h4>Two pointers — O(n) time, O(1) space</h4>
+      <pre><code>fun trap(h: IntArray): Int {
+    var l = 0; var r = h.size - 1
+    var lMax = 0; var rMax = 0; var water = 0
+    while (l &lt; r) {
+        if (h[l] &lt; h[r]) {
+            if (h[l] &gt;= lMax) lMax = h[l] else water += lMax - h[l]
+            l++
+        } else {
+            if (h[r] &gt;= rMax) rMax = h[r] else water += rMax - h[r]
+            r--
+        }
+    }
+    return water
+}</code></pre>
+      <h4>Monotonic stack — alternate approach</h4>
+      <p>Maintain a decreasing stack of heights. When a taller bar arrives, pop shorter bars and calculate water as the difference between <code>min(new height, stack top) - popped height</code> times width.</p>
+      <h4>When monotonic stack shines</h4>
+      <ul>
+        <li>Next greater / smaller element.</li>
+        <li>Largest rectangle in histogram.</li>
+        <li>Daily temperatures.</li>
+        <li>Sum of subarray minimums.</li>
+      </ul>
+      <div class="gotcha"><strong>Two-pointer intuition:</strong> Whichever side is shorter determines the water level at that index — because you've already seen a taller bar on the other side. That's why we move the shorter side.</div>
+    `
+  },
+  {
+    phase: 5,
+    difficulty: 'med',
+    q: "Explain backtracking. Solve 'Subsets'.",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Backtracking = DFS on the decision tree + undo step. For each position, you either include or exclude an element. Time is O(2^n) for subsets, O(n!) for permutations — exponential but unavoidable for these problem types."</div>
+      <h4>Subsets</h4>
+      <pre><code>fun subsets(nums: IntArray): List&lt;List&lt;Int&gt;&gt; {
+    val res = mutableListOf&lt;List&lt;Int&gt;&gt;()
+    fun backtrack(start: Int, path: MutableList&lt;Int&gt;) {
+        res.add(path.toList())               // every node is an answer
+        for (i in start until nums.size) {
+            path.add(nums[i])
+            backtrack(i + 1, path)
+            path.removeAt(path.size - 1)     // undo
+        }
+    }
+    backtrack(0, mutableListOf())
+    return res
+}</code></pre>
+      <h4>Backtracking template</h4>
+      <ol>
+        <li><strong>Choose</strong> — add to path.</li>
+        <li><strong>Explore</strong> — recurse.</li>
+        <li><strong>Un-choose</strong> — remove from path (this is the "back" in backtrack).</li>
+      </ol>
+      <h4>Sibling problems (know these)</h4>
+      <ul>
+        <li>Permutations — swap-based or visited-set.</li>
+        <li>Combinations — pick k from n.</li>
+        <li>N-Queens — place queen, recurse, unplace.</li>
+        <li>Word Search — DFS on grid with visited set.</li>
+        <li>Sudoku solver — classic CSP.</li>
+      </ul>
+      <div class="gotcha"><strong>Dedup with sort:</strong> Subsets II (input has dupes) — sort first, then skip <code>if (i &gt; start && nums[i] == nums[i-1]) continue</code>.</div>
+    `
+  },
+  {
+    phase: 5,
+    difficulty: 'med',
+    q: "Binary search — not just on sorted arrays. Give 3 non-trivial uses.",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Binary search works anywhere you can define a monotonic predicate: 'given X, is the answer yes or no?' where the answer transitions at exactly one point. That unlocks problems nobody labels 'binary search'."</div>
+      <h4>1. Search in rotated sorted array</h4>
+      <p>Array is rotated (e.g., [4,5,6,7,0,1,2]). Binary search, but decide which half is sorted based on <code>nums[mid]</code> vs <code>nums[l]</code>.</p>
+      <h4>2. Koko eating bananas — binary search on answer</h4>
+      <pre><code>fun minEatingSpeed(piles: IntArray, h: Int): Int {
+    var lo = 1; var hi = piles.max()!!
+    while (lo &lt; hi) {
+        val mid = (lo + hi) / 2
+        val hours = piles.sumOf { (it + mid - 1) / mid }    // ceil div
+        if (hours &lt;= h) hi = mid else lo = mid + 1
+    }
+    return lo
+}</code></pre>
+      <p>"The predicate 'can Koko finish in h hours at speed k?' is monotonic — true for all speeds ≥ some threshold. Binary search the threshold."</p>
+      <h4>3. Median of two sorted arrays — O(log min(m,n))</h4>
+      <p>Partition both arrays so the left half has the correct count. Binary search the partition index in the shorter array. Hard but classic.</p>
+      <h4>Binary search template that handles off-by-one</h4>
+      <pre><code>var lo = 0; var hi = n           // hi is EXCLUSIVE
+while (lo &lt; hi) {
+    val mid = lo + (hi - lo) / 2  // avoid overflow
+    if (predicate(mid)) hi = mid  // answer in [lo, mid]
+    else lo = mid + 1             // answer in [mid+1, hi)
+}
+// lo == hi == first index where predicate is true</code></pre>
+      <div class="gotcha"><strong>Overflow:</strong> <code>(lo + hi) / 2</code> overflows for big Ints. Use <code>lo + (hi - lo) / 2</code>. Java/Kotlin Int is 32-bit.</div>
+    `
+  },
+  {
+    phase: 5,
+    difficulty: 'med',
+    q: "Design a rate limiter — algorithmic. Token bucket vs sliding window.",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Rate limiting lives at two layers — app (client throttling retries) and server (enforcing QPS). Two main algorithms: token bucket (smooths bursts) and sliding window log (accurate but memory-heavy)."</div>
+      <h4>Token bucket — simplest & most common</h4>
+      <pre><code>class TokenBucket(private val capacity: Int, private val refillPerSec: Int) {
+    private var tokens = capacity.toDouble()
+    private var lastRefill = System.nanoTime()
+    @Synchronized
+    fun allow(): Boolean {
+        val now = System.nanoTime()
+        val elapsedSec = (now - lastRefill) / 1e9
+        tokens = minOf(capacity.toDouble(), tokens + elapsedSec * refillPerSec)
+        lastRefill = now
+        if (tokens &gt;= 1) { tokens--; return true }
+        return false
+    }
+}</code></pre>
+      <p><strong>Pros:</strong> O(1) memory, allows bursts up to capacity. <strong>Cons:</strong> over short windows you can see a 2× burst.</p>
+      <h4>Sliding window log</h4>
+      <p>Keep timestamps of recent requests in a deque. Drop entries older than <code>window</code>. Reject if <code>size &gt;= limit</code>. <strong>Exact</strong> but O(N) memory where N = limit.</p>
+      <h4>Sliding window counter (hybrid)</h4>
+      <p>Store count per bucket (e.g., per second). For window W, sum last W buckets. Approximate but cheap.</p>
+      <h4>Android client-side use</h4>
+      <ul>
+        <li>Retry budget — cap retries/sec to prevent DDoS of our own backend.</li>
+        <li>Search debounce is a degenerate rate limiter (allow 1/300ms).</li>
+        <li>Analytics batching — limit network calls.</li>
+      </ul>
+      <div class="gotcha"><strong>Distributed systems angle:</strong> For multi-instance servers, rate limits need a shared store (Redis + Lua script for atomicity). Mention this — shows systems thinking.</div>
+    `
+  },
+  {
+    phase: 5,
+    difficulty: 'med',
+    q: "Big-O analysis — how do you talk about time and space complexity in an interview?",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "I state Big-O after every solution — brute force and optimized. I separate time from space. I also call out average vs worst when they differ (hashmaps, quicksort)."</div>
+      <h4>Common cases I've memorized</h4>
+      <ul>
+        <li><strong>O(1)</strong> — HashMap/HashSet avg lookup, array index, stack push.</li>
+        <li><strong>O(log n)</strong> — Binary search, balanced BST ops, heap push/pop.</li>
+        <li><strong>O(n)</strong> — Single pass, BFS/DFS on tree.</li>
+        <li><strong>O(n log n)</strong> — Sorting, BFS/DFS on n nodes with heap ordering.</li>
+        <li><strong>O(n²)</strong> — Nested loops, DP with 2D table, bubble sort.</li>
+        <li><strong>O(2^n)</strong> — Subsets, recursion without memo.</li>
+        <li><strong>O(n!)</strong> — Permutations.</li>
+      </ul>
+      <h4>Space I often miss and get called on</h4>
+      <ul>
+        <li><strong>Recursion stack</strong> counts — O(log n) for balanced tree, O(n) for linked list reversal.</li>
+        <li><strong>Hidden copies</strong> — slicing strings in Java is O(n), not O(1).</li>
+        <li><strong>Input vs auxiliary</strong> — usually we only count auxiliary space.</li>
+      </ul>
+      <h4>Amortized vs worst-case</h4>
+      <p>HashMap is O(1) average, O(n) worst case (hash collision). ArrayList add is O(1) amortized (due to doubling), O(n) worst case when resizing. Call these out.</p>
+      <div class="gotcha"><strong>Don't say O(3n):</strong> Drop constants and lower-order terms. But DO say "O(n) with large constant" if the solution has 5 passes — it's still O(n) but worth mentioning.</div>
+    `
+  },
+
+  // ============ PHASE 6: MOBILE SYSTEM DESIGN + LLD ============
+  {
+    phase: 6,
+    difficulty: 'med',
+    q: "How do you approach a mobile system design question? Walk me through your framework.",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Mobile system design is different from backend system design — it's about offline, sync, battery, and UX. I follow a 6-step framework: Clarify → Requirements → High-level architecture → Deep dive → Tradeoffs → Scale/evolve."</div>
+      <h4>My framework</h4>
+      <ol>
+        <li><strong>Clarify (5 min)</strong> — What's the core feature? Scale (100 users or 100M)? Offline support? Platforms? Version constraints?</li>
+        <li><strong>Functional + non-functional requirements</strong> — Functional: what user can do. Non-functional: latency, battery, offline, security, analytics.</li>
+        <li><strong>High-level architecture</strong> — Draw: UI → ViewModel → Repository → Data sources (Remote + Local) + WorkManager. Call out layers.</li>
+        <li><strong>Deep dive (pick 2-3)</strong> — Offline strategy, sync conflict resolution, caching, modularization, error handling.</li>
+        <li><strong>Tradeoffs</strong> — "I could use MVI over MVVM because..." Show you weighed options.</li>
+        <li><strong>Scale / evolve</strong> — What breaks at 10× users? 10× data? Migration strategy?</li>
+      </ol>
+      <h4>Mobile-specific angles interviewers love</h4>
+      <ul>
+        <li><strong>Offline-first</strong> — Write to local DB, queue sync via WorkManager.</li>
+        <li><strong>Battery</strong> — Batch network calls, respect Doze, avoid wake locks.</li>
+        <li><strong>Process death</strong> — Saved state, restore ViewModel-level caches.</li>
+        <li><strong>Release independence</strong> — Feature flags, remote config so you don't need an app update.</li>
+        <li><strong>Observability</strong> — Structured logs, crashlytics, performance traces.</li>
+      </ul>
+      <div class="gotcha"><strong>Biggest trap:</strong> Jumping to code. System design is about architecture diagrams and tradeoffs. Use paper / whiteboard. Code only if asked.</div>
+    `
+  },
+  {
+    phase: 6,
+    difficulty: 'hard',
+    q: "Design an Instagram-like feed with offline support.",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Key design points — pagination, caching, optimistic UI for likes, offline reads, prefetch, analytics, pull-to-refresh. I'd use Paging 3 + Room + Retrofit + WorkManager."</div>
+      <h4>Architecture (from bottom up)</h4>
+      <ul>
+        <li><strong>Remote</strong> — Retrofit + OkHttp with HTTP caching headers.</li>
+        <li><strong>Local</strong> — Room tables: <code>post</code>, <code>user</code>, <code>media</code>, <code>feed_remote_keys</code>.</li>
+        <li><strong>Paging 3 with RemoteMediator</strong> — single source of truth is Room, RemoteMediator fetches from server and writes to Room. Paging reads from Room.</li>
+        <li><strong>Repository</strong> — exposes <code>Pager.flow</code>, wraps business logic.</li>
+        <li><strong>ViewModel</strong> — <code>cachedIn(viewModelScope)</code> so rotation doesn't refetch.</li>
+        <li><strong>UI</strong> — <code>LazyColumn</code> + <code>collectAsLazyPagingItems()</code>.</li>
+      </ul>
+      <h4>Offline strategy</h4>
+      <ul>
+        <li>Reads work fully offline — Room serves cached pages.</li>
+        <li>Likes: optimistic (update Room immediately, update UI), enqueue sync via WorkManager. On failure after retries, revert with a toast.</li>
+        <li>Comments: same pattern — local insert with <code>synced = false</code>, WorkManager ships them.</li>
+      </ul>
+      <h4>Image loading</h4>
+      <p>Coil with memory (LruCache) + disk cache. Prefetch images for next 3 cards to avoid jank on scroll.</p>
+      <h4>Pagination cursor strategy</h4>
+      <p>Cursor-based (<code>before_id</code> / <code>after_id</code>) — stable with concurrent inserts. Offset-based breaks when new posts arrive during scroll.</p>
+      <h4>Scale considerations</h4>
+      <ul>
+        <li>50 posts × 5 images × 500KB = 125 MB RAM if naive. → LRU memory cache cap ~50 MB.</li>
+        <li>DB grows unbounded — TTL-based prune (delete posts older than 7 days, keep 500 newest).</li>
+        <li>Feed personalization happens server-side; client just renders.</li>
+      </ul>
+      <div class="gotcha"><strong>Common mistake:</strong> Using <code>viewModelScope.launch</code> in Repository for sync. Should be WorkManager — survives process death.</div>
+    `
+  },
+  {
+    phase: 6,
+    difficulty: 'hard',
+    q: "Design a WhatsApp-like chat. Focus on real-time, offline queue, and delivery receipts.",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Chat systems have 3 hard problems: real-time delivery, offline message queueing, and eventual consistency (receipts, ordering). I'd use WebSocket + Room + FCM + WorkManager."</div>
+      <h4>Connection strategy</h4>
+      <ul>
+        <li>WebSocket when app is foreground — low-latency bidirectional.</li>
+        <li>FCM when backgrounded — push wakes the app, shows notification.</li>
+        <li>Heartbeat every 30s to keep WebSocket alive through NAT timeouts.</li>
+      </ul>
+      <h4>Sending a message</h4>
+      <ol>
+        <li>User hits send. Insert into Room with <code>status = PENDING</code>, <code>local_id = UUID</code>.</li>
+        <li>Try WebSocket send. If not connected, enqueue WorkManager.</li>
+        <li>On server ack → update Room <code>status = SENT</code>, <code>server_id</code>.</li>
+        <li>On recipient delivered → <code>DELIVERED</code>. On read → <code>READ</code>.</li>
+      </ol>
+      <h4>Idempotency</h4>
+      <p>Every message carries <code>local_id</code> (UUID). Server deduplicates. Retries never duplicate messages.</p>
+      <h4>Message ordering</h4>
+      <p>Server assigns monotonic sequence per conversation. Client displays by server seq, falls back to client timestamp for pending.</p>
+      <h4>End-to-end encryption</h4>
+      <p>Signal Protocol: X3DH for key exchange, Double Ratchet for per-message keys. Keys in Android Keystore. Messages encrypted before WebSocket send.</p>
+      <h4>Media messages</h4>
+      <p>Upload to blob storage (S3) with resumable protocol → get URL → send text message with URL. Download lazy + cached.</p>
+      <h4>Conversation list</h4>
+      <p>Observe <code>messages</code> table with <code>@Query</code> + Flow, group by conversation, render last message + unread count reactively.</p>
+      <div class="gotcha"><strong>Battery trap:</strong> Always-on WebSocket drains battery. Disconnect after 5 min of background, rely on FCM. Reconnect on foreground + on FCM nudge.</div>
+    `
+  },
+  {
+    phase: 6,
+    difficulty: 'hard',
+    q: "Design battery-efficient location tracking (Uber / Rapido / Rapido Local).",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Location tracking is all about battery. Blindly requesting HIGH_ACCURACY every second kills a phone. I'd use FusedLocationProvider with adaptive intervals based on state."</div>
+      <h4>FusedLocationProviderClient + LocationRequest</h4>
+      <pre><code>LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 5_000L)
+    .setMinUpdateDistanceMeters(10f)
+    .setMaxUpdateDelayMillis(10_000L)  // allow batching
+    .build()</code></pre>
+      <h4>Adaptive strategy</h4>
+      <table style="width:100%; font-size:13px; border-collapse: collapse; margin:8px 0;">
+        <tr style="border-bottom:1px solid var(--border)"><th style="text-align:left;padding:6px;">State</th><th style="text-align:left;padding:6px;">Priority</th><th style="text-align:left;padding:6px;">Interval</th></tr>
+        <tr><td style="padding:6px;">User at home, app open</td><td>BALANCED</td><td>30s</td></tr>
+        <tr><td style="padding:6px;">Ride in progress</td><td>HIGH_ACCURACY</td><td>5s</td></tr>
+        <tr><td style="padding:6px;">Backgrounded, ride active</td><td>HIGH_ACCURACY</td><td>10s (Foreground Service)</td></tr>
+        <tr><td style="padding:6px;">Idle background</td><td>LOW_POWER</td><td>60s</td></tr>
+      </table>
+      <h4>Foreground service for background tracking</h4>
+      <p>Android 10+ requires <code>ACCESS_BACKGROUND_LOCATION</code> + foreground service with <code>foregroundServiceType="location"</code>. Persistent notification is mandatory.</p>
+      <h4>Upload strategy</h4>
+      <ul>
+        <li>Batch 10 points and send every 50s on WebSocket.</li>
+        <li>Store unsent points in Room — network blip doesn't lose data.</li>
+        <li>On low battery (&lt;15%), halve upload frequency.</li>
+      </ul>
+      <h4>Accuracy filtering</h4>
+      <p>Drop points with <code>accuracy &gt; 50m</code>. Kalman filter or simple smoothing to avoid GPS jitter in urban canyons.</p>
+      <h4>Geofencing for pickup/drop</h4>
+      <p>Use <code>GeofencingClient</code> — OS wakes app when user enters zone. Zero battery cost vs polling.</p>
+      <div class="gotcha"><strong>Doze mode:</strong> On Android 6+, Doze kills your service. Solution: foreground service + <code>setForeground</code> + track the 'trip active' state so users see a notification.</div>
+    `
+  },
+  {
+    phase: 6,
+    difficulty: 'hard',
+    q: "Design a photo uploader with resume, retry, and progress.",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Photos are big (5-20 MB). Network drops. Process dies. So: chunked upload, resume support, WorkManager for retry, progress via Flow."</div>
+      <h4>Architecture</h4>
+      <ul>
+        <li><strong>Entity</strong> — <code>Upload(id, localUri, serverUploadId, status, bytesUploaded, totalBytes, retryCount)</code>.</li>
+        <li><strong>UploadWorker</strong> (CoroutineWorker) picks up pending uploads, uses exponential backoff.</li>
+        <li><strong>Progress</strong> — emit <code>setProgress(workDataOf(PROGRESS to pct))</code>. UI observes via <code>WorkManager.getWorkInfoByIdLiveData</code>.</li>
+      </ul>
+      <h4>Chunked upload protocol (TUS-like)</h4>
+      <ol>
+        <li>POST /uploads → server returns <code>uploadId</code>, <code>offset=0</code>.</li>
+        <li>PATCH /uploads/{id} with bytes [offset..offset+chunk]. Server returns new offset.</li>
+        <li>Repeat until offset == total. GET /uploads/{id}/status can check on restart.</li>
+      </ol>
+      <h4>Resume logic</h4>
+      <p>On worker start, GET /uploads/{id}/status to learn server's offset. Skip bytes already sent. Continue from there.</p>
+      <h4>Retry + backoff</h4>
+      <pre><code>OneTimeWorkRequestBuilder&lt;UploadWorker&gt;()
+    .setConstraints(Constraints.Builder()
+        .setRequiredNetworkType(NetworkType.CONNECTED)
+        .build())
+    .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 30, TimeUnit.SECONDS)
+    .build()</code></pre>
+      <h4>Compression</h4>
+      <p>Downscale to max 2048px + JPEG 85% quality before upload. Typical 15 MB → 1.5 MB. 10× faster, better user experience.</p>
+      <h4>Concurrency limit</h4>
+      <p>Tag workers with unique tag + <code>ExistingWorkPolicy.APPEND_OR_REPLACE</code> — serialize so 1 upload at a time per user (avoid saturating bandwidth).</p>
+      <div class="gotcha"><strong>Storage permissions 2026:</strong> Scoped storage on Android 10+. Use <code>ContentResolver</code> + URI permission, not raw file path. URI survives across process deaths if persisted.</div>
+    `
+  },
+  {
+    phase: 6,
+    difficulty: 'hard',
+    q: "Design an analytics SDK — batching, offline, guaranteed delivery.",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Analytics has three requirements — never block the UI, never lose events, and don't hammer the network. That means: in-memory queue → disk buffer → batched flush."</div>
+      <h4>Event pipeline</h4>
+      <ol>
+        <li><strong>Client API</strong> — <code>Analytics.track("purchase", props)</code>. Non-blocking — add to in-memory queue.</li>
+        <li><strong>Buffering worker</strong> — flushes in-memory queue to Room every 5s or when queue ≥ 50 events.</li>
+        <li><strong>Flush worker (WorkManager)</strong> — every 30s OR when batch ≥ 100 events, POSTs batch. Deletes on success.</li>
+        <li><strong>Backpressure</strong> — if DB exceeds 10k events, drop oldest low-priority events (analytics is lossy by nature).</li>
+      </ol>
+      <h4>Event schema</h4>
+      <pre><code>@Entity
+data class Event(
+    @PrimaryKey val id: String = UUID.randomUUID().toString(),
+    val name: String,
+    val props: String,          // JSON
+    val timestamp: Long,
+    val userId: String?,
+    val sessionId: String,
+    val priority: Int = 0       // 0 = normal, 1 = critical (purchase)
+)</code></pre>
+      <h4>Reliability tricks</h4>
+      <ul>
+        <li><strong>Idempotency</strong> — each event has UUID. Server dedupes.</li>
+        <li><strong>Compression</strong> — gzip the batch body. 5-10× smaller for JSON.</li>
+        <li><strong>Session ID</strong> — regenerated after 30 min idle.</li>
+      </ul>
+      <h4>Performance discipline</h4>
+      <ul>
+        <li>Never do disk/network on the caller's thread. Event goes into a <code>Channel</code>, a dedicated coroutine drains it.</li>
+        <li>Never block app startup on analytics init — lazy init after first frame.</li>
+        <li>Never let analytics crash the app — wrap user code in try/catch.</li>
+      </ul>
+      <h4>Privacy (2026 essentials)</h4>
+      <ul>
+        <li>GDPR: obey <code>optOut</code> flag, drop all events + PII.</li>
+        <li>DPDP (India): user consent before tracking.</li>
+        <li>No PII (email, phone) in props. Hash if needed.</li>
+      </ul>
+      <div class="gotcha"><strong>Flush on terminate:</strong> Use <code>ProcessLifecycleOwner</code> ON_STOP to force-flush the queue. Process death still loses in-memory events — that's why the disk buffer exists.</div>
+    `
+  },
+  {
+    phase: 6,
+    difficulty: 'hard',
+    q: "Design a multi-level image cache (memory + disk + network).",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "This is what Coil / Glide do internally. Three layers: memory LRU (fast, lossy), disk LRU (survives death, larger), network (source of truth). Fallback chain: memory → disk → network."</div>
+      <h4>Layered lookup</h4>
+      <pre><code>suspend fun load(url: String): Bitmap {
+    memoryCache[url]?.let { return it }
+    diskCache[url]?.let { bmp -&gt;
+        memoryCache.put(url, bmp)           // promote to memory
+        return bmp
+    }
+    val bytes = network.fetch(url)
+    val bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+    diskCache.put(url, bytes)
+    memoryCache.put(url, bmp)
+    return bmp
+}</code></pre>
+      <h4>Memory cache sizing</h4>
+      <p>Rule of thumb: 1/8 of app's max heap. Use <code>LruCache</code> with <code>sizeOf</code> returning <code>bitmap.allocationByteCount</code>.</p>
+      <h4>Disk cache</h4>
+      <ul>
+        <li>OkHttp's <code>Cache</code> with HTTP headers — zero-config, respects server TTL.</li>
+        <li>Or custom <code>DiskLruCache</code> (Jake Wharton's) — 50-100 MB cap, LRU eviction.</li>
+      </ul>
+      <h4>Key design</h4>
+      <p>Key = hash(url + targetWidth + targetHeight + transforms). Avoids loading the 4K original for a 100dp thumbnail.</p>
+      <h4>Downsampling</h4>
+      <p><code>BitmapFactory.Options.inSampleSize</code> — decode at lower resolution. Target size hint from ImageView. This is the #1 OOM prevention.</p>
+      <h4>Request deduplication</h4>
+      <p>If 10 ViewHolders request the same URL simultaneously (fast scroll), dedupe: one network request, all observers get the result. A <code>ConcurrentHashMap&lt;Url, Deferred&lt;Bitmap&gt;&gt;</code>.</p>
+      <h4>Cancellation</h4>
+      <p>When ViewHolder is rebound, cancel in-flight load. Coil does this via tagging the target View.</p>
+      <div class="gotcha"><strong>Bitmap pooling:</strong> Reuse <code>Bitmap</code> buffers via <code>BitmapFactory.Options.inBitmap</code>. Huge GC reduction on scroll-heavy UIs. Glide does this by default.</div>
+    `
+  },
+  {
+    phase: 6,
+    difficulty: 'hard',
+    q: "Sync strategy — how do you handle offline → online conflicts?",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Conflict resolution depends on data semantics. Strategies range from last-write-wins (simple, works for most fields) to CRDTs (collaborative docs). I pick based on stakes — lost cart items vs lost Google Doc edits differ 100×."</div>
+      <h4>Strategies, easiest to hardest</h4>
+      <ol>
+        <li><strong>Server-only</strong> — Client never writes offline. Simplest, poor UX.</li>
+        <li><strong>Last-Write-Wins (LWW)</strong> — Each field has a timestamp; latest wins. Fits profiles, preferences, non-critical writes.</li>
+        <li><strong>Version vectors</strong> — Each replica has a version. Server detects divergence → conflict → escalate to UI ("resolve this").</li>
+        <li><strong>Operational Transform (OT)</strong> — Google Docs. Transform concurrent ops to preserve intent. Very complex.</li>
+        <li><strong>CRDTs</strong> — data types that merge deterministically (add-wins set, counter). No conflicts by construction. Trello, Figma use these.</li>
+      </ol>
+      <h4>Cart sync pattern (e-commerce — what I do at CD)</h4>
+      <ul>
+        <li>Each cart item has <code>updatedAt</code> + <code>deviceId</code>.</li>
+        <li>Client sends: "my cart state as of T." Server merges: for each SKU, pick latest <code>updatedAt</code>.</li>
+        <li>Additive ops (add-item) merged as union.</li>
+        <li>On server-detected conflict for quantity, prefer higher quantity + surface a toast ("We merged your cart from another device").</li>
+      </ul>
+      <h4>Delete-vs-edit conflict</h4>
+      <p>Tombstones. Deleting a row writes <code>deleted=true</code> with timestamp, not actual deletion. Tombstones expire after sync window.</p>
+      <h4>Idempotency for writes</h4>
+      <p>Every write carries a client-generated <code>op_id</code> (UUID). Server stores processed IDs; retries are no-ops.</p>
+      <div class="gotcha"><strong>Clock skew:</strong> Phone clocks lie. Use server-authoritative timestamps or hybrid logical clocks (HLC). Don't trust <code>System.currentTimeMillis()</code> for ordering across devices.</div>
+    `
+  },
+  {
+    phase: 6,
+    difficulty: 'hard',
+    q: "How would you modularize a 500-screen Android app?",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Modularization buys parallel builds, ownership boundaries, and dynamic delivery. I'd go with the NowInAndroid pattern: <code>app</code> → <code>feature</code> modules → <code>core</code> modules, with <code>:core:designsystem</code> and <code>:core:data</code> as the glue."</div>
+      <h4>Module layers</h4>
+      <ul>
+        <li><strong>:app</strong> — wire-up only. Manifest merge, top-level DI graph, navigation host.</li>
+        <li><strong>:feature:*</strong> — one module per screen/flow (home, cart, checkout, orders). No cross-feature dependencies.</li>
+        <li><strong>:core:ui</strong> — shared Compose components.</li>
+        <li><strong>:core:designsystem</strong> — theme, typography, tokens.</li>
+        <li><strong>:core:data</strong> — repositories. Depends on network + database.</li>
+        <li><strong>:core:network</strong> — Retrofit, OkHttp, interceptors.</li>
+        <li><strong>:core:database</strong> — Room, DAOs.</li>
+        <li><strong>:core:model</strong> — data classes shared across features.</li>
+        <li><strong>:core:common</strong> — Dispatchers, Result types.</li>
+        <li><strong>:core:testing</strong> — fakes, test rules.</li>
+      </ul>
+      <h4>Dependency rule</h4>
+      <p>Features depend DOWN on core. Features NEVER depend on each other. Cross-feature nav through a <code>:core:navigation</code> contract (route Strings or typed nav graph).</p>
+      <h4>Benefits I've measured</h4>
+      <ul>
+        <li>Incremental builds 3-5× faster (only touched module rebuilds).</li>
+        <li>Ownership: feature team owns its module, no step-on-toes.</li>
+        <li>Dynamic Feature Modules (DFM) — download on demand.</li>
+      </ul>
+      <h4>Gotchas at scale</h4>
+      <ul>
+        <li>Navigation across features needs a contract. Use Jetpack Navigation's typed routes or a String-based deep-link registry.</li>
+        <li>Circular deps creep in. Enforce with <code>module-graph</code> Gradle plugin.</li>
+        <li>Resources leak across modules — prefix with feature name (<code>home_title</code>).</li>
+      </ul>
+      <div class="gotcha"><strong>Version catalog</strong> (<code>libs.versions.toml</code>) — centralized dep versions. Without it, 30 modules × 50 deps = unmanageable drift.</div>
+    `
+  },
+  {
+    phase: 6,
+    difficulty: 'med',
+    q: "LLD — Design a Parking Lot. Walk through your classes.",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "I'd start by identifying entities and behaviors. Parking Lot has floors, spots (of types), tickets, and a pricing strategy. I'll make each responsibility a class and use inheritance only where it pays."</div>
+      <h4>Class design</h4>
+      <pre><code>enum class VehicleType { BIKE, CAR, TRUCK }
+enum class SpotType { COMPACT, REGULAR, LARGE, ELECTRIC }
+
+abstract class Vehicle(val licensePlate: String, val type: VehicleType)
+class Bike(l: String) : Vehicle(l, VehicleType.BIKE)
+class Car(l: String) : Vehicle(l, VehicleType.CAR)
+class Truck(l: String) : Vehicle(l, VehicleType.TRUCK)
+
+class ParkingSpot(
+    val id: String,
+    val type: SpotType,
+    var occupiedBy: Vehicle? = null
+) { fun isFree() = occupiedBy == null }
+
+class Floor(val id: Int, val spots: List&lt;ParkingSpot&gt;) {
+    fun findSpot(v: Vehicle): ParkingSpot? =
+        spots.firstOrNull { it.isFree() && canFit(v.type, it.type) }
+}
+
+data class Ticket(
+    val id: String, val vehicle: Vehicle,
+    val spot: ParkingSpot, val entryTime: Long
+)
+
+interface PricingStrategy { fun charge(ticket: Ticket, exitTime: Long): Double }
+
+class ParkingLot(
+    private val floors: List&lt;Floor&gt;,
+    private val pricing: PricingStrategy
+) {
+    fun park(v: Vehicle): Ticket? {
+        for (f in floors) f.findSpot(v)?.let { s -&gt;
+            s.occupiedBy = v
+            return Ticket(UUID.randomUUID().toString(), v, s, now())
+        }
+        return null
+    }
+    fun exit(t: Ticket): Double {
+        t.spot.occupiedBy = null
+        return pricing.charge(t, now())
+    }
+}</code></pre>
+      <h4>Design patterns used</h4>
+      <ul>
+        <li><strong>Strategy</strong> — <code>PricingStrategy</code> swappable (hourly, flat, dynamic).</li>
+        <li><strong>Factory</strong> — <code>Vehicle.fromType(type, plate)</code> for creation.</li>
+        <li><strong>Composite</strong> — Floor → Spots; Lot → Floors.</li>
+      </ul>
+      <h4>Follow-ups to expect</h4>
+      <ul>
+        <li>Thread safety — <code>park()</code> needs locking per floor or atomic spot-claim.</li>
+        <li>Multiple lots — introduce <code>ParkingLotService</code> with load balancing.</li>
+        <li>Real-time display board — Observer pattern on spot state changes.</li>
+      </ul>
+      <div class="gotcha"><strong>Don't over-engineer:</strong> Some candidates build 20 classes with factories of factories. Aim for 6-8 classes with clear responsibilities. Interviewer will ask for extensions — add them incrementally.</div>
+    `
+  },
+  {
+    phase: 6,
+    difficulty: 'med',
+    q: "Design patterns in Android — which ones show up where?",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Most GoF patterns show up in Android, but these 8 dominate. I'll name each with a concrete Android home."</div>
+      <h4>The 8 I use weekly</h4>
+      <table style="width:100%; font-size:13px; border-collapse: collapse; margin: 8px 0;">
+        <tr style="border-bottom:1px solid var(--border)"><th style="padding:6px;text-align:left;">Pattern</th><th style="padding:6px;text-align:left;">Android usage</th></tr>
+        <tr><td style="padding:6px;"><strong>Singleton</strong></td><td style="padding:6px;">OkHttpClient, Retrofit, Room DB — Hilt's @Singleton scope.</td></tr>
+        <tr><td style="padding:6px;"><strong>Builder</strong></td><td style="padding:6px;">Retrofit.Builder, OkHttpClient.Builder, AlertDialog.Builder, NotificationCompat.Builder.</td></tr>
+        <tr><td style="padding:6px;"><strong>Factory</strong></td><td style="padding:6px;">ViewModelProvider.Factory, Fragment.instantiate.</td></tr>
+        <tr><td style="padding:6px;"><strong>Observer</strong></td><td style="padding:6px;">LiveData, StateFlow, Lifecycle observers.</td></tr>
+        <tr><td style="padding:6px;"><strong>Strategy</strong></td><td style="padding:6px;">Interceptors in OkHttp, sort comparators, pricing rules.</td></tr>
+        <tr><td style="padding:6px;"><strong>Repository</strong></td><td style="padding:6px;">Abstracts local+remote, single source of truth.</td></tr>
+        <tr><td style="padding:6px;"><strong>Adapter</strong></td><td style="padding:6px;">RecyclerView.Adapter, FragmentStateAdapter.</td></tr>
+        <tr><td style="padding:6px;"><strong>Decorator</strong></td><td style="padding:6px;">ContextWrapper, OkHttp Interceptors chain.</td></tr>
+      </table>
+      <h4>Less common but worth knowing</h4>
+      <ul>
+        <li><strong>Command</strong> — WorkManager jobs, Intents (effectively commands).</li>
+        <li><strong>Chain of Responsibility</strong> — OkHttp interceptor chain (auth → logging → retry).</li>
+        <li><strong>Mediator</strong> — ViewModel mediates between UI and repo.</li>
+        <li><strong>State</strong> — MVI state machines, ExoPlayer playback state.</li>
+      </ul>
+      <h4>When to mention these in answers</h4>
+      <p>Name the pattern only when it adds clarity. Don't force 'Decorator pattern' into every answer. The interviewer sees through pattern-dropping.</p>
+      <div class="gotcha"><strong>Singleton abuse:</strong> Every 'Manager' / 'Helper' being a global Singleton creates untestable code. Prefer DI-scoped. Singleton is a scope, not an architecture.</div>
+    `
+  },
+  {
+    phase: 6,
+    difficulty: 'med',
+    q: "MVVM vs MVI — when to choose MVI?",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Both separate UI from logic. MVVM has multiple mutable streams (state + events), MVI has a single immutable state and explicit intents. MVI shines when state is complex or concurrent bugs are biting."</div>
+      <h4>MVVM</h4>
+      <pre><code>class CartViewModel : ViewModel() {
+    val items: StateFlow&lt;List&lt;Item&gt;&gt; = ...
+    val total: StateFlow&lt;Double&gt; = ...
+    val isLoading: StateFlow&lt;Boolean&gt; = ...
+    val error: SharedFlow&lt;Throwable&gt; = ...
+    fun add(item: Item) { ... }
+}</code></pre>
+      <p>Multiple StateFlows — can drift out of sync. "isLoading true, items empty, error set" — what does UI show?</p>
+      <h4>MVI</h4>
+      <pre><code>data class CartState(
+    val items: List&lt;Item&gt; = emptyList(),
+    val isLoading: Boolean = false,
+    val error: String? = null
+) {
+    val total: Double get() = items.sumOf { it.price }
+}
+
+sealed interface CartIntent {
+    data class Add(val item: Item) : CartIntent
+    object Refresh : CartIntent
+}
+
+class CartViewModel : ViewModel() {
+    private val _state = MutableStateFlow(CartState())
+    val state: StateFlow&lt;CartState&gt; = _state
+    fun onIntent(intent: CartIntent) { ... }
+}</code></pre>
+      <p>Single state. Derived values (total). Explicit intents. Impossible states unrepresentable.</p>
+      <h4>Choose MVI when</h4>
+      <ul>
+        <li>State has &gt; 4 orthogonal fields that must stay consistent.</li>
+        <li>You've had "two flows drifted" bugs.</li>
+        <li>Team is comfortable with state machines.</li>
+        <li>Compose-first UI (MVI maps naturally to <code>@Composable fun UI(state)</code>).</li>
+      </ul>
+      <h4>Choose MVVM when</h4>
+      <ul>
+        <li>Simple screens (list + detail).</li>
+        <li>Team not yet senior with coroutines/state machines.</li>
+        <li>Fragment-based legacy code.</li>
+      </ul>
+      <div class="gotcha"><strong>One-time events in MVI:</strong> Navigation, toasts — these aren't state. Use <code>Channel</code> / <code>SharedFlow&lt;Effect&gt;</code> as a sibling, not part of state. Otherwise rotation replays the nav.</div>
+    `
+  },
+  {
+    phase: 6,
+    difficulty: 'med',
+    q: "Design a feature flag / remote config system for mobile.",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Feature flags decouple release from deploy. Architecture: remote source → local cache → in-memory accessor → UI. Key design — fast read, stale-ok, type-safe keys."</div>
+      <h4>Layers</h4>
+      <ul>
+        <li><strong>Remote</strong> — Firebase Remote Config, LaunchDarkly, or home-grown (GET /flags).</li>
+        <li><strong>Storage</strong> — DataStore or SharedPreferences. Persisted across launches.</li>
+        <li><strong>Accessor</strong> — <code>FeatureFlags.isEnabled(Flag.NEW_CART_UI)</code> — in-memory read, O(1).</li>
+        <li><strong>Refresh</strong> — WorkManager every 6 hours + on app start (async).</li>
+      </ul>
+      <h4>Type-safe keys</h4>
+      <pre><code>sealed class FeatureFlag&lt;T&gt;(val key: String, val default: T) {
+    object NewCartUi : FeatureFlag&lt;Boolean&gt;("new_cart_ui", false)
+    object MaxItemsInCart : FeatureFlag&lt;Long&gt;("max_items_cart", 50L)
+    object CheckoutVariant : FeatureFlag&lt;String&gt;("checkout_variant", "A")
+}
+
+object FeatureFlags {
+    fun &lt;T&gt; get(flag: FeatureFlag&lt;T&gt;): T = ...
+}</code></pre>
+      <h4>Requirements checklist</h4>
+      <ul>
+        <li><strong>Fast read</strong> — No disk I/O in hot path. In-memory map loaded at startup.</li>
+        <li><strong>Fallback</strong> — Always have a default. Network failure never breaks UI.</li>
+        <li><strong>Gradual rollout</strong> — % rollout, hashed on userId for consistency.</li>
+        <li><strong>Targeting</strong> — by country, app version, device model, user segment.</li>
+        <li><strong>A/B analytics</strong> — expose current variant to analytics for attribution.</li>
+        <li><strong>Kill switch</strong> — can disable a feature in minutes without a release.</li>
+      </ul>
+      <h4>Gotcha — flag value changing mid-session</h4>
+      <p>Don't read the flag 20 times during a flow. Cache at session start, use throughout. Otherwise a refresh mid-checkout changes the variant under the user.</p>
+      <div class="gotcha"><strong>Dead flags:</strong> Old flags pile up. Every quarter, audit and remove flags that are 100% rolled out. Dead flags are tech debt.</div>
+    `
+  },
+  {
+    phase: 6,
+    difficulty: 'med',
+    q: "Hilt vs Koin vs manual DI — when would you pick each?",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "All three inject dependencies. Hilt is compile-time (Dagger under the hood). Koin is runtime. Manual is explicit constructor wiring. I pick Hilt for large apps, Koin for KMP, manual for small apps or libraries."</div>
+      <h4>Comparison</h4>
+      <table style="width:100%; font-size:13px; border-collapse: collapse; margin: 8px 0;">
+        <tr style="border-bottom:1px solid var(--border)"><th style="padding:6px;text-align:left;">Aspect</th><th style="padding:6px;text-align:left;">Hilt</th><th style="padding:6px;text-align:left;">Koin</th><th style="padding:6px;text-align:left;">Manual</th></tr>
+        <tr><td style="padding:6px;">Resolution</td><td>Compile-time</td><td>Runtime (reflection-free in 3.x)</td><td>Compile-time</td></tr>
+        <tr><td style="padding:6px;">Build speed</td><td>Slow (KSP helps)</td><td>Fast</td><td>Fast</td></tr>
+        <tr><td style="padding:6px;">Runtime cost</td><td>Zero</td><td>Module lookup</td><td>Zero</td></tr>
+        <tr><td style="padding:6px;">Error surface</td><td>Compile error</td><td>Runtime crash</td><td>Compile error</td></tr>
+        <tr><td style="padding:6px;">KMP support</td><td>No</td><td>Yes</td><td>Yes</td></tr>
+        <tr><td style="padding:6px;">Learning curve</td><td>Steep</td><td>Shallow</td><td>N/A</td></tr>
+      </table>
+      <h4>Pick Hilt when</h4>
+      <ul>
+        <li>Large Android-only app.</li>
+        <li>Team wants compile-time safety.</li>
+        <li>Using standard Android components (Activity, ViewModel, Worker) — Hilt has first-class support.</li>
+      </ul>
+      <h4>Pick Koin when</h4>
+      <ul>
+        <li>Kotlin Multiplatform project (Hilt is Android-only).</li>
+        <li>Small/medium app where runtime errors are tolerable.</li>
+        <li>Fast iteration, simple setup.</li>
+      </ul>
+      <h4>Pick manual DI when</h4>
+      <ul>
+        <li>Library you're publishing (don't force a DI framework on consumers).</li>
+        <li>Small app (&lt;20 classes).</li>
+        <li>You want maximum build speed.</li>
+      </ul>
+      <h4>Code comparison</h4>
+      <pre><code>// Hilt
+@HiltViewModel
+class CartViewModel @Inject constructor(private val repo: CartRepo) : ViewModel()
+
+// Koin
+class CartViewModel(private val repo: CartRepo) : ViewModel()
+val vmModule = module { viewModel { CartViewModel(get()) } }
+
+// Manual
+class CartViewModel(private val repo: CartRepo) : ViewModel()
+// In Activity: val vm by viewModels { factory(CartRepo(...)) }</code></pre>
+      <div class="gotcha"><strong>Don't mix</strong> Hilt and Koin in one codebase. Picking DI is a long-term commitment. Migration is painful — I've done it, takes weeks.</div>
+    `
+  },
+  {
+    phase: 6,
+    difficulty: 'hard',
+    q: "Your Room database has grown to 500 MB on some devices. What do you do?",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "A 500 MB local DB is a bug. I'd triage: what's in it, is it necessary, is it bounded? Then: prune, archive, or move to blob storage. Also — never ship this without monitoring DB size in the first place."</div>
+      <h4>Step 1: Diagnose</h4>
+      <ul>
+        <li><code>SELECT name, SUM(LENGTH(blob_col)) FROM sqlite_master ...</code> — which tables are biggest?</li>
+        <li>Is it BLOBs (images, files) — move out!</li>
+        <li>Is it unbounded log/history?</li>
+        <li>Are there indexes bigger than the table?</li>
+      </ul>
+      <h4>Step 2: Immediate mitigations</h4>
+      <ul>
+        <li><strong>Prune</strong> — TTL policy. Keep last 30 days of orders, delete older. Use <code>@Query("DELETE FROM ... WHERE createdAt &lt; :cutoff")</code> in a WorkManager job.</li>
+        <li><strong>Archive</strong> — Move old rows to a separate .db file or compress to JSON in cold storage.</li>
+        <li><strong>VACUUM</strong> — Run <code>VACUUM</code> to reclaim space after large deletes. Room: <code>db.query("VACUUM")</code>. Expensive, so do it in background.</li>
+        <li><strong>Move BLOBs out</strong> — Store file paths, not bytes. Use internal storage / scoped storage.</li>
+      </ul>
+      <h4>Step 3: Structural changes</h4>
+      <ul>
+        <li><strong>Indexes audit</strong> — Drop unused indexes. Each index is a separate tree.</li>
+        <li><strong>Denormalize</strong> or <strong>normalize</strong> based on access patterns — storing JSON blobs vs separate tables is a space/speed tradeoff.</li>
+        <li><strong>WAL mode</strong> — SQLite Write-Ahead Logging, better concurrency + smaller journal. Room enables by default.</li>
+        <li><strong>Compression</strong> — Compress large TEXT columns with gzip before insert. 2-5× savings on JSON.</li>
+      </ul>
+      <h4>Step 4: Prevent recurrence</h4>
+      <ul>
+        <li>Firebase Performance trace on DB size — alert at 100 MB.</li>
+        <li>Unit test: "after 10k inserts + scheduled prune, DB size &lt; X."</li>
+        <li>Room migration: don't leave orphaned tables from old schema versions.</li>
+      </ul>
+      <div class="gotcha"><strong>Android's low-storage trigger:</strong> At ~10% free disk, Android broadcasts <code>ACTION_DEVICE_STORAGE_LOW</code>. Users blame YOUR app even if the system is overall low. Proactive pruning keeps good reviews.</div>
+    `
+  },
+  {
+    phase: 6,
+    difficulty: 'hard',
+    q: "Design a subscription / VIP membership module — plan discovery, purchase, and renewal.",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Subscriptions have three distinct flows — discovery, purchase, renewal — each with different failure modes. Let me design each, then talk about the cross-cutting concerns: idempotency, auto-renewal, and metrics."</div>
+      <h4>Discovery</h4>
+      <p>Entry points are multiple — home banner, profile badge, post-order CTA. I'd route all through a single <code>SubscriptionRouter</code> that attaches an analytics 'source' attribute so conversion can be attributed by entry point. The plan listing screen pulls from <code>/plans?userId=...</code> — backend returns tiers, benefits, price, and personalized messaging (ex-member sees 'welcome back'). Cache in Room with a 1-hour TTL so re-entry is instant.</p>
+      <h4>Purchase — state machine</h4>
+      <p>I'd use MVI because this flow has 6-7 interdependent fields (selected plan, payment method, promo code, isLoading, error, step). A single <code>SubscriptionState</code> data class prevents impossible states.</p>
+      <pre><code>sealed class Step {
+    object PlanSelection : Step()
+    data class Review(val plan: Plan) : Step()
+    data class Payment(val plan: Plan, val method: PaymentMethod?) : Step()
+    data class Confirming(val intentId: String) : Step()
+    data class Done(val orderId: String) : Step()
+}</code></pre>
+      <h4>Payment idempotency</h4>
+      <p>Critical. Before launching payment, generate a client-side <code>purchaseIntentId</code> (UUID). POST to /subscribe/intent creates a pending server-side record. If payment succeeds but our confirm-call fails, retrying with the same intent id does NOT double-charge. Every payment system needs this.</p>
+      <h4>Renewal — two modes</h4>
+      <ul>
+        <li><strong>Auto-renewal</strong> — UPI mandate or saved card. Backend-driven; client only renders result notifications.</li>
+        <li><strong>Manual renewal</strong> — 3 days before expiry, push notification. Deep-links into purchase flow with expiring plan pre-selected and an expired-plan banner.</li>
+      </ul>
+      <h4>Grace period handling</h4>
+      <p>When a subscription expires, don't lock the user out immediately. Offer a 7-day grace where premium features still work but the UI shows 'your membership expired — renew'. After grace, features downgrade but data is preserved for 30 days (in case they re-subscribe).</p>
+      <h4>Metrics I'd instrument</h4>
+      <ul>
+        <li>Conversion funnel per step — drop-off per step tells product where to improve.</li>
+        <li>Payment success rate by provider — if Razorpay dips, we know where to look.</li>
+        <li>Auto-renewal success rate — if it drops, UPI mandate revocations likely.</li>
+        <li>Grace-period recovery rate — users who renew during grace.</li>
+      </ul>
+      <div class="gotcha"><strong>Common trap:</strong> Treating subscription as 'one-time payment with a timer'. Real subscriptions need auto-renewal, grace periods, pause/resume, refund handling, and upgrade/downgrade mid-cycle with pro-rated billing. Scope carefully in the interview.</div>
+    `
+  },
+  {
+    phase: 6,
+    difficulty: 'hard',
+    q: "Design a full e-commerce ordering flow — cart, checkout, payment, real-time order status.",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Ordering has four parts, and each has subtle failure modes. Let me walk through them with the worst-case I was worried about at each stage."</div>
+      <h4>Cart</h4>
+      <p>Cart lives in Room, never just in memory. Phone rings, app killed, screen off — cart is intact. Every add/remove is a Room transaction first, then optional server sync for cart-abandonment emails. Cart items hold a <strong>price snapshot</strong>; server is authoritative at checkout — I re-validate every item's price right before showing the total. If anything changed, surface a 'Prices updated' toast with the delta.</p>
+      <h4>Checkout state machine</h4>
+      <p>ADDRESS → SLOT → PAYMENT_METHOD → CONFIRMING → PLACED. Backed by a sealed class, UI renders from a single StateFlow. For scheduled delivery, slot availability is server-driven; my client refreshes slot state on focus so we don't show 'sold-out' slots. Slot is reserved for 10 minutes once tapped — backend enforces this.</p>
+      <h4>Payment — idempotency contract</h4>
+      <ol>
+        <li>Client generates <code>orderIntentId</code> (UUID).</li>
+        <li>POST /orders/intent with cart + intent id → server creates pending order, returns <code>paymentOrderId</code>.</li>
+        <li>Launch Razorpay/Stripe SDK with that id.</li>
+        <li>On callback, server's webhook is the source of truth — not SDK's client-side result.</li>
+        <li>Client polls /orders/{id}/status for up to 30s to resolve.</li>
+      </ol>
+      <p>If the phone dies mid-payment, server state is authoritative. Reopening the app shows correct status in recent orders.</p>
+      <h4>Real-time order status</h4>
+      <p>For next-day scheduled delivery (CD-style), transitions happen over hours — PLACED → CONFIRMED → PACKED → OUT_FOR_DELIVERY → DELIVERED. FCM high-priority data messages update Room; UI reactively re-renders via Flow. No WebSocket — overkill for this cadence, more battery.</p>
+      <p>For same-day delivery (Swiggy-style), I'd swap in WebSocket for the final '30-min window' because partner location updates need sub-10s latency. Hybrid: FCM for long status, WebSocket when delivery is imminent.</p>
+      <h4>Offline behavior</h4>
+      <p>Cart fully offline. Checkout requires network (slot fetch, payment). Net drops mid-checkout → 'reconnecting' banner, pause not error. Orders list loads from Room cache showing last-known state.</p>
+      <h4>Performance — sub-second feel</h4>
+      <p>Product list opens ~300ms because Room serves first; network fills via Paging. Checkout open ~500ms because cart is local + slot fetch parallel with screen transition. Baseline Profile covers the critical path.</p>
+      <div class="gotcha"><strong>Double-charge nightmare:</strong> Without idempotency, a retry after flaky network charges twice. Every payment API call needs a client-generated idempotency key. This is the #1 real-world bug in e-commerce apps.</div>
+    `
+  },
+  {
+    phase: 6,
+    difficulty: 'hard',
+    q: "Design a BLE-based IoT device pairing and control architecture.",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "BLE is deceptively complex because it's two protocols — advertising/scanning for discovery, GATT for connection-oriented data. For IoT pairing we use both. Let me design the full stack."</div>
+      <h4>The flow</h4>
+      <ol>
+        <li>App starts <code>BluetoothLeScanner</code> with a service UUID filter so only our device family is seen.</li>
+        <li>User picks device from scan results — call <code>device.connectGatt()</code>.</li>
+        <li>On connection, discover services → discover characteristics.</li>
+        <li>Pairing: write a shared secret (from QR during setup) to PAIR_REQUEST characteristic. Device responds via notification with PAIR_ACK.</li>
+        <li>Subscribe to DATA characteristic for telemetry notifications; write to CONTROL characteristic for commands.</li>
+      </ol>
+      <h4>Serialized operation queue — the trick</h4>
+      <p>BLE only allows one outstanding GATT operation at a time. Concurrent reads/writes will drop silently. I wrap everything in a Channel-based queue with one consumer coroutine.</p>
+      <pre><code>class BleDeviceManager(private val gatt: BluetoothGatt) {
+    private val opQueue = Channel&lt;BleOp&gt;(Channel.UNLIMITED)
+    init {
+        scope.launch { for (op in opQueue) execute(op) }
+    }
+    suspend fun readTemp(): Float = suspendCoroutine { cont -&gt;
+        opQueue.trySend(BleOp.Read(TEMP_CHAR) { cont.resume(parseTemp(it)) })
+    }
+}</code></pre>
+      <h4>MTU negotiation</h4>
+      <p>Default BLE packet is 23 bytes — tiny. For bigger payloads I call <code>gatt.requestMtu(517)</code> right after connection, wait for <code>onMtuChanged</code> callback before sending data. Firmware must support it too.</p>
+      <h4>Reconnection</h4>
+      <p>BLE drops frequently — even well-written apps disconnect every few minutes on Android. Auto-reconnect with exponential backoff (1s, 2s, 4s, max 30s). Expose connection state as a StateFlow so UI reacts.</p>
+      <h4>Android 12+ permission mess</h4>
+      <p>Split into <code>BLUETOOTH_SCAN</code>, <code>BLUETOOTH_CONNECT</code>, <code>BLUETOOTH_ADVERTISE</code>. Request at runtime, check before every API call. Pre-12 devices need <code>ACCESS_FINE_LOCATION</code> for scanning — legacy but still matters.</p>
+      <h4>Background scanning</h4>
+      <p>Android 8+ severely limits background BLE. Two options: scan filters + low-power mode for passive discovery, or Foreground Service with persistent notification for continuous work (smart lock, fitness tracker). Foreground Service is heavy — justify the notification.</p>
+      <h4>Security</h4>
+      <ul>
+        <li>BLE bonding for encryption — use pairing methods (Passkey, OOB) over 'Just Works'.</li>
+        <li>Device ID alone ≠ identity — always do a cryptographic challenge on session start.</li>
+        <li>Pre-shared keys via QR code during initial setup — prevents spoofing.</li>
+      </ul>
+      <div class="gotcha"><strong>Battery reality:</strong> BLE scanning keeps the radio periodically on. Use hardware scan filters (radio matches before waking CPU), duty-cycle (scan 1s every 30s), and low-power scan mode. I've seen BLE apps drain 15%+ battery because of naive continuous high-power scanning.</div>
+    `
+  }
+];
+
+const p5 = document.getElementById('phase5-container');
+const p6 = document.getElementById('phase6-container');
+
+function render() {
+  p5.innerHTML = ''; p6.innerHTML = '';
+  let c5 = 0, c6 = 0;
+  questions.forEach((item, idx) => {
+    const done = getDone(idx);
+    const diffLabel = item.difficulty === 'hard' ? 'Hard' : item.difficulty === 'med' ? 'Medium' : 'Easy';
+    const diffClass = item.difficulty === 'hard' ? 'tag-hard' : item.difficulty === 'med' ? 'tag-med' : 'tag-easy';
+    if (item.phase === 5) c5++; else c6++;
+    const qNum = item.phase === 5 ? c5 : c6;
+
+    const card = document.createElement('div');
+    card.className = 'question-card' + (done ? ' done' : '');
+    card.innerHTML = `
+      <div class="question-header">
+        <div class="question-number">Q${qNum}</div>
+        <div class="question-text">${item.q}<span class="tag ${diffClass}">${diffLabel}</span></div>
+        <div class="actions">
+          <button class="btn btn-view" data-idx="${idx}">View Answer</button>
+          <button class="btn btn-done ${done ? 'active' : ''}" data-done="${idx}">${done ? '✓ Done' : 'Mark Done'}</button>
+        </div>
+      </div>
+      <div class="answer" id="answer-${idx}">${item.a}</div>
+    `;
+    (item.phase === 5 ? p5 : p6).appendChild(card);
+  });
+
+  document.querySelectorAll('[data-idx]').forEach(btn => {
+    btn.onclick = (e) => {
+      const idx = e.target.dataset.idx;
+      const ans = document.getElementById('answer-' + idx);
+      const open = ans.classList.toggle('open');
+      e.target.textContent = open ? 'Hide Answer' : 'View Answer';
+    };
+  });
+  document.querySelectorAll('[data-done]').forEach(btn => {
+    btn.onclick = (e) => {
+      const idx = parseInt(e.target.dataset.done);
+      toggleDone(idx); render();
+    };
+  });
+  updateProgress();
+}
+function getDone(idx) {
+  const list = JSON.parse(localStorage.getItem('prep_done_p5p6') || '[]');
+  return list.includes(idx);
+}
+function toggleDone(idx) {
+  let list = JSON.parse(localStorage.getItem('prep_done_p5p6') || '[]');
+  if (list.includes(idx)) list = list.filter(i => i !== idx); else list.push(idx);
+  localStorage.setItem('prep_done_p5p6', JSON.stringify(list));
+}
+function updateProgress() {
+  const list = JSON.parse(localStorage.getItem('prep_done_p5p6') || '[]');
+  const total = questions.length, done = list.length;
+  const pct = total ? (done / total * 100) : 0;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = `${done} of ${total} completed (${Math.round(pct)}%)`;
+}
+function resetProgress() {
+  if (confirm('Reset all progress?')) { localStorage.removeItem('prep_done_p5p6'); render(); }
+}
+render();
+</script>
+</body>
+</html>

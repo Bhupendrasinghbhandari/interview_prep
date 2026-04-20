@@ -1,0 +1,1915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SDE-2 Android Interview Prep · Phase 3 & 4</title>
+<style>
+  :root {
+    --bg: #0b0f17;
+    --card: #121826;
+    --card-hover: #1a2236;
+    --border: #232b3d;
+    --text: #e6edf7;
+    --text-dim: #8a94a7;
+    --accent: #6ea8fe;
+    --accent-hover: #90bcff;
+    --success: #3fb950;
+    --success-bg: #0f2a1a;
+    --warn: #f0b429;
+    --code-bg: #0a0e15;
+    --phase3: #ff9770;
+    --phase4: #70d6ff;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    padding: 24px 16px 80px;
+  }
+  .container { max-width: 960px; margin: 0 auto; }
+  header {
+    text-align: center;
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+  header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, var(--phase3), var(--phase4));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  header p { color: var(--text-dim); font-size: 14px; }
+  .progress-bar {
+    margin-top: 16px;
+    background: var(--card);
+    border-radius: 999px;
+    height: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--phase3), var(--phase4));
+    width: 0%;
+    transition: width 0.4s ease;
+  }
+  .progress-text {
+    margin-top: 8px;
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+  .phase-header {
+    margin: 40px 0 20px;
+    padding: 16px 20px;
+    background: var(--card);
+    border-left: 4px solid var(--phase3);
+    border-radius: 8px;
+  }
+  .phase-header.phase-4 { border-left-color: var(--phase4); }
+  .phase-header h2 { font-size: 20px; margin-bottom: 4px; }
+  .phase-header p { color: var(--text-dim); font-size: 13px; }
+  .question-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 12px;
+    overflow: hidden;
+    transition: all 0.2s ease;
+  }
+  .question-card:hover { border-color: var(--accent); }
+  .question-card.done {
+    background: var(--success-bg);
+    border-color: var(--success);
+    opacity: 0.75;
+  }
+  .question-card.done .question-text { text-decoration: line-through; color: var(--text-dim); }
+  .question-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px 20px;
+  }
+  .question-number {
+    background: var(--bg);
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 13px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    flex-shrink: 0;
+    min-width: 48px;
+    text-align: center;
+  }
+  .question-text {
+    flex: 1;
+    font-size: 15px;
+    font-weight: 500;
+    padding-top: 2px;
+  }
+  .tag {
+    display: inline-block;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-left: 6px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .tag-hard { background: rgba(248, 81, 73, 0.15); color: #f85149; }
+  .tag-med { background: rgba(240, 180, 41, 0.15); color: var(--warn); }
+  .tag-easy { background: rgba(63, 185, 80, 0.15); color: var(--success); }
+  .actions { display: flex; gap: 8px; flex-shrink: 0; }
+  .btn {
+    background: var(--bg);
+    color: var(--text);
+    border: 1px solid var(--border);
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 500;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+  }
+  .btn:hover { background: var(--card-hover); border-color: var(--accent); }
+  .btn-view { color: var(--accent); }
+  .btn-done { color: var(--success); }
+  .btn-done.active {
+    background: var(--success);
+    color: white;
+    border-color: var(--success);
+  }
+  .answer {
+    display: none;
+    padding: 0 20px 20px 20px;
+    border-top: 1px solid var(--border);
+    margin-top: 4px;
+    padding-top: 16px;
+    color: var(--text);
+  }
+  .answer.open { display: block; }
+  .answer .opener {
+    background: rgba(110, 168, 254, 0.08);
+    border-left: 3px solid var(--accent);
+    padding: 10px 14px;
+    margin-bottom: 14px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-style: italic;
+  }
+  .answer .opener strong { color: var(--accent); font-style: normal; }
+  .answer h4 {
+    color: var(--accent);
+    font-size: 14px;
+    margin: 16px 0 6px;
+    font-weight: 600;
+  }
+  .answer p { margin-bottom: 10px; font-size: 14px; }
+  .answer ul, .answer ol { margin: 8px 0 12px 20px; font-size: 14px; }
+  .answer li { margin-bottom: 5px; }
+  .answer code {
+    background: var(--code-bg);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'SF Mono', Monaco, Consolas, monospace;
+    font-size: 13px;
+    color: #ffa657;
+  }
+  .answer pre {
+    background: var(--code-bg);
+    padding: 12px 14px;
+    border-radius: 6px;
+    overflow-x: auto;
+    margin: 10px 0;
+    border: 1px solid var(--border);
+  }
+  .answer pre code {
+    background: none;
+    padding: 0;
+    color: var(--text);
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .answer strong { color: var(--accent-hover); }
+  .gotcha {
+    background: rgba(240, 180, 41, 0.08);
+    border-left: 3px solid var(--warn);
+    padding: 10px 14px;
+    margin: 12px 0;
+    border-radius: 4px;
+    font-size: 13px;
+  }
+  .gotcha strong { color: var(--warn); }
+  .reset-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    padding: 8px 14px;
+    border-radius: 999px;
+    cursor: pointer;
+    font-size: 12px;
+  }
+  .reset-btn:hover { color: var(--text); }
+  @media (max-width: 600px) {
+    .question-header { flex-wrap: wrap; }
+    .actions { width: 100%; justify-content: flex-end; margin-top: 8px; }
+    header h1 { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>SDE-2 Android Interview Prep</h1>
+    <p>Phase 3 & 4 · Android Core + Architecture + Networking · Speak-out-loud answers</p>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-text" id="progressText">0 of 0 completed</div>
+  </header>
+
+  <div class="phase-header">
+    <h2>Phase 3 · Android Core & Architecture</h2>
+    <p>Lifecycle, MVVM/MVI, Clean Architecture, Hilt, modularization, ViewModel, process death — the stuff that separates junior from senior.</p>
+  </div>
+  <div id="phase3-container"></div>
+
+  <div class="phase-header phase-4">
+    <h2>Phase 4 · Networking, Data & Concurrency</h2>
+    <p>Retrofit/OkHttp, Room, Paging 3, WorkManager, offline-first, caching — directly what you do at Country Delight.</p>
+  </div>
+  <div id="phase4-container"></div>
+</div>
+
+<button class="reset-btn" onclick="resetProgress()">↻ Reset Progress</button>
+
+<script>
+const questions = [
+  // ============ PHASE 3: ANDROID CORE & ARCHITECTURE ============
+  {
+    phase: 3,
+    difficulty: 'med',
+    q: "Walk me through the Android Activity lifecycle. What happens on a screen rotation?",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "The Activity lifecycle is a set of callbacks that signal what stage a screen is in — created, visible, interactive, and so on. I use them to decide when to start work, save state, and clean up."</div>
+      <h4>The core callbacks in order</h4>
+      <ul>
+        <li><code>onCreate()</code> — Activity is being created. Set up UI, bind ViewModel. Runs once per lifecycle instance.</li>
+        <li><code>onStart()</code> — Activity becomes visible but not yet interactive.</li>
+        <li><code>onResume()</code> — Activity is in foreground and interactive. Camera, sensors, and animations should start here.</li>
+        <li><code>onPause()</code> — Another activity is coming to foreground (could be partial, like a dialog). Pause animations, release light resources.</li>
+        <li><code>onStop()</code> — Activity is no longer visible. Release heavier resources — listeners, network polls.</li>
+        <li><code>onDestroy()</code> — Activity is being destroyed for good (or about to be recreated).</li>
+      </ul>
+      <h4>What I'd say about rotation</h4>
+      <p>"On rotation, by default Android destroys and recreates the Activity — onPause → onStop → onDestroy → onCreate → onStart → onResume. That's why ViewModels matter: they survive this recreation because they're scoped to the <code>ViewModelStoreOwner</code>, not the Activity instance."</p>
+      <h4>Real example from my work</h4>
+      <p>"At Country Delight, when a user rotates during checkout, we can't re-fetch the cart — that would be a terrible experience. We hold cart state in the ViewModel, and the UI just re-binds to it after recreation. Anything transient like scroll position goes into <code>rememberSaveable</code>."</p>
+      <div class="gotcha"><strong>Follow-up to expect:</strong> "How do you avoid recreation on rotation?" Add <code>android:configChanges="orientation|screenSize"</code> in manifest — but only do this if you actually need it (video players, games). For normal screens, let the system recreate and rely on ViewModel.</div>
+    `
+  },
+  {
+    phase: 3,
+    difficulty: 'hard',
+    q: "What is process death? How is it different from configuration change, and how do you handle it?",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Process death is when Android kills your app's entire process while it's in the background to reclaim memory — but the user thinks they can return to the same screen. Configuration change just recreates the Activity; process death kills everything, including ViewModels and singleton state."</div>
+      <h4>The key distinction</h4>
+      <ul>
+        <li><strong>Config change (rotation, theme, locale):</strong> Activity destroyed + recreated. ViewModel survives.</li>
+        <li><strong>Process death:</strong> Entire process terminated. ViewModel dies. Only what's persisted (SavedStateHandle, Bundle, DB, DataStore) survives.</li>
+      </ul>
+      <h4>How to handle it</h4>
+      <p>"I use <code>SavedStateHandle</code> in ViewModels for anything that must survive — like filter selections, search query, pagination cursor. Anything derivable (like the product list itself) gets re-fetched on restore."</p>
+      <pre><code>@HiltViewModel
+class ProductListViewModel @Inject constructor(
+    private val repo: ProductRepository,
+    private val savedState: SavedStateHandle
+) : ViewModel() {
+
+    val query: StateFlow&lt;String&gt; = savedState.getStateFlow("query", "")
+
+    fun updateQuery(q: String) {
+        savedState["query"] = q  // survives process death
+    }
+}</code></pre>
+      <h4>Testing it</h4>
+      <p>"I test process death explicitly using Developer Options → 'Don't keep activities', or <code>adb shell am kill &lt;package&gt;</code> while the app is backgrounded. Senior interviewers love this — it's the #1 bug category juniors miss."</p>
+      <h4>What I'd say about the user experience</h4>
+      <p>"The goal is that the user can never tell whether process death happened. They swipe back to the app and they're still on the product detail screen, still with their selected variant, still with their filter applied."</p>
+      <div class="gotcha"><strong>Follow-up:</strong> "What about the Activity's <code>onSaveInstanceState</code>?" That Bundle gets written through to SavedStateHandle automatically. In Compose, <code>rememberSaveable</code> uses the same Bundle under the hood.</div>
+    `
+  },
+  {
+    phase: 3,
+    difficulty: 'med',
+    q: "Why use ViewModel? Explain how it survives configuration changes.",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "ViewModel exists to hold UI state in a place that outlives the Activity or Fragment. It survives rotation and other config changes, so we don't re-fetch data or lose user input when the screen recreates."</div>
+      <h4>How survival works</h4>
+      <p>"A ViewModel is stored in a <code>ViewModelStore</code>, which is held by the <code>ViewModelStoreOwner</code> — the Activity or Fragment. During config change, Android uses <code>NonConfigurationInstances</code> to carry the ViewModelStore across the destroy-recreate cycle. The new Activity instance reattaches to the same store and gets the same ViewModel back."</p>
+      <h4>When the ViewModel is cleared</h4>
+      <ul>
+        <li>Activity/Fragment is finishing for real (user pressed back, <code>finish()</code> called) — <code>onCleared()</code> fires.</li>
+        <li>Process is killed — ViewModel dies with no callback.</li>
+      </ul>
+      <h4>What belongs in a ViewModel</h4>
+      <ul>
+        <li>UI state (<code>StateFlow&lt;UiState&gt;</code>).</li>
+        <li>Business logic — fetching, transforming, coordinating.</li>
+        <li>Coroutines scoped to <code>viewModelScope</code>.</li>
+      </ul>
+      <h4>What does NOT belong</h4>
+      <ul>
+        <li>Views, Contexts of Activities, anything lifecycle-bound (leak risk).</li>
+        <li>Navigation logic (use nav events).</li>
+        <li>Android framework dependencies — keeps VM testable without Robolectric.</li>
+      </ul>
+      <h4>How I'd explain the practical benefit</h4>
+      <p>"At Country Delight, our product listing ViewModel holds the current category, filters, and paginated Flow. A user can rotate their phone ten times during checkout and we don't re-hit the backend once — because the ViewModel is still there, and the UI just recollects from its StateFlow."</p>
+      <div class="gotcha"><strong>Interview trap:</strong> "Can a ViewModel hold a Context?" Only the Application Context via <code>AndroidViewModel</code> or injection. Holding an Activity Context leaks the entire Activity across rotations.</div>
+    `
+  },
+  {
+    phase: 3,
+    difficulty: 'hard',
+    q: "Explain MVVM, MVI, and MVP. Which do you use and why?",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "All three are UI architecture patterns that separate presentation logic from view. They differ in how state flows and how the UI talks to the logic layer. I use MVVM as the default because it fits Android's tooling, and MVI on screens with complex, conflicting state transitions."</div>
+      <h4>MVP — Model, View, Presenter</h4>
+      <ul>
+        <li>View is passive; Presenter pushes updates via an interface (<code>view.showLoading()</code>, <code>view.showData()</code>).</li>
+        <li>Lifecycle-painful — Presenter has to know when the View attaches/detaches.</li>
+        <li>Now mostly legacy. Old Java-era codebases still run on this.</li>
+      </ul>
+      <h4>MVVM — Model, View, ViewModel</h4>
+      <ul>
+        <li>ViewModel exposes state as observables (StateFlow, LiveData). View observes and binds.</li>
+        <li>ViewModel doesn't know about the View — no interface, no attach/detach.</li>
+        <li>Default choice for modern Android. Fits Jetpack perfectly.</li>
+      </ul>
+      <pre><code>class CartViewModel : ViewModel() {
+    val uiState: StateFlow&lt;CartUiState&gt; = ...
+    fun onQuantityChanged(item: Item, qty: Int) { ... }
+}
+// View just collects uiState and calls onQuantityChanged</code></pre>
+      <h4>MVI — Model, View, Intent</h4>
+      <ul>
+        <li>Single immutable state object. One input channel: user "intents" (events).</li>
+        <li>Reducer takes (currentState, intent) → newState.</li>
+        <li>Predictable, time-travel debuggable, but more boilerplate.</li>
+      </ul>
+      <pre><code>sealed interface CartIntent {
+    data class ChangeQty(val id: String, val qty: Int) : CartIntent
+    object Checkout : CartIntent
+}
+
+fun reduce(state: CartState, intent: CartIntent): CartState = when (intent) {
+    is CartIntent.ChangeQty -&gt; state.copy(items = state.items.update(intent))
+    CartIntent.Checkout -&gt; state.copy(isSubmitting = true)
+}</code></pre>
+      <h4>How I'd pitch my actual choice</h4>
+      <p>"For Country Delight, we run MVVM with a single <code>UiState</code> data class per screen — which is basically MVI-flavored MVVM. Strict MVI is overkill for CRUD screens but great for complex flows like checkout where you have overlapping async operations that can conflict."</p>
+      <div class="gotcha"><strong>Follow-up:</strong> "How do you handle one-time events like navigation or toasts in MVVM?" I use a <code>SharedFlow&lt;Event&gt;</code> with <code>replay = 0</code> — not in the UiState, because state-based events re-fire on rotation.</div>
+    `
+  },
+  {
+    phase: 3,
+    difficulty: 'hard',
+    q: "Explain Clean Architecture. What are the layers, and how do they communicate?",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Clean Architecture is about separating business logic from framework details, so the core of the app doesn't depend on Android, Retrofit, or Room. The key rule is the dependency rule — outer layers depend on inner layers, never the other way around."</div>
+      <h4>The layers — outside to inside</h4>
+      <ol>
+        <li><strong>Presentation</strong> — Composables, ViewModels. Depends on domain. Android-aware.</li>
+        <li><strong>Domain</strong> — Use cases, business models, repository interfaces. Pure Kotlin, zero Android dependencies. Testable on JVM.</li>
+        <li><strong>Data</strong> — Repository implementations, Retrofit services, Room DAOs, DTOs, mappers. Implements domain's interfaces.</li>
+      </ol>
+      <h4>The critical rule — dependency inversion</h4>
+      <p>"The domain layer defines a <code>ProductRepository</code> interface. The data layer provides <code>ProductRepositoryImpl</code>. The presentation layer depends on the interface, not the impl. This means I can swap Retrofit for GraphQL without touching ViewModels."</p>
+      <pre><code>// domain/ProductRepository.kt
+interface ProductRepository {
+    fun observeProducts(category: String): Flow&lt;List&lt;Product&gt;&gt;
+}
+
+// domain/GetProductsUseCase.kt
+class GetProductsUseCase(private val repo: ProductRepository) {
+    operator fun invoke(category: String) = repo.observeProducts(category)
+        .map { it.filter { p -&gt; p.inStock } }
+}
+
+// data/ProductRepositoryImpl.kt
+class ProductRepositoryImpl @Inject constructor(
+    private val api: ProductApi,
+    private val dao: ProductDao
+) : ProductRepository {
+    override fun observeProducts(category: String): Flow&lt;List&lt;Product&gt;&gt; = ...
+}</code></pre>
+      <h4>Use cases — when to bother</h4>
+      <p>"I don't create a use case for every single method — that's ceremony. I create use cases when there's real business logic that doesn't belong in the repository: combining multiple data sources, applying business rules, orchestrating multiple repos."</p>
+      <h4>What I'd say about the real benefit</h4>
+      <p>"The domain layer being pure Kotlin means I can run business logic tests in milliseconds on JVM — no Robolectric, no emulator. At Paras I had a fintech app where this paid off hugely — we tested all the payment flow rules as pure JUnit."</p>
+      <div class="gotcha"><strong>Pragmatism check:</strong> "Do you always use Clean Architecture?" Not on a 3-screen app. Architecture cost has to match project complexity. For a weekend project, MVVM with a repository is enough.</div>
+    `
+  },
+  {
+    phase: 3,
+    difficulty: 'hard',
+    q: "What is Hilt? How does it differ from Dagger, and how does it integrate with ViewModels?",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Hilt is Google's opinionated wrapper on top of Dagger. It gives you predefined scopes tied to Android components — Application, Activity, ViewModel — so you don't have to wire scopes and components manually. Under the hood it's still Dagger, just with less boilerplate."</div>
+      <h4>What Hilt gives you</h4>
+      <ul>
+        <li>Predefined components: <code>SingletonComponent</code>, <code>ActivityComponent</code>, <code>ViewModelComponent</code>, etc.</li>
+        <li>Automatic injection into Android classes via <code>@AndroidEntryPoint</code>.</li>
+        <li>ViewModel injection via <code>@HiltViewModel</code>.</li>
+        <li>Standard scopes: <code>@Singleton</code>, <code>@ActivityScoped</code>, <code>@ViewModelScoped</code>.</li>
+      </ul>
+      <h4>Module example</h4>
+      <pre><code>@Module
+@InstallIn(SingletonComponent::class)
+object NetworkModule {
+    @Provides @Singleton
+    fun provideOkHttp(): OkHttpClient = OkHttpClient.Builder()
+        .addInterceptor(AuthInterceptor())
+        .build()
+
+    @Provides @Singleton
+    fun provideRetrofit(client: OkHttpClient): Retrofit = Retrofit.Builder()
+        .baseUrl("https://api.example.com/")
+        .client(client)
+        .build()
+
+    @Provides
+    fun provideProductApi(retrofit: Retrofit): ProductApi = retrofit.create()
+}</code></pre>
+      <h4>ViewModel injection</h4>
+      <pre><code>@HiltViewModel
+class ProductViewModel @Inject constructor(
+    private val getProducts: GetProductsUseCase,
+    private val savedState: SavedStateHandle
+) : ViewModel() { ... }
+
+// In Composable
+@Composable
+fun ProductScreen(vm: ProductViewModel = hiltViewModel()) { ... }</code></pre>
+      <h4>Hilt vs raw Dagger — how I'd frame it</h4>
+      <p>"With raw Dagger I'd hand-write the component hierarchy, subcomponents, custom scopes, and plumb dependencies between Activities and Fragments myself. Hilt decides those conventions for me. The downside is less flexibility — for most apps that's fine, for very complex apps with unusual scoping you might still reach for Dagger."</p>
+      <h4>When injection fails</h4>
+      <p>"Most Hilt bugs I've seen are missing <code>@AndroidEntryPoint</code> on an Activity, or binding a dependency in the wrong scope — like a ViewModel-scoped repo being asked for in a Singleton. Reading the error carefully tells you the missing binding and where it was requested."</p>
+      <div class="gotcha"><strong>Follow-up:</strong> "What's a multibinding?" When you want to inject a set or map of things (like a set of interceptors or analytics handlers), you use <code>@IntoSet</code> or <code>@IntoMap</code>. Great for plugin-style architecture.</div>
+    `
+  },
+  {
+    phase: 3,
+    difficulty: 'hard',
+    q: "What are scoped and unscoped dependencies in Dagger/Hilt? Why does scope matter?",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Scope controls how long a dependency lives and whether it's shared. Unscoped means a new instance every time it's injected. Scoped means the component holds one instance and reuses it for the lifetime of that component."</div>
+      <h4>Unscoped example</h4>
+      <pre><code>// No @Singleton, no scope
+@Provides
+fun provideRandomId(): String = UUID.randomUUID().toString()
+
+// Every injection site gets a NEW UUID</code></pre>
+      <h4>Scoped example</h4>
+      <pre><code>@Provides @Singleton
+fun provideOkHttp(): OkHttpClient = OkHttpClient.Builder().build()
+
+// Every injection site gets the SAME OkHttpClient for app lifetime</code></pre>
+      <h4>Why scope matters — real reasons</h4>
+      <ul>
+        <li><strong>Correctness:</strong> OkHttpClient must be a singleton — each instance has its own connection pool and thread pool. Multiple instances = memory bloat and leaked threads.</li>
+        <li><strong>Shared state:</strong> An in-memory cache repo scoped to Singleton shares data across the app. Scoped to ViewModel, each screen has its own cache.</li>
+        <li><strong>Cost:</strong> Retrofit creation is expensive. Scoping prevents rebuilding it.</li>
+      </ul>
+      <h4>Hilt's scopes at a glance</h4>
+      <ul>
+        <li><code>@Singleton</code> — app lifetime.</li>
+        <li><code>@ActivityRetainedScoped</code> — survives config change, dies with Activity.</li>
+        <li><code>@ViewModelScoped</code> — lives for the ViewModel.</li>
+        <li><code>@ActivityScoped</code>, <code>@FragmentScoped</code>, <code>@ServiceScoped</code>.</li>
+      </ul>
+      <h4>How to pick</h4>
+      <p>"Default is unscoped — only scope when there's a real reason: expensive creation, shared state, or the dependency manages resources. Over-scoping to Singleton is a memory leak risk; under-scoping wastes creation cost."</p>
+      <h4>Real example I'd cite</h4>
+      <p>"On a fintech app at Paras, we had a SessionManager scoped to ActivityRetainedScoped. It tracked auth state and had to survive rotation, but we wanted it cleared when the user logged out (which recreated the Activity). Singleton would have held auth state past logout — a security bug."</p>
+      <div class="gotcha"><strong>Error to watch:</strong> "Cannot provide @ViewModelScoped dependency in @Singleton" means you tried to inject a smaller-scoped thing into a larger-scoped holder — that's a lifecycle violation Hilt catches at compile time.</div>
+    `
+  },
+  {
+    phase: 3,
+    difficulty: 'hard',
+    q: "What is modularization? Why split an Android app into modules, and how do you structure them?",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Modularization splits the app into separate Gradle modules so each feature or layer compiles and tests independently. Done right, it cuts build times dramatically, enforces architecture boundaries at the compiler level, and lets multiple teams work without stepping on each other."</div>
+      <h4>Benefits — what I'd highlight</h4>
+      <ul>
+        <li><strong>Build speed:</strong> Only changed modules rebuild. A 4-minute full build becomes 30 seconds incremental.</li>
+        <li><strong>Enforced boundaries:</strong> Feature A physically can't import from Feature B. No accidental coupling.</li>
+        <li><strong>Parallel builds:</strong> Gradle builds independent modules in parallel.</li>
+        <li><strong>Team scaling:</strong> Feature teams own their module end-to-end.</li>
+        <li><strong>Dynamic delivery:</strong> Ship features as separate APK splits for Play Feature Delivery.</li>
+      </ul>
+      <h4>A structure I'd propose for a Country Delight-style app</h4>
+      <pre><code>:app                        // Application entry, NavHost, DI wiring
+:core:ui                    // Design system, theme, common components
+:core:network               // Retrofit, OkHttp, interceptors
+:core:database              // Room setup, common DAOs
+:core:domain                // Shared entities, base use cases
+:feature:products           // Product catalog module
+:feature:cart               // Cart + checkout
+:feature:subscription       // VIP / subscription flows
+:feature:orders             // Order tracking</code></pre>
+      <h4>The golden rule</h4>
+      <p>"Features never depend on other features. They depend on <code>:core:*</code> modules and a shared <code>:navigation</code> contract module. If Feature A needs to launch Feature B, it does so via a navigation interface, not a direct dependency."</p>
+      <h4>Feature module internal structure</h4>
+      <pre><code>:feature:products
+  ├── data/       (ProductRepositoryImpl, API, DAO)
+  ├── domain/     (use cases, models, repo interface)
+  └── ui/         (Composables, ViewModels)</code></pre>
+      <h4>What I'd cite from experience</h4>
+      <p>"On a large Paras project I led the move from a single-module app to 12 modules. Full clean build dropped from ~5 minutes to ~2. Incremental builds on a ViewModel change went from 40 seconds to 6. Developer experience improved — no more merge conflicts on a single app module."</p>
+      <div class="gotcha"><strong>Warning:</strong> Over-modularizing early is a trap. Don't split into 20 modules on day one. Start with 3-4 clear boundaries and split further when a module gets unwieldy or build time justifies it.</div>
+    `
+  },
+  {
+    phase: 3,
+    difficulty: 'med',
+    q: "What is the difference between `Application`, `Activity`, and `Service` context? When do memory leaks happen?",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "A Context is a handle to app resources and framework services. Different contexts have different lifetimes and capabilities — the single biggest source of leaks in Android is holding an Activity context in something that outlives the Activity."</div>
+      <h4>The three you'll use</h4>
+      <ul>
+        <li><strong>Application Context:</strong> Lives as long as the process. Safe to hold in singletons. Can't show dialogs or start Activities directly (no window token).</li>
+        <li><strong>Activity Context:</strong> Tied to one Activity. Can show UI. Dies when Activity finishes.</li>
+        <li><strong>Service Context:</strong> Tied to a Service lifecycle.</li>
+      </ul>
+      <h4>The leak pattern</h4>
+      <pre><code>// LEAK
+object AnalyticsManager {
+    var context: Context? = null  // if set to an Activity, leaks it forever
+}
+
+// SAFE — use application context for long-lived holders
+class AnalyticsManager(private val appContext: Context) {
+    // appContext lives as long as the app anyway
+}</code></pre>
+      <h4>Common leak sources I've hunted</h4>
+      <ul>
+        <li>Static field holding an Activity.</li>
+        <li>Inner (non-static) class holding an implicit outer Activity reference — Handler, AsyncTask, custom listeners.</li>
+        <li>ViewModel holding a View or Activity Context.</li>
+        <li>Long-lived coroutine on <code>GlobalScope</code> referencing an Activity.</li>
+        <li>Listener registered but never unregistered (broadcast receivers, location updates).</li>
+      </ul>
+      <h4>How I detect them</h4>
+      <p>"LeakCanary is my first line — at Paras we integrated it into every debug build and the CI report flagged any new leaks. Android Studio Profiler's heap dump confirms which references hold the leak."</p>
+      <h4>The "safe by default" rule</h4>
+      <p>"If a class lives longer than an Activity, it must not hold an Activity Context. For Hilt, inject <code>@ApplicationContext</code> when you need a context in a Singleton or Repository."</p>
+      <pre><code>@Provides @Singleton
+fun provideImageLoader(@ApplicationContext ctx: Context): ImageLoader =
+    ImageLoader.Builder(ctx).build()</code></pre>
+      <div class="gotcha"><strong>Trick question:</strong> "Can a ViewModel leak an Activity?" Yes — if you pass Activity context into it. That's why <code>AndroidViewModel</code> only gives you Application context. If you need an Activity-specific thing, pass the data, not the Activity.</div>
+    `
+  },
+  {
+    phase: 3,
+    difficulty: 'med',
+    q: "What's the difference between `launchMode` standard, singleTop, singleTask, and singleInstance?",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Launch modes control how an Activity is placed into the task back stack when started. 99% of the time you want <code>standard</code> — but deep linking, notifications, and 'home-like' screens need the others."</div>
+      <h4>standard (default)</h4>
+      <p>Every start creates a new instance, even if the same Activity is already on top. Most normal screens use this.</p>
+      <h4>singleTop</h4>
+      <p>If the target Activity is already at the top of the back stack, reuse it and deliver the intent via <code>onNewIntent()</code>. Otherwise, create a new instance.</p>
+      <p><strong>Use case:</strong> Search screen. If the user hits search from a result, you don't want to stack another search on top of search.</p>
+      <h4>singleTask</h4>
+      <p>Only one instance exists across the entire task. If it's launched again, the existing instance moves to the top and all Activities above it are cleared. <code>onNewIntent()</code> fires.</p>
+      <p><strong>Use case:</strong> The Home/Dashboard of a navigation drawer app. Tapping "Home" from anywhere returns to the same Home, not a stacked duplicate.</p>
+      <h4>singleInstance</h4>
+      <p>Like singleTask, but the Activity lives in its own task alone — no other Activities can be in that task. Rarely used.</p>
+      <p><strong>Use case:</strong> Incoming call screens, lock screen overlays — things that need to stand alone.</p>
+      <h4>Real example I'd give</h4>
+      <p>"At Country Delight, our splash/launch Activity is <code>singleTask</code> with clear-top behavior. If a push notification launches the app while the user is mid-checkout, we don't want two entry points on the stack — we route cleanly through one."</p>
+      <h4>Intent flags as an alternative</h4>
+      <p>"You can achieve similar effects dynamically with Intent flags — <code>FLAG_ACTIVITY_CLEAR_TOP</code>, <code>FLAG_ACTIVITY_SINGLE_TOP</code>, <code>FLAG_ACTIVITY_NEW_TASK</code>. I prefer flags for one-off cases and <code>launchMode</code> when the behavior is permanent."</p>
+      <div class="gotcha"><strong>Follow-up:</strong> "What's <code>onNewIntent()</code> and when does it fire?" It fires when a singleTop/singleTask Activity gets an intent while already running. <code>onCreate</code> does NOT fire. You must pull data from the new Intent, not the original — forgetting this is a classic bug.</div>
+    `
+  },
+  {
+    phase: 3,
+    difficulty: 'med',
+    q: "How does Android decide to kill your app in the background? What's the killing order?",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Android categorizes processes by importance and kills low-importance ones first when it needs memory. The lowest is empty processes, and the highest is the foreground one. Knowing this hierarchy is how you design background work that survives — or accepts that it won't."</div>
+      <h4>The priority ladder (highest survives longest)</h4>
+      <ol>
+        <li><strong>Foreground process</strong> — Activity resumed, service running as foreground, IntentService running. Killed only under extreme memory pressure.</li>
+        <li><strong>Visible process</strong> — Activity is paused but visible (dialog on top), or has a visible service.</li>
+        <li><strong>Service process</strong> — Background service running.</li>
+        <li><strong>Cached process</strong> — Has Activities but none are visible. Killed first under memory pressure. This is where most backgrounded apps live.</li>
+        <li><strong>Empty process</strong> — No active components. Killed immediately when memory is needed.</li>
+      </ol>
+      <h4>What this means for work you want to finish</h4>
+      <ul>
+        <li><strong>Trivial, fast:</strong> Coroutine in Activity or ViewModel. Dies with the component. Fine for things like logging an event.</li>
+        <li><strong>Survives backgrounding briefly:</strong> Foreground service with a notification. Used for music players, uploads.</li>
+        <li><strong>Survives process death and reboot:</strong> WorkManager. It persists work in a DB and reschedules when the app is alive again.</li>
+      </ul>
+      <h4>How I'd frame the design decision</h4>
+      <p>"The question I ask is: if Android kills my app right now, does the user lose anything? If yes, the work needs WorkManager or a foreground service. If it's best-effort (like prefetching images), a regular coroutine is fine."</p>
+      <h4>Country Delight example</h4>
+      <p>"Order placement retries use WorkManager with a CONNECTED constraint — if the user loses signal during checkout confirmation, the retry survives process death. But scrolling a product list, we use normal coroutines — if the user leaves, the prefetch is lost and that's fine."</p>
+      <div class="gotcha"><strong>Doze mode follow-up:</strong> "What if the device is in Doze?" Even foreground services can be throttled. <code>setExactAndAllowWhileIdle</code> and <code>setAllowWhileIdle</code> work through Doze, but the system rate-limits them. WorkManager handles Doze automatically.</div>
+    `
+  },
+  {
+    phase: 3,
+    difficulty: 'hard',
+    q: "Explain single-activity architecture. What are the pros and cons vs multi-activity?",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Single-activity architecture means the whole app runs inside one Activity, with screens being Fragments or Composables navigated via a NavHost. It's now the default recommendation from Google and what I build with in production."</div>
+      <h4>Why it won</h4>
+      <ul>
+        <li><strong>Predictable state:</strong> One Activity lifecycle. One back stack. One place to handle process death.</li>
+        <li><strong>Shared ViewModels:</strong> With Activity-scoped or nav-graph-scoped ViewModels, screens can share state cleanly.</li>
+        <li><strong>Animations between screens:</strong> Same-activity transitions are simpler than cross-activity intents.</li>
+        <li><strong>Deep linking:</strong> Navigation-Compose maps URLs to screens inside one Activity.</li>
+        <li><strong>Faster navigation:</strong> Creating a composable is cheaper than starting an Activity.</li>
+      </ul>
+      <h4>Trade-offs</h4>
+      <ul>
+        <li><strong>All code loaded together:</strong> Without dynamic feature modules, the full app ships in one APK. Less of an issue today.</li>
+        <li><strong>One crash = whole app:</strong> An unhandled exception in any screen takes the whole Activity down. Strong error boundaries matter more.</li>
+        <li><strong>Not ideal when a feature genuinely needs its own task or process</strong> — e.g., a picture-in-picture player or a separate task from a notification. Those can still be secondary Activities.</li>
+      </ul>
+      <h4>My real setup</h4>
+      <pre><code>// One Activity
+@AndroidEntryPoint
+class MainActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContent {
+            AppTheme {
+                val navController = rememberNavController()
+                AppNavHost(navController)
+            }
+        }
+    }
+}</code></pre>
+      <h4>Hybrid approach</h4>
+      <p>"I don't take it as religion. At Country Delight we have one main Activity for the whole shopping flow, but a separate Activity for the in-app web checkout that runs a payment SDK — because that SDK needs its own window and lifecycle isolation."</p>
+      <div class="gotcha"><strong>Follow-up:</strong> "How do you share state between two screens in single-activity?" Either lift the state into a ViewModel scoped to the navigation graph (via <code>hiltViewModel(navBackStackEntry)</code>), or store it in a repository. I don't pass large objects through navigation arguments.</div>
+    `
+  },
+  {
+    phase: 3,
+    difficulty: 'med',
+    q: "What are navigation graphs and nested graphs? When would you use a nested graph?",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "A navigation graph is the whole app's map of destinations and routes. A nested graph is a subgraph with its own start destination — I use them to group related screens and to scope a shared ViewModel to that flow."</div>
+      <h4>Why nested graphs matter</h4>
+      <ul>
+        <li><strong>Modularity:</strong> Each feature owns its own graph. App module just references them.</li>
+        <li><strong>Shared scoped state:</strong> A ViewModel scoped to a nested graph is shared across its screens and cleared when the user exits the graph.</li>
+        <li><strong>Encapsulation:</strong> Outside the graph, only the entry destination is visible.</li>
+      </ul>
+      <h4>Example — a checkout flow</h4>
+      <pre><code>navigation(startDestination = "checkout/address", route = "checkout_flow") {
+    composable("checkout/address") { backEntry -&gt;
+        val parentEntry = remember(backEntry) {
+            navController.getBackStackEntry("checkout_flow")
+        }
+        val vm: CheckoutViewModel = hiltViewModel(parentEntry)
+        AddressScreen(vm)
+    }
+    composable("checkout/payment") { backEntry -&gt;
+        val parentEntry = remember(backEntry) {
+            navController.getBackStackEntry("checkout_flow")
+        }
+        val vm: CheckoutViewModel = hiltViewModel(parentEntry)
+        PaymentScreen(vm)
+    }
+    composable("checkout/confirm") { /* same pattern */ }
+}</code></pre>
+      <p>"All three screens share the same <code>CheckoutViewModel</code>. When the user exits the checkout flow, the ViewModel clears. This is cleaner than trying to pass cart state through navigation arguments."</p>
+      <h4>Real use case</h4>
+      <p>"Country Delight's VIP subscription flow has plan selection, review, payment, and confirmation screens. They share a <code>SubscriptionViewModel</code> holding the selected plan, promo code, and payment method. Nested graph makes that scoping trivial."</p>
+      <div class="gotcha"><strong>Common mistake:</strong> Using Activity-scoped ViewModels for flow-specific state. The ViewModel then lives for the whole app session and leaks stale data when the user re-enters the flow. Nav-graph scope fixes this.</div>
+    `
+  },
+  {
+    phase: 3,
+    difficulty: 'hard',
+    q: "How do you handle errors across the app cleanly? What's a good error-handling strategy?",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "I model errors as a first-class part of the domain — not just exceptions thrown randomly. That means typed <code>Result</code> wrappers at repository boundaries, a sealed <code>UiState</code> with an explicit error branch, and mapping raw exceptions to user-facing messages at the UI layer."</div>
+      <h4>Layered strategy</h4>
+      <ol>
+        <li><strong>Data layer:</strong> Catch raw Retrofit/Room exceptions, map to domain errors.</li>
+        <li><strong>Domain layer:</strong> Return <code>Result&lt;T, DomainError&gt;</code> or throw domain exceptions.</li>
+        <li><strong>ViewModel:</strong> Collect into UiState — success, error with a user-friendly message, loading.</li>
+        <li><strong>UI:</strong> Render the error state. Snackbars for recoverable errors, error screens for fatal.</li>
+      </ol>
+      <h4>Example pipeline</h4>
+      <pre><code>// Domain
+sealed interface DomainError {
+    object Network : DomainError
+    object Unauthorized : DomainError
+    data class Server(val code: Int) : DomainError
+    object Unknown : DomainError
+}
+
+// Data
+class ProductRepositoryImpl(...) : ProductRepository {
+    override suspend fun fetchProducts(): Result&lt;List&lt;Product&gt;&gt; = runCatching {
+        api.getProducts().toDomain()
+    }.recoverCatching { e -&gt;
+        throw when (e) {
+            is IOException -&gt; AppException(DomainError.Network)
+            is HttpException when e.code() == 401 -&gt; AppException(DomainError.Unauthorized)
+            else -&gt; AppException(DomainError.Unknown)
+        }
+    }
+}
+
+// ViewModel
+fun load() {
+    viewModelScope.launch {
+        _uiState.value = UiState.Loading
+        _uiState.value = repo.fetchProducts().fold(
+            onSuccess = { UiState.Success(it) },
+            onFailure = { UiState.Error(mapToUserMessage(it)) }
+        )
+    }
+}</code></pre>
+      <h4>Global error handling</h4>
+      <ul>
+        <li><strong>OkHttp interceptor</strong> catches 401 globally and fires a logout event.</li>
+        <li><strong>Crashlytics</strong> for unexpected exceptions. Use <code>setCustomKeys</code> for breadcrumbs.</li>
+        <li><strong>Thread default handler</strong> for truly uncaught exceptions — log, then let the app crash cleanly.</li>
+      </ul>
+      <h4>What I'd emphasize in the interview</h4>
+      <p>"The key principle — never show a raw exception message to the user. <code>SocketTimeoutException</code> means nothing to them. We map to 'Please check your connection and try again.' That mapping happens once, in the ViewModel or a shared error handler."</p>
+      <div class="gotcha"><strong>Never swallow <code>CancellationException</code>:</strong> If you catch <code>Exception</code> in a coroutine, you'll catch cancellation too — breaking structured concurrency. Always rethrow it: <code>catch (e: CancellationException) { throw e }</code>.</div>
+    `
+  },
+  {
+    phase: 3,
+    difficulty: 'hard',
+    q: "What is `SavedStateHandle`? How is it different from `rememberSaveable` and Bundle?",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "<code>SavedStateHandle</code> is a key-value store injected into ViewModels that survives process death — not just config change. It's how I persist critical state from a ViewModel without hand-writing <code>onSaveInstanceState</code>."</div>
+      <h4>The three survival mechanisms compared</h4>
+      <table style="width:100%; border-collapse:collapse; margin:10px 0; font-size:13px;">
+        <tr style="background:#0a0e15;">
+          <th style="padding:8px; border:1px solid #232b3d;">Mechanism</th>
+          <th style="padding:8px; border:1px solid #232b3d;">Config change</th>
+          <th style="padding:8px; border:1px solid #232b3d;">Process death</th>
+          <th style="padding:8px; border:1px solid #232b3d;">Lives in</th>
+        </tr>
+        <tr>
+          <td style="padding:8px; border:1px solid #232b3d;">ViewModel field</td>
+          <td style="padding:8px; border:1px solid #232b3d;">✓</td>
+          <td style="padding:8px; border:1px solid #232b3d;">✗</td>
+          <td style="padding:8px; border:1px solid #232b3d;">Memory</td>
+        </tr>
+        <tr>
+          <td style="padding:8px; border:1px solid #232b3d;"><code>rememberSaveable</code></td>
+          <td style="padding:8px; border:1px solid #232b3d;">✓</td>
+          <td style="padding:8px; border:1px solid #232b3d;">✓</td>
+          <td style="padding:8px; border:1px solid #232b3d;">Bundle (UI layer)</td>
+        </tr>
+        <tr>
+          <td style="padding:8px; border:1px solid #232b3d;"><code>SavedStateHandle</code></td>
+          <td style="padding:8px; border:1px solid #232b3d;">✓</td>
+          <td style="padding:8px; border:1px solid #232b3d;">✓</td>
+          <td style="padding:8px; border:1px solid #232b3d;">Bundle (VM layer)</td>
+        </tr>
+        <tr>
+          <td style="padding:8px; border:1px solid #232b3d;">DataStore/DB</td>
+          <td style="padding:8px; border:1px solid #232b3d;">✓</td>
+          <td style="padding:8px; border:1px solid #232b3d;">✓</td>
+          <td style="padding:8px; border:1px solid #232b3d;">Disk</td>
+        </tr>
+      </table>
+      <h4>How I use it</h4>
+      <pre><code>@HiltViewModel
+class SearchViewModel @Inject constructor(
+    private val repo: SearchRepository,
+    private val savedState: SavedStateHandle
+) : ViewModel() {
+
+    // Initial value also pulled from navigation args — SavedStateHandle carries those
+    val query: StateFlow&lt;String&gt; = savedState.getStateFlow("query", "")
+
+    fun updateQuery(q: String) {
+        savedState["query"] = q  // auto-persisted to Bundle
+    }
+}</code></pre>
+      <h4>Rule for what to store</h4>
+      <p>"Only small, primitive-ish data belongs in SavedStateHandle — IDs, filters, search queries, selected tabs. Never store big lists, bitmaps, or parsed API responses. For those, re-fetch or re-derive from persistent storage."</p>
+      <h4>SavedStateHandle also carries nav args</h4>
+      <p>"When you navigate with arguments, they're automatically in the ViewModel's SavedStateHandle. So <code>savedState.get&lt;String&gt;(\"productId\")</code> pulls the nav arg without needing to pass it manually — another reason to inject it everywhere."</p>
+      <h4>Common interview framing</h4>
+      <p>"Think of it this way: <code>rememberSaveable</code> is for state the UI owns, <code>SavedStateHandle</code> is for state the ViewModel owns, and both get persisted through the same Bundle mechanism when the process dies."</p>
+      <div class="gotcha"><strong>Bundle size limit:</strong> The Activity's save state Bundle is capped around 1MB. Trying to save a huge list there crashes with <code>TransactionTooLargeException</code>. Keep SavedStateHandle keys small.</div>
+    `
+  },
+  {
+    phase: 3,
+    difficulty: 'med',
+    q: "How do you share a ViewModel between two Composables or Fragments?",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "The key is scope. A ViewModel is shared when both callers resolve it from the same <code>ViewModelStoreOwner</code>. So the question becomes: at what scope does the shared state need to live?"</div>
+      <h4>Option 1 — Activity-scoped (app-session shared)</h4>
+      <pre><code>// Both composables inside the same Activity get the same instance
+@Composable
+fun ScreenA() {
+    val vm: SharedViewModel = hiltViewModel(LocalContext.current as ComponentActivity)
+}
+@Composable
+fun ScreenB() {
+    val vm: SharedViewModel = hiltViewModel(LocalContext.current as ComponentActivity)
+}</code></pre>
+      <p>Great for genuinely app-wide state (auth, user profile). Overkill for feature-local sharing.</p>
+      <h4>Option 2 — Nav-graph-scoped (flow-local shared)</h4>
+      <pre><code>@Composable
+fun AddressScreen(navController: NavHostController) {
+    val parentEntry = remember(navController.currentBackStackEntry) {
+        navController.getBackStackEntry("checkout_flow")
+    }
+    val vm: CheckoutViewModel = hiltViewModel(parentEntry)
+}</code></pre>
+      <p>"This is my default for multi-screen flows — checkout, onboarding, VIP subscription. The ViewModel lives for the duration of the flow and clears when the user exits."</p>
+      <h4>Option 3 — Fragments sharing via Activity</h4>
+      <pre><code>class DetailFragment : Fragment() {
+    private val vm: SharedViewModel by activityViewModels()
+}
+class ListFragment : Fragment() {
+    private val vm: SharedViewModel by activityViewModels()
+}</code></pre>
+      <h4>When NOT to share a ViewModel</h4>
+      <p>"Sharing by default is an anti-pattern. If two screens need to communicate, ask: is this really shared state, or is it just one-way data passing? For one-way, use nav arguments or pass an ID and have the second screen fetch its own data."</p>
+      <h4>How I'd frame it</h4>
+      <p>"At Country Delight, the cart is truly shared state — every screen needs to know 'is there something in the cart?' for the top bar badge. That's Activity-scoped or better, lifted into a repository injected into every ViewModel. Flow-local state like 'selected delivery slot during checkout' is nav-graph-scoped."</p>
+      <div class="gotcha"><strong>Don't</strong> put shared state into a Singleton repository "for simplicity" when it's really only needed during one flow. You'll leak stale state across user sessions.</div>
+    `
+  },
+  {
+    phase: 3,
+    difficulty: 'med',
+    q: "Explain Android Services — started vs bound vs foreground. What changed in Android 14?",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Services run work outside a visible UI. Three flavors: started (runs until self-stops), bound (clients connect, lives while bound), foreground (started service with a persistent notification and special OS privilege). Android 14 added mandatory <code>foregroundServiceType</code> — you must declare WHY a foreground service exists."</div>
+      <h4>Started service</h4>
+      <pre><code>class UploadService : Service() {
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        // do work, then call stopSelf()
+        return START_STICKY  // restart if killed
+    }
+    override fun onBind(intent: Intent?) = null
+}</code></pre>
+      <p>Return values: <code>START_STICKY</code> (restart with null intent), <code>START_NOT_STICKY</code> (don't restart), <code>START_REDELIVER_INTENT</code> (restart with last intent).</p>
+      <h4>Bound service</h4>
+      <p>Clients call <code>bindService()</code>, get a Binder back, communicate via IPC or direct method calls. Lives while at least one client is bound. Good for: ongoing data feeds, Messenger-based IPC between app processes.</p>
+      <h4>Foreground Service</h4>
+      <pre><code>override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+    val notif = NotificationCompat.Builder(this, CHANNEL_ID)
+        .setContentTitle("Uploading")
+        .setSmallIcon(R.drawable.ic_upload)
+        .build()
+    ServiceCompat.startForeground(
+        this, NOTIFICATION_ID, notif,
+        ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC  // Android 14+ required
+    )
+    return START_STICKY
+}</code></pre>
+      <h4>Android 14 foregroundServiceType values</h4>
+      <ul>
+        <li><code>location</code> — continuous location (maps, ride-sharing).</li>
+        <li><code>mediaPlayback</code> — audio/video player backgrounded.</li>
+        <li><code>dataSync</code> — upload/download.</li>
+        <li><code>connectedDevice</code> — BLE / companion device.</li>
+        <li><code>camera</code>, <code>microphone</code>, <code>phoneCall</code>, <code>health</code>, <code>mediaProcessing</code>.</li>
+        <li><code>shortService</code> — under 3 min, no type needed.</li>
+        <li><code>specialUse</code> — escape hatch with Play Store justification.</li>
+      </ul>
+      <p>Declare in manifest AND pass to <code>startForeground</code>. Missing this crashes on Android 14+.</p>
+      <h4>When NOT to use a Service</h4>
+      <p>Most "background" work doesn't need a Service anymore. Use WorkManager for deferrable work, coroutines for in-memory async, Foreground Service only when the user is actively watching (music, ride tracking, upload).</p>
+      <div class="gotcha"><strong>Android 12+ restriction:</strong> You can't start a foreground service from the background (app not in foreground, no visible Activity). Limited exceptions — from a BroadcastReceiver for specific system broadcasts, or with SYSTEM_ALERT_WINDOW. Otherwise use WorkManager with expedited work.</div>
+    `
+  },
+  {
+    phase: 3,
+    difficulty: 'med',
+    q: "BroadcastReceiver — manifest vs runtime, and why most implicit broadcasts are banned now.",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "BroadcastReceivers respond to events. Two declaration modes: manifest (static, system can instantiate even if app isn't running) and runtime (dynamic, app must be alive). Since Android 8, most <em>implicit</em> manifest broadcasts are banned — performance cost of waking dozens of apps for every screen-on or connectivity change."</div>
+      <h4>Manifest-declared</h4>
+      <pre><code>&lt;receiver android:name=".BootReceiver" android:exported="true"&gt;
+    &lt;intent-filter&gt;
+        &lt;action android:name="android.intent.action.BOOT_COMPLETED" /&gt;
+    &lt;/intent-filter&gt;
+&lt;/receiver&gt;</code></pre>
+      <h4>Runtime-registered</h4>
+      <pre><code>val receiver = object : BroadcastReceiver() {
+    override fun onReceive(ctx: Context, intent: Intent) { /* ... */ }
+}
+registerReceiver(receiver, IntentFilter(Intent.ACTION_BATTERY_CHANGED),
+    Context.RECEIVER_NOT_EXPORTED)    // Android 13+ requires exported flag</code></pre>
+      <h4>Android 8+ implicit broadcast bans</h4>
+      <p>Most system broadcasts (CONNECTIVITY_CHANGE, NEW_PICTURE, NEW_VIDEO, etc.) won't wake manifest-declared receivers. The allowed exceptions are bootable/targeted broadcasts: BOOT_COMPLETED, MY_PACKAGE_REPLACED, LOCALE_CHANGED, TIMEZONE_CHANGED, a few others.</p>
+      <h4>Modern replacements</h4>
+      <ul>
+        <li><strong>Connectivity</strong> — <code>ConnectivityManager.registerNetworkCallback</code> + Flow.</li>
+        <li><strong>App events inside your app</strong> — <code>SharedFlow</code> / EventBus pattern. LocalBroadcastManager is deprecated.</li>
+        <li><strong>Scheduled work</strong> — WorkManager, not BR+AlarmManager.</li>
+      </ul>
+      <h4>PendingIntent — mutability flags (Android 12+ required)</h4>
+      <pre><code>PendingIntent.getBroadcast(
+    context, 0, intent,
+    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE  // required on 12+
+)</code></pre>
+      <p>Every PendingIntent MUST declare FLAG_IMMUTABLE or FLAG_MUTABLE. Immutable = other apps can't modify the wrapped intent. Default to immutable; use mutable only when you need to inject extras later (e.g., inline notification replies).</p>
+      <h4>Exported flag (Android 13+)</h4>
+      <p>Every receiver registered at runtime must specify <code>RECEIVER_EXPORTED</code> or <code>RECEIVER_NOT_EXPORTED</code>. Manifest receivers need <code>android:exported</code> if they have an intent filter. Missing it → crash on Android 13+.</p>
+      <div class="gotcha"><strong>Security:</strong> Any exported receiver is a public API. Other apps can send you broadcasts. Check sender via <code>intent.action</code> match + verify any extras. Better: don't export at all (<code>android:exported="false"</code>) unless you really need cross-app broadcasts.</div>
+    `
+  },
+  {
+    phase: 3,
+    difficulty: 'med',
+    q: "Activity launch modes — standard, singleTop, singleTask, singleInstance. When to use each?",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Launch modes control how new Activities interact with the back stack. 99% of screens are <code>standard</code>. The others exist for specific cases — avoiding duplicate screens, deep linking, and single-instance tools."</div>
+      <h4>standard (default)</h4>
+      <p>Every launch creates a new instance, pushed onto the current task's stack. A → B → B → B gives three Bs on the stack. Normal screen behavior.</p>
+      <h4>singleTop</h4>
+      <p>If an instance is already on top of the stack, reuse it (fires <code>onNewIntent</code>). Otherwise, new instance.</p>
+      <p><strong>Use for:</strong> notification-opens-screen. Prevents duplicate of same screen when user taps notification twice.</p>
+      <pre><code>override fun onNewIntent(intent: Intent) {
+    super.onNewIntent(intent)
+    setIntent(intent)   // critical — else getIntent() returns the old one
+    handleDeepLink(intent)
+}</code></pre>
+      <h4>singleTask</h4>
+      <p>At most one instance exists system-wide (within its task affinity). Launching brings the task to foreground, clears Activities above it, delivers to <code>onNewIntent</code>.</p>
+      <p><strong>Use for:</strong> the app's main entry Activity, or screens that should never duplicate regardless of how they're reached. Browser's main page is singleTask.</p>
+      <h4>singleInstance</h4>
+      <p>Like singleTask but even more restrictive — this Activity is alone in its own task. New Activities it launches go into OTHER tasks.</p>
+      <p><strong>Use for:</strong> Very rare. Phone dialer's incoming call screen is a classic example. Avoid unless you understand task stacks deeply.</p>
+      <h4>Intent flags (override launch mode at call time)</h4>
+      <ul>
+        <li><code>FLAG_ACTIVITY_NEW_TASK</code> — launch in a new task.</li>
+        <li><code>FLAG_ACTIVITY_CLEAR_TOP</code> — if target already in stack, clear everything above it.</li>
+        <li><code>FLAG_ACTIVITY_CLEAR_TASK</code> — used with NEW_TASK, clears the target task.</li>
+        <li><code>FLAG_ACTIVITY_NO_HISTORY</code> — target doesn't enter the back stack at all.</li>
+      </ul>
+      <h4>taskAffinity</h4>
+      <p>Groups Activities into named tasks. Default affinity = package name. Setting <code>android:taskAffinity=":secondary"</code> means that Activity lives in a different task. Pairs with singleTask for multi-window flows. Rarely needed.</p>
+      <h4>Single-Activity architecture (modern preferred)</h4>
+      <p>With Jetpack Navigation, most apps have ONE Activity + many fragments/composables. Launch modes become almost irrelevant. You handle back stack via <code>NavController</code>. Launch modes still matter for: deep link entry Activity, widget/notification entry.</p>
+      <div class="gotcha"><strong>Deep link trap:</strong> If your entry Activity is <code>singleTask</code> and user opens the app from a notification while already inside a deeper screen, the stack gets cleared — user loses where they were. Use <code>singleTop</code> + careful <code>onNewIntent</code> handling instead, or route all deep links through a dedicated non-UI Activity that forwards.</div>
+    `
+  },
+  {
+    phase: 3,
+    difficulty: 'med',
+    q: "WorkManager vs JobScheduler vs AlarmManager vs ForegroundService — when to pick which?",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Android has four background tools. Default to WorkManager for anything deferrable. AlarmManager for exact-time, user-visible alarms. Foreground Service for immediate long work the user is watching. JobScheduler is legacy — WorkManager wraps it for you."</div>
+      <h4>Decision tree</h4>
+      <table style="width:100%;font-size:13px;border-collapse:collapse;margin:8px 0;">
+        <tr style="border-bottom:1px solid var(--border)"><th style="padding:6px;text-align:left;">Characteristic</th><th style="padding:6px;text-align:left;">Pick</th></tr>
+        <tr><td style="padding:6px;">Deferrable, guaranteed eventually (sync, upload)</td><td>WorkManager</td></tr>
+        <tr><td style="padding:6px;">User-visible exact time (alarm clock, reminder)</td><td>AlarmManager setExactAndAllowWhileIdle</td></tr>
+        <tr><td style="padding:6px;">Immediate, long-running, user-aware (music, upload)</td><td>Foreground Service</td></tr>
+        <tr><td style="padding:6px;">Periodic flex window (daily report)</td><td>PeriodicWorkRequest</td></tr>
+        <tr><td style="padding:6px;">In-memory, lifecycle-scoped</td><td>Coroutine in viewModelScope</td></tr>
+      </table>
+      <h4>WorkManager — the default</h4>
+      <pre><code>val work = OneTimeWorkRequestBuilder&lt;UploadWorker&gt;()
+    .setConstraints(Constraints.Builder()
+        .setRequiredNetworkType(NetworkType.UNMETERED)
+        .setRequiresCharging(true)
+        .build())
+    .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 30, TimeUnit.SECONDS)
+    .build()
+WorkManager.getInstance(context).enqueue(work)</code></pre>
+      <ul>
+        <li>Persistent across reboots and process deaths.</li>
+        <li>Constraints — network, charging, battery, idle.</li>
+        <li>Retries with backoff built in.</li>
+        <li>Chains via <code>.beginWith(a).then(b)</code>.</li>
+        <li>Observable via LiveData / Flow.</li>
+      </ul>
+      <h4>Expedited work (Android 12+)</h4>
+      <pre><code>OneTimeWorkRequestBuilder&lt;MyWorker&gt;()
+    .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
+    .build()</code></pre>
+      <p>Runs promptly, counts against app's expedited quota. Use for urgent user-initiated work (send now, not in 15 min). Falls back to normal if quota exhausted.</p>
+      <h4>AlarmManager — exact time only</h4>
+      <pre><code>alarmManager.setExactAndAllowWhileIdle(
+    AlarmManager.RTC_WAKEUP, triggerTime, pendingIntent)</code></pre>
+      <p>Android 12+ requires <code>SCHEDULE_EXACT_ALARM</code> permission — user must grant it explicitly in settings. Reserved for alarm clock / calendar reminder apps. For anything else, use WorkManager.</p>
+      <h4>JobScheduler</h4>
+      <p>The OS-level scheduling primitive. You'll almost never touch it directly anymore — WorkManager uses it under the hood on API 23+. Learn about it only to understand WorkManager internals.</p>
+      <h4>Foreground Service</h4>
+      <p>For immediate, long-running work the user is actively aware of (music playback, ride tracking, photo upload with progress bar). Shows a persistent notification. Heavier than WorkManager but not subject to background restrictions.</p>
+      <div class="gotcha"><strong>The common antipattern:</strong> Using AlarmManager + BroadcastReceiver to schedule work "because that's what I learned in 2018". Modern answer is WorkManager almost always. AlarmManager should be reserved for user-facing time-triggered events, not general background work.</div>
+    `
+  },
+  {
+    phase: 3,
+    difficulty: 'med',
+    q: "Walk me through the Android permission model — runtime, POST_NOTIFICATIONS, background location.",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Android permissions are runtime since API 23. Beyond the basic allow/deny flow, three cases trip teams up: Android 13's POST_NOTIFICATIONS, background location's two-step dance, and the new one-time / 'only this time' choice. Let me walk through each."</div>
+      <h4>Standard runtime request</h4>
+      <pre><code>val launcher = registerForActivityResult(
+    ActivityResultContracts.RequestPermission()
+) { granted -&gt;
+    if (granted) proceed() else showDeniedState()
+}
+
+when {
+    ContextCompat.checkSelfPermission(ctx, perm) == PERMISSION_GRANTED -&gt; proceed()
+    shouldShowRequestPermissionRationale(activity, perm) -&gt; showRationale { launcher.launch(perm) }
+    else -&gt; launcher.launch(perm)
+}</code></pre>
+      <h4>shouldShowRequestPermissionRationale</h4>
+      <p>Returns true only AFTER user denied once and didn't check "don't ask again". Use it to decide whether to show an in-app rationale before asking. First-time call returns false; don't ask rationale cold.</p>
+      <h4>POST_NOTIFICATIONS (Android 13+)</h4>
+      <p>All apps targeting API 33+ need runtime permission to show notifications. For existing apps, user is auto-granted on upgrade; for new installs, they must grant.</p>
+      <p>Best practice: <strong>don't cold-ask on app launch</strong>. Wait for a moment when the user has reason to care — after placing their first order, after finishing onboarding. Permission grant rates double vs cold asks.</p>
+      <h4>Background location — the two-step</h4>
+      <p>Android 10+ split location into foreground and background. Flow:</p>
+      <ol>
+        <li>Request <code>ACCESS_FINE_LOCATION</code> (or COARSE). User grants → you can use while app visible.</li>
+        <li>Separately request <code>ACCESS_BACKGROUND_LOCATION</code>. On Android 11+, this <strong>opens a Settings screen</strong>, not an in-app dialog. User must manually pick "Allow all the time".</li>
+      </ol>
+      <p>Android 10: "Allow all the time" in first dialog covers both. Android 11+: two-step ritual. Test on both.</p>
+      <h4>One-time permissions (Android 11+)</h4>
+      <p>User can grant "only this time" for location, camera, mic. Permission is revoked when the app is backgrounded for a while. You must recheck every time you use it — don't cache permission state in memory across app sessions.</p>
+      <h4>Auto-reset (Android 11+)</h4>
+      <p>If an app is unused for months, the OS auto-revokes granted runtime permissions. User sees a system notification. You must handle the case where permission was granted last time but is now gone.</p>
+      <h4>Package visibility queries (Android 11+)</h4>
+      <p>Not a permission, but related. Your app can't see installed apps by default. Declare <code>&lt;queries&gt;</code> in manifest with specific package names, intent filters, or providers you need to discover. Required for things like "share to WhatsApp" via intent chooser.</p>
+      <div class="gotcha"><strong>The subtle one — PHONE permissions:</strong> <code>READ_PHONE_STATE</code>, <code>READ_CALL_LOG</code>, and <code>SMS</code> permissions require a special Play Store "sensitive permissions" declaration. Play rejects apps that request them without strong justification. Avoid unless your app's core function requires it.</div>
+    `
+  },
+  {
+    phase: 3,
+    difficulty: 'med',
+    q: "DataStore vs SharedPreferences — when to migrate, how to migrate.",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "SharedPreferences is effectively deprecated. DataStore is the Jetpack replacement with better API, Flow-based reads, and no ANR risks. Preferences DataStore is a direct SharedPreferences replacement; Proto DataStore uses protobuf for type-safe schema. Migration is straightforward."</div>
+      <h4>Why SharedPreferences is problematic</h4>
+      <ul>
+        <li><strong>Synchronous reads on main thread</strong> — <code>getString()</code> blocks. First access parses the XML; big prefs cause ANRs.</li>
+        <li><strong>commit() is synchronous</strong>, <code>apply()</code> is async-ish but still main-thread-unsafe on rare crashes.</li>
+        <li><strong>No error handling</strong> for corrupt XML files — silently returns defaults.</li>
+        <li><strong>No type safety</strong> — put a Long, read a String, get a ClassCastException.</li>
+        <li><strong>No observability</strong> — no Flow for reads.</li>
+      </ul>
+      <h4>Preferences DataStore</h4>
+      <pre><code>val Context.dataStore by preferencesDataStore(name = "settings")
+
+object Keys {
+    val DARK_MODE = booleanPreferencesKey("dark_mode")
+    val USERNAME = stringPreferencesKey("username")
+}
+
+// Write
+suspend fun setDarkMode(enabled: Boolean) {
+    context.dataStore.edit { prefs -&gt; prefs[Keys.DARK_MODE] = enabled }
+}
+
+// Read as Flow
+val darkMode: Flow&lt;Boolean&gt; = context.dataStore.data.map { prefs -&gt;
+    prefs[Keys.DARK_MODE] ?: false
+}</code></pre>
+      <h4>Proto DataStore — schema-backed</h4>
+      <p>Define a .proto file, generate Kotlin classes. Strong typing, versioning, field defaults — no string keys to typo.</p>
+      <pre><code>message UserSettings {
+    bool dark_mode = 1;
+    string username = 2;
+    int32 sync_interval_minutes = 3;
+}</code></pre>
+      <p>Preferences DataStore is enough for most apps. Reach for Proto when you have complex typed config or want versioned schema evolution.</p>
+      <h4>Migration from SharedPreferences</h4>
+      <pre><code>val Context.dataStore by preferencesDataStore(
+    name = "settings",
+    produceMigrations = { ctx -&gt;
+        listOf(SharedPreferencesMigration(ctx, "old_prefs_file_name"))
+    }
+)</code></pre>
+      <p>First DataStore read triggers a one-time migration from the old SharedPreferences file, then deletes the XML. Zero code churn in the rest of the app beyond swapping the accessor.</p>
+      <h4>When to NOT use DataStore</h4>
+      <ul>
+        <li>Large data (&gt;1 MB total) — use Room.</li>
+        <li>Relational data — use Room.</li>
+        <li>Partial updates over large blobs — Proto rewrites the whole file on every edit. Not suitable for high-frequency writes on large state.</li>
+      </ul>
+      <h4>Common gotchas</h4>
+      <ul>
+        <li>DataStore is thread-safe but a SINGLE instance per file is required. Use the <code>by preferencesDataStore</code> delegate — it handles this.</li>
+        <li>All writes are serialized. Don't stream thousands of tiny writes; batch them.</li>
+        <li>Errors (corrupt file, IO) surface in the Flow — wrap with <code>.catch { ... emit(defaults) }</code>.</li>
+      </ul>
+      <div class="gotcha"><strong>The subtle one:</strong> DataStore's <code>data</code> is a cold Flow. Every collector re-reads from disk on first collect. Use <code>.distinctUntilChanged()</code> + share via <code>stateIn</code> in a ViewModel to avoid repeated disk reads across multiple observers.</div>
+    `
+  },
+
+  // ============ PHASE 4: NETWORKING, DATA & CONCURRENCY ============
+  {
+    phase: 4,
+    difficulty: 'med',
+    q: "How does Retrofit work under the hood? What does `retrofit.create()` do?",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Retrofit uses dynamic proxies. When I call <code>retrofit.create(ApiService::class.java)</code>, Retrofit generates a proxy object that implements my interface at runtime. Each method call on the proxy gets translated into an HTTP request based on the annotations."</div>
+      <h4>The pipeline</h4>
+      <ol>
+        <li>Call an interface method like <code>api.getProduct(id)</code>.</li>
+        <li>Proxy reads method annotations (<code>@GET</code>, <code>@Path</code>, etc.) and parameters.</li>
+        <li>Builds an OkHttp <code>Request</code>.</li>
+        <li>OkHttp executes it — runs through interceptors, connection pool, DNS.</li>
+        <li>Response body handed to a <code>Converter</code> (Moshi, Gson, Kotlinx Serialization) to deserialize.</li>
+        <li>Returned wrapped in the declared return type (<code>Response&lt;T&gt;</code>, <code>suspend T</code>, <code>Flow&lt;T&gt;</code>, etc.) via a <code>CallAdapter</code>.</li>
+      </ol>
+      <h4>Interface example</h4>
+      <pre><code>interface ProductApi {
+    @GET("products/{id}")
+    suspend fun getProduct(@Path("id") id: String): ProductDto
+
+    @GET("products")
+    suspend fun listProducts(
+        @Query("category") category: String,
+        @Query("page") page: Int
+    ): ListResponse&lt;ProductDto&gt;
+
+    @POST("orders")
+    suspend fun placeOrder(@Body order: OrderRequest): OrderResponse
+}</code></pre>
+      <h4>Why use suspend</h4>
+      <p>"<code>suspend</code> functions don't block threads — Retrofit uses <code>Dispatchers.IO</code> internally to dispatch the network call off the caller's thread. I don't need <code>withContext(Dispatchers.IO)</code> around a suspend Retrofit call — that's a common redundancy."</p>
+      <h4>Key OkHttp interceptors I add</h4>
+      <ul>
+        <li><strong>AuthInterceptor</strong> — attaches the auth token. Uses <code>Authenticator</code> for 401 refresh.</li>
+        <li><strong>HttpLoggingInterceptor</strong> — request/response logs in debug builds.</li>
+        <li><strong>ChuckerInterceptor</strong> — on-device request viewer (debug only).</li>
+        <li><strong>Custom CacheInterceptor</strong> — for controlling offline behavior.</li>
+      </ul>
+      <div class="gotcha"><strong>Follow-up:</strong> "How does Retrofit know how to convert the response to your data class?" Via registered <code>Converter.Factory</code> — like <code>MoshiConverterFactory</code>. Without one, Retrofit would just give you a raw <code>ResponseBody</code>.</div>
+    `
+  },
+  {
+    phase: 4,
+    difficulty: 'hard',
+    q: "Explain offline-first architecture. How do you keep the UI working without network?",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Offline-first means the UI reads from a local database, not directly from the network. The repository exposes a Flow from the database, and network calls exist only to keep the database fresh. The user experience stays the same whether they're online or not."</div>
+      <h4>The pattern</h4>
+      <pre><code>class ProductRepository @Inject constructor(
+    private val api: ProductApi,
+    private val dao: ProductDao
+) {
+    // Single source of truth — DB
+    fun observeProducts(category: String): Flow&lt;List&lt;Product&gt;&gt; =
+        dao.observeByCategory(category).map { it.toDomain() }
+
+    // Triggered explicitly — refreshes the DB from network
+    suspend fun refresh(category: String) {
+        val fresh = api.listProducts(category)
+        dao.upsertAll(fresh.toEntity())
+    }
+}</code></pre>
+      <h4>Flow of a screen load</h4>
+      <ol>
+        <li>UI collects <code>observeProducts(category)</code> from Room.</li>
+        <li>Room emits immediately — either cached data or empty list.</li>
+        <li>ViewModel calls <code>repository.refresh()</code>.</li>
+        <li>Network returns, DB updates, Flow re-emits, UI updates.</li>
+      </ol>
+      <p>"The UI never waits on the network. If the user is offline, they see cached data. If online, they see fresh data within milliseconds of the response."</p>
+      <h4>Handling writes offline</h4>
+      <p>"For actions like 'add to cart' or 'place order', I use WorkManager with a retry policy. The local DB is updated optimistically, and the sync worker pushes to the server with exponential backoff. If the server rejects, the local state rolls back with a user-visible error."</p>
+      <h4>Sync strategies</h4>
+      <ul>
+        <li><strong>Pull-to-refresh:</strong> Manual user trigger.</li>
+        <li><strong>Staleness-based:</strong> If the cached data is older than N minutes, auto-refresh on screen open.</li>
+        <li><strong>WorkManager periodic sync:</strong> Background refresh every few hours.</li>
+        <li><strong>Push notifications:</strong> Invalidate on server event.</li>
+      </ul>
+      <h4>Country Delight angle I'd highlight</h4>
+      <p>"Quick commerce is a perfect offline-first case — users check the app on metros, in elevators, with flaky data. Browsing products, viewing the cart, checking delivery slots — all must work instantly. Only the checkout step needs the network in real time, and even that we optimistically queue if the network blips."</p>
+      <div class="gotcha"><strong>Staleness trap:</strong> Without TTL logic, users see months-old data. I add a <code>lastFetched</code> timestamp in DB and check it before serving — if older than N minutes, trigger a refresh while serving the stale data in parallel.</div>
+    `
+  },
+  {
+    phase: 4,
+    difficulty: 'hard',
+    q: "How does Room work? What are `@Entity`, `@Dao`, and `@Database`? How do you handle migrations?",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Room is an abstraction over SQLite that generates type-safe database access code at compile time. I define entities, DAOs with annotated queries, and a Database class that ties them together. Room validates my SQL at build time, which catches bugs that raw SQLite would let through."</div>
+      <h4>The three annotations</h4>
+      <pre><code>// Entity — table definition
+@Entity(tableName = "products", indices = [Index("category")])
+data class ProductEntity(
+    @PrimaryKey val id: String,
+    val name: String,
+    val price: Int,
+    val category: String,
+    val lastFetched: Long
+)
+
+// DAO — queries
+@Dao
+interface ProductDao {
+    @Query("SELECT * FROM products WHERE category = :category")
+    fun observeByCategory(category: String): Flow&lt;List&lt;ProductEntity&gt;&gt;
+
+    @Upsert
+    suspend fun upsertAll(products: List&lt;ProductEntity&gt;)
+
+    @Query("DELETE FROM products WHERE lastFetched &lt; :threshold")
+    suspend fun purgeOld(threshold: Long)
+}
+
+// Database
+@Database(entities = [ProductEntity::class], version = 2)
+abstract class AppDatabase : RoomDatabase() {
+    abstract fun productDao(): ProductDao
+}</code></pre>
+      <h4>Why Flow queries are powerful</h4>
+      <p>"A Flow-returning DAO method emits a fresh result every time the underlying table changes. Insert a row anywhere in the app → the UI observing that Flow updates automatically. This is the backbone of offline-first."</p>
+      <h4>Migrations</h4>
+      <pre><code>val MIGRATION_1_2 = object : Migration(1, 2) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("ALTER TABLE products ADD COLUMN stock INTEGER NOT NULL DEFAULT 0")
+    }
+}
+
+Room.databaseBuilder(context, AppDatabase::class.java, "app.db")
+    .addMigrations(MIGRATION_1_2)
+    .build()</code></pre>
+      <h4>When I pick fallbackToDestructiveMigration</h4>
+      <p>"Only for dev builds or for caches where losing data is acceptable. In production with real user data, every schema change gets a proper migration. Room has migration testing tools — I write a test for each migration that creates the old DB, applies the migration, and verifies the new schema."</p>
+      <h4>Transactions</h4>
+      <pre><code>@Transaction
+@Query("SELECT * FROM products")
+suspend fun getAllWithDetails(): List&lt;ProductWithDetails&gt;
+
+@Transaction
+suspend fun replaceAll(products: List&lt;ProductEntity&gt;) {
+    deleteAll()
+    insertAll(products)  // atomic — no in-between state visible to observers
+}</code></pre>
+      <div class="gotcha"><strong>Watch for:</strong> Main-thread DB access. Room throws by default, but non-suspend, non-Flow queries can be called from anywhere — make sure you're on a background context. Using <code>suspend</code> or <code>Flow</code> return types prevents this.</div>
+    `
+  },
+  {
+    phase: 4,
+    difficulty: 'hard',
+    q: "What is Paging 3? How does it handle pagination with offline support?",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Paging 3 is Google's library for loading large lists page by page without loading everything into memory. It handles the three hard parts: fetching pages on demand, invalidating stale data, and combining network + database for offline support."</div>
+      <h4>The key building blocks</h4>
+      <ul>
+        <li><strong>PagingSource</strong> — loads one page at a time. You implement <code>load()</code>.</li>
+        <li><strong>RemoteMediator</strong> — coordinates network + database for offline-first paging.</li>
+        <li><strong>Pager</strong> — creates a Flow of <code>PagingData</code>.</li>
+        <li><strong>LazyPagingItems / PagingDataAdapter</strong> — UI consumes the stream.</li>
+      </ul>
+      <h4>Pure network (simple case)</h4>
+      <pre><code>class ProductPagingSource(private val api: ProductApi) : PagingSource&lt;Int, Product&gt;() {
+    override suspend fun load(params: LoadParams&lt;Int&gt;): LoadResult&lt;Int, Product&gt; {
+        return try {
+            val page = params.key ?: 1
+            val response = api.listProducts(page, params.loadSize)
+            LoadResult.Page(
+                data = response.items,
+                prevKey = if (page == 1) null else page - 1,
+                nextKey = if (response.items.isEmpty()) null else page + 1
+            )
+        } catch (e: Exception) { LoadResult.Error(e) }
+    }
+    override fun getRefreshKey(state: PagingState&lt;Int, Product&gt;): Int? = 1
+}</code></pre>
+      <h4>Network + DB via RemoteMediator (offline-first)</h4>
+      <p>"This is the real-world setup. Room is the source of truth. RemoteMediator decides when to fetch more pages from the network and inserts them into the DB. The PagingSource reads from the DB."</p>
+      <pre><code>@OptIn(ExperimentalPagingApi::class)
+class ProductMediator(
+    private val api: ProductApi,
+    private val db: AppDatabase
+) : RemoteMediator&lt;Int, ProductEntity&gt;() {
+    override suspend fun load(
+        loadType: LoadType,
+        state: PagingState&lt;Int, ProductEntity&gt;
+    ): MediatorResult {
+        val page = when (loadType) {
+            LoadType.REFRESH -&gt; 1
+            LoadType.PREPEND -&gt; return MediatorResult.Success(endOfPaginationReached = true)
+            LoadType.APPEND -&gt; computeNextPage(state)
+        }
+        return try {
+            val response = api.listProducts(page, state.config.pageSize)
+            db.withTransaction {
+                if (loadType == LoadType.REFRESH) db.productDao().clearAll()
+                db.productDao().upsertAll(response.toEntities())
+            }
+            MediatorResult.Success(endOfPaginationReached = response.items.isEmpty())
+        } catch (e: Exception) { MediatorResult.Error(e) }
+    }
+}</code></pre>
+      <h4>Consuming in Compose</h4>
+      <pre><code>val items: LazyPagingItems&lt;Product&gt; = viewModel.products.collectAsLazyPagingItems()
+
+LazyColumn {
+    items(items.itemCount, key = items.itemKey { it.id }) { i -&gt;
+        items[i]?.let { ProductCard(it) }
+    }
+    item {
+        when (items.loadState.append) {
+            is LoadState.Loading -&gt; LoadingSpinner()
+            is LoadState.Error -&gt; RetryButton { items.retry() }
+            else -&gt; Unit
+        }
+    }
+}</code></pre>
+      <h4>Country Delight angle</h4>
+      <p>"Product catalog with thousands of items, filterable by category and brand — Paging 3 + RemoteMediator is perfect. Users scroll from metro stations with bad signal, but the DB already has the first few pages cached. Seamless."</p>
+      <div class="gotcha"><strong>Invalidation:</strong> When the user changes a filter, I invalidate the PagingSource so it reloads from page 1. If I just changed the query without invalidating, I'd get mixed results from old + new.</div>
+    `
+  },
+  {
+    phase: 4,
+    difficulty: 'hard',
+    q: "How does WorkManager work? When do you use it vs a coroutine or foreground service?",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "WorkManager is for deferrable work that needs to run reliably — even across app restarts, process death, or device reboots. It persists work requests in a database and uses the best available scheduler (JobScheduler, AlarmManager, etc.) under the hood."</div>
+      <h4>Decision tree</h4>
+      <ul>
+        <li><strong>User is looking at the screen, work finishes before they leave?</strong> → Coroutine in ViewModel.</li>
+        <li><strong>User-facing, long-running, must show a notification?</strong> → Foreground service.</li>
+        <li><strong>Must complete eventually, can be deferred, should survive reboot?</strong> → WorkManager.</li>
+      </ul>
+      <h4>Worker example</h4>
+      <pre><code>@HiltWorker
+class SyncOrdersWorker @AssistedInject constructor(
+    @Assisted context: Context,
+    @Assisted params: WorkerParameters,
+    private val repo: OrderRepository
+) : CoroutineWorker(context, params) {
+
+    override suspend fun doWork(): Result = try {
+        repo.syncPendingOrders()
+        Result.success()
+    } catch (e: IOException) {
+        if (runAttemptCount &lt; 3) Result.retry() else Result.failure()
+    }
+}</code></pre>
+      <h4>Scheduling with constraints</h4>
+      <pre><code>val request = OneTimeWorkRequestBuilder&lt;SyncOrdersWorker&gt;()
+    .setConstraints(
+        Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .setRequiresBatteryNotLow(true)
+            .build()
+    )
+    .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 30, TimeUnit.SECONDS)
+    .build()
+
+WorkManager.getInstance(ctx).enqueueUniqueWork(
+    "sync_orders",
+    ExistingWorkPolicy.KEEP,  // don't duplicate
+    request
+)</code></pre>
+      <h4>Unique work policies</h4>
+      <ul>
+        <li><code>KEEP</code> — if already scheduled, don't enqueue again.</li>
+        <li><code>REPLACE</code> — cancel the old one, enqueue new.</li>
+        <li><code>APPEND</code> — chain after existing.</li>
+        <li><code>APPEND_OR_REPLACE</code> — append unless the previous failed, then replace.</li>
+      </ul>
+      <h4>Periodic vs one-time</h4>
+      <p>"Periodic has a 15-minute minimum interval. For a sync-every-hour background refresh, use <code>PeriodicWorkRequest</code>. For a one-shot retry on a failed upload, use <code>OneTimeWorkRequest</code>."</p>
+      <h4>Real Country Delight use case</h4>
+      <p>"When a user places an order with poor connectivity and the final confirmation call fails, we enqueue a WorkManager task with exponential backoff. The user sees 'Order placed, syncing...' and the work completes when the network returns. Even if they force-close the app, WorkManager picks up on next launch or device boot."</p>
+      <div class="gotcha"><strong>Don't use WorkManager for:</strong> Immediate work (use a coroutine), exact-timing alarms (use AlarmManager), or work that must run every second (not possible reliably). Minimum periodic interval is 15 minutes.</div>
+    `
+  },
+  {
+    phase: 4,
+    difficulty: 'hard',
+    q: "Explain OkHttp interceptors. What's the difference between application and network interceptors?",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Interceptors are the middleware of OkHttp — every request and response passes through a chain of them. The difference between application and network interceptors is where they sit: application runs once per logical request, network runs once per actual network call (so retries and redirects hit it multiple times)."</div>
+      <h4>Application interceptor — one per logical call</h4>
+      <pre><code>class AuthInterceptor(private val tokenStore: TokenStore) : Interceptor {
+    override fun intercept(chain: Interceptor.Chain): Response {
+        val token = tokenStore.token ?: return chain.proceed(chain.request())
+        val authed = chain.request().newBuilder()
+            .header("Authorization", "Bearer ${'$'}token")
+            .build()
+        return chain.proceed(authed)
+    }
+}</code></pre>
+      <p><strong>Use for:</strong> auth headers, logging the logical request, analytics, header injection. Doesn't see redirects or retries.</p>
+      <h4>Network interceptor — one per wire hit</h4>
+      <pre><code>class NetworkLoggingInterceptor : Interceptor {
+    override fun intercept(chain: Interceptor.Chain): Response {
+        // Sees every redirect, every retry
+        val req = chain.request()
+        Log.d("Net", "Hit wire: ${'$'}{req.url}")
+        return chain.proceed(req)
+    }
+}</code></pre>
+      <p><strong>Use for:</strong> inspecting actual wire traffic, cache validation, compressed response inspection.</p>
+      <h4>Order matters</h4>
+      <p>"Interceptors run in the order you add them. Auth should come before logging, so you see the authed header. Logging should come last in the app-interceptor chain so all modifications are visible."</p>
+      <h4>Example real-world chain</h4>
+      <pre><code>OkHttpClient.Builder()
+    // Application interceptors — logical request level
+    .addInterceptor(AuthInterceptor(tokenStore))
+    .addInterceptor(LanguageInterceptor())        // adds Accept-Language
+    .addInterceptor(HttpLoggingInterceptor().apply {
+        level = if (BuildConfig.DEBUG) BODY else NONE
+    })
+    // Network interceptors — wire level
+    .addNetworkInterceptor(CacheInterceptor())    // manipulates Cache-Control
+    // Other
+    .authenticator(TokenRefreshAuthenticator(tokenStore))
+    .cache(Cache(ctx.cacheDir, 10 * 1024 * 1024))
+    .build()</code></pre>
+      <h4>Authenticator vs interceptor for token refresh</h4>
+      <p>"For 401 handling I use an <code>Authenticator</code>, not an interceptor. Authenticator is called specifically when the server responds 401 — it refreshes the token and retries the request with the new one. Doing this in an interceptor is fragile because you'd have to detect and parse the 401 manually."</p>
+      <div class="gotcha"><strong>Thread safety:</strong> Interceptors run on OkHttp's dispatcher threads — multiple at once. Any state inside them must be thread-safe. Token stores should use <code>@Volatile</code> or <code>AtomicReference</code>.</div>
+    `
+  },
+  {
+    phase: 4,
+    difficulty: 'med',
+    q: "How would you implement a token refresh flow with Retrofit/OkHttp?",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "I use an <code>Authenticator</code> — OkHttp calls it automatically when the server returns 401. The Authenticator refreshes the token, retries the original request with the new one, and synchronizes across concurrent requests to avoid thundering herds."</div>
+      <h4>The Authenticator</h4>
+      <pre><code>class TokenRefreshAuthenticator(
+    private val tokenStore: TokenStore,
+    private val refreshApi: RefreshApi
+) : Authenticator {
+
+    override fun authenticate(route: Route?, response: Response): Request? {
+        // If we've already retried, give up — prevents infinite loop
+        if (responseCount(response) &gt;= 2) return null
+
+        // Only one refresh at a time — cross-thread sync
+        synchronized(this) {
+            val currentToken = tokenStore.accessToken
+            val reqToken = response.request.header("Authorization")?.removePrefix("Bearer ")
+
+            // If another thread already refreshed while we were waiting, use the new token
+            if (currentToken != reqToken) {
+                return response.request.newBuilder()
+                    .header("Authorization", "Bearer ${'$'}currentToken")
+                    .build()
+            }
+
+            // Actually refresh
+            val newToken = runBlocking {
+                runCatching { refreshApi.refresh(tokenStore.refreshToken) }
+                    .getOrNull() ?: return@runBlocking null
+            } ?: return null
+
+            tokenStore.save(newToken)
+            return response.request.newBuilder()
+                .header("Authorization", "Bearer ${'$'}{newToken.access}")
+                .build()
+        }
+    }
+
+    private fun responseCount(response: Response): Int {
+        var count = 1
+        var r = response.priorResponse
+        while (r != null) { count++; r = r.priorResponse }
+        return count
+    }
+}</code></pre>
+      <h4>Pairing it with the AuthInterceptor</h4>
+      <pre><code>.addInterceptor(AuthInterceptor(tokenStore))  // adds header
+.authenticator(TokenRefreshAuthenticator(...)) // handles 401 refresh</code></pre>
+      <h4>What the flow looks like end-to-end</h4>
+      <ol>
+        <li>AuthInterceptor attaches the current access token.</li>
+        <li>Server responds 401.</li>
+        <li>Authenticator kicks in — refreshes token, returns the retried request.</li>
+        <li>OkHttp automatically retries with the new token.</li>
+        <li>If refresh fails, Authenticator returns null → 401 bubbles up to the caller.</li>
+      </ol>
+      <h4>Why the synchronized block matters</h4>
+      <p>"Without it, imagine 5 API calls all fail with 401 at once. All 5 Authenticators try to refresh — you'd hit the refresh endpoint 5 times. The synchronized block + the currentToken != reqToken check means only the first one actually refreshes; the others pick up the new token."</p>
+      <h4>Post-refresh-failure handling</h4>
+      <p>"When refresh fails (refresh token expired or revoked), I broadcast a logout event — either via a SharedFlow on a SessionManager singleton, or via a direct callback. The UI observes and navigates to login. Don't do navigation from inside the Authenticator — it shouldn't know about the UI."</p>
+      <div class="gotcha"><strong>Don't do token refresh in an Interceptor.</strong> Interceptors don't know which failures are 401-specific, and you'd have to parse the response body manually. Authenticator is purpose-built for this.</div>
+    `
+  },
+  {
+    phase: 4,
+    difficulty: 'hard',
+    q: "How do you cache HTTP responses? What's the difference between OkHttp cache and in-memory cache?",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "I layer caches: OkHttp disk cache for HTTP-compliant caching, an in-memory cache (or Room) for parsed domain data, and cache-control headers from the server as the ultimate policy. Each layer serves a different purpose — I don't pick one over the others."</div>
+      <h4>OkHttp disk cache — HTTP-semantic caching</h4>
+      <pre><code>val cache = Cache(context.cacheDir.resolve("http"), 10L * 1024 * 1024)  // 10MB
+
+OkHttpClient.Builder()
+    .cache(cache)
+    .build()</code></pre>
+      <p>"OkHttp respects HTTP caching headers — <code>Cache-Control</code>, <code>ETag</code>, <code>Expires</code>. If the server says <code>Cache-Control: max-age=300</code>, OkHttp serves from disk for 5 minutes without hitting the network. With <code>ETag</code>, it sends conditional requests and the server can reply 304 Not Modified."</p>
+      <h4>When the server doesn't send cache headers</h4>
+      <p>"Many APIs don't. I override via a network interceptor:"</p>
+      <pre><code>class CacheInterceptor : Interceptor {
+    override fun intercept(chain: Interceptor.Chain): Response {
+        val response = chain.proceed(chain.request())
+        return response.newBuilder()
+            .header("Cache-Control", "public, max-age=60")  // cache 1 min
+            .build()
+    }
+}
+.addNetworkInterceptor(CacheInterceptor())</code></pre>
+      <h4>Forcing cache or network</h4>
+      <pre><code>// Force cached response (offline)
+val req = originalRequest.newBuilder()
+    .cacheControl(CacheControl.FORCE_CACHE)
+    .build()
+
+// Force network fetch
+val req = originalRequest.newBuilder()
+    .cacheControl(CacheControl.FORCE_NETWORK)
+    .build()</code></pre>
+      <h4>Why I layer with Room for real offline-first</h4>
+      <p>"OkHttp cache is keyed by URL — if a user made a request and later you fetched the same data with different params, no hit. Room stores parsed entities and lets me query by domain logic. OkHttp cache is a bonus, not the backbone."</p>
+      <h4>In-memory cache</h4>
+      <p>"For very hot data — the current user profile, the cart — I hold it in a Singleton repository as a <code>StateFlow</code>. Sub-millisecond access, and Flow-based reactivity. Not suitable for large data because it dies with the process."</p>
+      <h4>The three-tier architecture</h4>
+      <pre><code>UI ── StateFlow ── Repository
+                      │
+                      ├── In-memory cache (hot state)
+                      ├── Room DB      (persisted offline cache)
+                      └── Retrofit ── OkHttp ── HTTP cache
+                                                     └── Network</code></pre>
+      <div class="gotcha"><strong>Cache invalidation bug:</strong> When a user mutates data (adds to cart), invalidate all three tiers in order — update in-memory, update DB, fire a refresh request. Missing any one causes stale UI.</div>
+    `
+  },
+  {
+    phase: 4,
+    difficulty: 'hard',
+    q: "What is `Mutex` in coroutines? When do you need it, and why not just use `synchronized`?",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "<code>Mutex</code> is a coroutine-aware lock. Unlike <code>synchronized</code>, it suspends instead of blocking when contended — so a coroutine waiting for the lock doesn't tie up a thread. I use it to protect shared mutable state accessed by multiple coroutines."</div>
+      <h4>The problem it solves</h4>
+      <pre><code>// BAD — data race across concurrent launches
+class Counter {
+    var count = 0
+    suspend fun increment() {
+        val old = count
+        delay(1)  // simulates work
+        count = old + 1
+    }
+}
+// 100 concurrent calls might land at 40, 60, 83...</code></pre>
+      <h4>Mutex fix</h4>
+      <pre><code>class Counter {
+    private val mutex = Mutex()
+    var count = 0
+    suspend fun increment() = mutex.withLock {
+        val old = count
+        delay(1)
+        count = old + 1
+    }
+}</code></pre>
+      <h4>Why not synchronized?</h4>
+      <p>"<code>synchronized</code> blocks the thread. If I have 20 coroutines on <code>Dispatchers.Default</code>'s small thread pool, a synchronized block held by one will starve the others — even though coroutines are supposed to be cheap and many. <code>Mutex.withLock</code> suspends instead, freeing the thread for other coroutines."</p>
+      <h4>When I don't reach for Mutex</h4>
+      <ul>
+        <li>When I can use a <code>StateFlow</code> and do copy-on-write updates — that's lock-free for readers.</li>
+        <li>When I can confine state to a single dispatcher (single-threaded context) — no contention possible.</li>
+        <li>For primitives, <code>AtomicInteger</code> or <code>atomic</code> from kotlinx.atomicfu is lighter.</li>
+      </ul>
+      <h4>Alternative — Actor pattern</h4>
+      <pre><code>val actor = scope.actor&lt;Command&gt; {
+    var count = 0
+    for (cmd in channel) {  // serialized processing
+        when (cmd) {
+            is Increment -&gt; count++
+            is GetCount -&gt; cmd.response.complete(count)
+        }
+    }
+}</code></pre>
+      <p>"Actor enforces serial access via a channel — no locks needed because only one coroutine ever touches the state."</p>
+      <h4>Real-world case</h4>
+      <p>"In an OkHttp auth token refresh, multiple 401s can fire at once. The refresh path uses a <code>Mutex</code> to ensure only one refresh happens; later ones pick up the new token. Same pattern I gave in the token refresh answer."</p>
+      <div class="gotcha"><strong>Deadlock risk:</strong> Holding a Mutex and then calling another suspending function that acquires the same Mutex — classic deadlock. Also: Mutex is NOT reentrant. Same coroutine acquiring it twice deadlocks itself.</div>
+    `
+  },
+  {
+    phase: 4,
+    difficulty: 'med',
+    q: "How do you debounce and throttle in Kotlin Flow? When to use each?",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "<code>debounce</code> waits for a pause in emissions before letting one through — classic for search input. <code>sample</code>, the throttle equivalent, takes the latest emission at regular intervals regardless of whether emissions are paused. They solve different problems."</div>
+      <h4>debounce — for "wait till they stop"</h4>
+      <pre><code>searchQuery
+    .debounce(300)
+    .filter { it.length &gt;= 2 }
+    .distinctUntilChanged()
+    .flatMapLatest { query -&gt; repo.search(query) }
+    .collect { _state.value = UiState.Results(it) }</code></pre>
+      <p>"Typing 'milk': emissions at 'm', 'mi', 'mil', 'milk'. With <code>debounce(300)</code>, only 'milk' makes it through — provided the user paused for 300ms. Saves backend hits."</p>
+      <h4>sample — for "give me the latest every N ms"</h4>
+      <pre><code>scrollOffset
+    .sample(100)
+    .collect { updateParallaxEffect(it) }</code></pre>
+      <p>"Scroll offset emits dozens of times per second. <code>sample(100)</code> gives me the latest value every 100ms — enough for a parallax effect, no need to process every pixel."</p>
+      <h4>distinctUntilChanged — dedupe consecutive identical values</h4>
+      <pre><code>uiState
+    .map { it.filterCategory }
+    .distinctUntilChanged()
+    .collect { category -&gt; reloadForCategory(category) }</code></pre>
+      <h4>Combining them — typical search pipeline</h4>
+      <pre><code>queryFlow
+    .onEach { _state.update { it.copy(query = it) } }  // update UI immediately
+    .debounce(300)                                      // wait for pause
+    .distinctUntilChanged()                             // no-op on same query
+    .filter { it.length &gt;= 2 }                         // skip too-short
+    .flatMapLatest { q -&gt; repo.search(q) }             // cancel previous
+    .catch { _state.update { it.copy(error = ...) } }
+    .collect { results -&gt; _state.update { it.copy(results = results) } }</code></pre>
+      <h4>Decision summary</h4>
+      <ul>
+        <li>User typing → <code>debounce</code></li>
+        <li>Continuous stream, want regular sampling → <code>sample</code></li>
+        <li>Want just the first N per time window → <code>conflate</code> or custom</li>
+      </ul>
+      <h4>conflate — the "drop intermediate" operator</h4>
+      <p>"<code>conflate()</code> drops values when the collector is slow — only keeping the latest. Useful when you want fast producers and 'good enough' consumption."</p>
+      <div class="gotcha"><strong>Debounce quirk:</strong> It emits the last value after the delay — but if the upstream closes before the delay elapses, the pending value is dropped unless you use <code>debounceBuffer</code> or handle completion specially.</div>
+    `
+  },
+  {
+    phase: 4,
+    difficulty: 'med',
+    q: "What is `DataStore`? Why use it instead of SharedPreferences?",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "DataStore is the modern replacement for SharedPreferences. It's async-by-default using coroutines and Flow, type-safe (with Proto DataStore), and handles concurrent access safely. SharedPreferences is synchronous and can cause ANRs if used on the main thread with large data."</div>
+      <h4>Two flavors</h4>
+      <ul>
+        <li><strong>Preferences DataStore</strong> — key-value, like SharedPrefs but async.</li>
+        <li><strong>Proto DataStore</strong> — schema-typed via Protocol Buffers.</li>
+      </ul>
+      <h4>Preferences DataStore example</h4>
+      <pre><code>val Context.dataStore by preferencesDataStore("settings")
+
+class SettingsRepository(private val context: Context) {
+    private val THEME = stringPreferencesKey("theme")
+
+    val theme: Flow&lt;String&gt; = context.dataStore.data.map { it[THEME] ?: "system" }
+
+    suspend fun setTheme(theme: String) {
+        context.dataStore.edit { it[THEME] = theme }
+    }
+}</code></pre>
+      <h4>Why it's better than SharedPreferences</h4>
+      <ul>
+        <li><strong>Async:</strong> Never blocks the main thread. SharedPreferences.apply() is "async" but the initial load on main thread is synchronous and a known ANR source.</li>
+        <li><strong>Flow-based reads:</strong> Changes are observable. Toggle a setting → any Flow collecting it updates automatically.</li>
+        <li><strong>Transactional writes:</strong> <code>edit { }</code> is atomic — no partial state visible.</li>
+        <li><strong>Type safety (Proto):</strong> No string-key typos, no casting.</li>
+        <li><strong>Error handling:</strong> Exposes errors via Flow exceptions, not silent failure.</li>
+      </ul>
+      <h4>Proto DataStore — typed schema</h4>
+      <pre><code>// user_prefs.proto
+message UserPrefs {
+    string theme = 1;
+    int32 font_scale = 2;
+    bool notifications_enabled = 3;
+}
+
+// Kotlin
+val prefs: Flow&lt;UserPrefs&gt; = context.userPrefsDataStore.data
+context.userPrefsDataStore.updateData { it.toBuilder().setTheme("dark").build() }</code></pre>
+      <h4>When I still use SharedPreferences</h4>
+      <p>"Legacy code that works and isn't a bottleneck. Migrating an existing SharedPreferences file is trivial with the DataStore migration API, but only worth it if we're already touching that code."</p>
+      <h4>What NOT to store</h4>
+      <p>"Like SharedPrefs — not for large structured data, not for sensitive data without encryption, not for frequently changing streams (use Room). DataStore shines for settings, feature flags, auth tokens (with encryption on top), onboarding flags."</p>
+      <div class="gotcha"><strong>Security:</strong> DataStore files are NOT encrypted by default. For tokens and sensitive values, wrap in EncryptedFile or use Android Keystore + manual crypto. Same caveat applies to SharedPreferences.</div>
+    `
+  },
+  {
+    phase: 4,
+    difficulty: 'hard',
+    q: "How do you handle network connectivity changes? What's the modern approach?",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "I monitor connectivity via <code>ConnectivityManager.NetworkCallback</code>, expose it as a Flow, and let features decide how to react. For operations that must wait for network, I combine this with WorkManager's CONNECTED constraint — the system handles the wait for me."</div>
+      <h4>Modern approach — NetworkCallback + Flow</h4>
+      <pre><code>fun Context.connectivityFlow(): Flow&lt;Boolean&gt; = callbackFlow {
+    val cm = getSystemService(ConnectivityManager::class.java)
+
+    val callback = object : ConnectivityManager.NetworkCallback() {
+        override fun onAvailable(network: Network) { trySend(true) }
+        override fun onLost(network: Network) { trySend(false) }
+        override fun onCapabilitiesChanged(network: Network, caps: NetworkCapabilities) {
+            trySend(caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET))
+        }
+    }
+
+    val request = NetworkRequest.Builder()
+        .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+        .build()
+    cm.registerNetworkCallback(request, callback)
+
+    // Initial state
+    val initial = cm.activeNetwork?.let {
+        cm.getNetworkCapabilities(it)?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+    } ?: false
+    trySend(initial)
+
+    awaitClose { cm.unregisterNetworkCallback(callback) }
+}.distinctUntilChanged()</code></pre>
+      <h4>Using it in the UI</h4>
+      <pre><code>val isOnline by connectivityFlow().collectAsStateWithLifecycle(initialValue = true)
+
+if (!isOnline) {
+    OfflineBanner()  // shown at top of screen
+}</code></pre>
+      <h4>Why the old way (BroadcastReceiver on CONNECTIVITY_ACTION) is bad</h4>
+      <ul>
+        <li>Deprecated for implicit broadcasts in manifests since Android 7.</li>
+        <li>Fires on many irrelevant changes.</li>
+        <li>Doesn't distinguish "has internet" from "has Wi-Fi but captive portal."</li>
+      </ul>
+      <h4>Capability checks that matter</h4>
+      <ul>
+        <li><code>NET_CAPABILITY_INTERNET</code> — has route to internet.</li>
+        <li><code>NET_CAPABILITY_VALIDATED</code> — actually reached the internet (not captive portal).</li>
+        <li><code>NET_CAPABILITY_NOT_METERED</code> — on unmetered connection (Wi-Fi or ethernet).</li>
+      </ul>
+      <h4>What I actually do</h4>
+      <ol>
+        <li>Expose a <code>Flow&lt;ConnectivityState&gt;</code> from a Singleton.</li>
+        <li>ViewModels observe it and decide: retry failed requests, queue writes, show banner.</li>
+        <li>For guaranteed-delivery work (uploads), I use WorkManager with <code>NetworkType.CONNECTED</code> — the system schedules the work when a network is available, even if the app is dead.</li>
+      </ol>
+      <h4>Country Delight angle</h4>
+      <p>"Users in metros and elevators flicker between Wi-Fi and 4G. Showing an offline banner the moment connectivity drops and hiding it on recovery creates trust. Our cart writes always go through WorkManager with retry — users don't lose their cart just because they walked into a dead zone."</p>
+      <div class="gotcha"><strong>Captive portal trap:</strong> On some public Wi-Fi, the device reports "connected" but real requests fail. Check <code>NET_CAPABILITY_VALIDATED</code>, not just <code>NET_CAPABILITY_INTERNET</code>.</div>
+    `
+  },
+  {
+    phase: 4,
+    difficulty: 'hard',
+    q: "Explain backpressure in Flow. How does Flow handle slow consumers?",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Backpressure is what happens when a producer emits faster than a consumer can handle. Flow's default behavior is suspension — the producer's <code>emit</code> suspends until the consumer processes the previous value. Unlike RxJava, there's no buffering by default, so you opt in explicitly via buffer, conflate, or collectLatest."</div>
+      <h4>Default — suspension (safest)</h4>
+      <pre><code>flow {
+    for (i in 1..5) {
+        emit(i)              // suspends if collector is slow
+        println("emitted ${'$'}i")
+    }
+}.collect {
+    delay(1000)              // slow consumer
+    println("got ${'$'}it")
+}
+// Producer emits one, waits for collect to finish, emits next. Fully sequential.</code></pre>
+      <h4>buffer — let the producer run ahead</h4>
+      <pre><code>flow { for (i in 1..5) { emit(i); println("emit ${'$'}i") } }
+    .buffer(capacity = 3)
+    .collect { delay(1000); println("got ${'$'}it") }
+
+// Producer emits all 5 quickly, buffer holds them, consumer catches up.</code></pre>
+      <h4>conflate — keep only the latest</h4>
+      <pre><code>scrollOffsetFlow
+    .conflate()
+    .collect { offset -&gt;
+        delay(50)  // expensive paint
+        updateUi(offset)
+    }
+// Rapidly scrolling drops intermediate offsets. Only the latest is processed.</code></pre>
+      <h4>collectLatest — cancel the previous handler</h4>
+      <pre><code>searchQueryFlow.collectLatest { q -&gt;
+    val results = repo.search(q)  // cancelled if a new q arrives
+    _state.value = UiState.Results(results)
+}</code></pre>
+      <h4>When to pick each</h4>
+      <ul>
+        <li><strong>Default (suspension):</strong> Order-sensitive, every value matters. DB writes, event log.</li>
+        <li><strong>buffer:</strong> Burst input, consumer is steady. Network chunks arriving faster than parsing.</li>
+        <li><strong>conflate:</strong> Latest-only matters. Scroll, sensor readings, typing indicator.</li>
+        <li><strong>collectLatest:</strong> Want to cancel old work when new input arrives. Search, validation.</li>
+      </ul>
+      <h4>The implicit buffer of flowOn</h4>
+      <pre><code>flow { ... }
+    .flowOn(Dispatchers.IO)  // implicitly adds a buffer
+    .collect { ... }</code></pre>
+      <p>"<code>flowOn</code> changes the dispatcher for upstream operators and has an implicit buffer of 64 between the context boundary. Good for parallelizing producer and consumer without thinking about it."</p>
+      <h4>Real example</h4>
+      <p>"For our product search, we want to cancel in-flight searches when the user types a new character — that's <code>collectLatest</code> combined with <code>flatMapLatest</code>. For analytics events, we want to never drop events — default suspension behavior with a DB-backed queue so we never lose one."</p>
+      <div class="gotcha"><strong>BufferOverflow policy:</strong> <code>buffer(capacity = 10, onBufferOverflow = BufferOverflow.DROP_OLDEST)</code> — control what happens when the buffer fills. Default throws, which you rarely want.</div>
+    `
+  }
+];
+
+const phase3Container = document.getElementById('phase3-container');
+const phase4Container = document.getElementById('phase4-container');
+
+function render() {
+  phase3Container.innerHTML = '';
+  phase4Container.innerHTML = '';
+  let p3Count = 0, p4Count = 0;
+
+  questions.forEach((item, idx) => {
+    const done = getDone(idx);
+    const diffLabel = item.difficulty === 'hard' ? 'Hard' : item.difficulty === 'med' ? 'Medium' : 'Easy';
+    const diffClass = item.difficulty === 'hard' ? 'tag-hard' : item.difficulty === 'med' ? 'tag-med' : 'tag-easy';
+    if (item.phase === 3) p3Count++;
+    else p4Count++;
+    const qNum = item.phase === 3 ? p3Count : p4Count;
+
+    const card = document.createElement('div');
+    card.className = 'question-card' + (done ? ' done' : '');
+    card.innerHTML = `
+      <div class="question-header">
+        <div class="question-number">Q${qNum}</div>
+        <div class="question-text">${item.q}<span class="tag ${diffClass}">${diffLabel}</span></div>
+        <div class="actions">
+          <button class="btn btn-view" data-idx="${idx}">View Answer</button>
+          <button class="btn btn-done ${done ? 'active' : ''}" data-done="${idx}">${done ? '✓ Done' : 'Mark Done'}</button>
+        </div>
+      </div>
+      <div class="answer" id="answer-${idx}">${item.a}</div>
+    `;
+    if (item.phase === 3) phase3Container.appendChild(card);
+    else phase4Container.appendChild(card);
+  });
+
+  document.querySelectorAll('[data-idx]').forEach(btn => {
+    btn.onclick = (e) => {
+      const idx = e.target.dataset.idx;
+      const ans = document.getElementById('answer-' + idx);
+      const open = ans.classList.toggle('open');
+      e.target.textContent = open ? 'Hide Answer' : 'View Answer';
+    };
+  });
+  document.querySelectorAll('[data-done]').forEach(btn => {
+    btn.onclick = (e) => {
+      const idx = parseInt(e.target.dataset.done);
+      toggleDone(idx);
+      render();
+    };
+  });
+  updateProgress();
+}
+
+function getDone(idx) {
+  const doneList = JSON.parse(localStorage.getItem('prep_done_p3p4') || '[]');
+  return doneList.includes(idx);
+}
+function toggleDone(idx) {
+  let doneList = JSON.parse(localStorage.getItem('prep_done_p3p4') || '[]');
+  if (doneList.includes(idx)) doneList = doneList.filter(i => i !== idx);
+  else doneList.push(idx);
+  localStorage.setItem('prep_done_p3p4', JSON.stringify(doneList));
+}
+function updateProgress() {
+  const doneList = JSON.parse(localStorage.getItem('prep_done_p3p4') || '[]');
+  const total = questions.length;
+  const done = doneList.length;
+  const pct = total ? (done / total * 100) : 0;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = `${done} of ${total} completed (${Math.round(pct)}%)`;
+}
+function resetProgress() {
+  if (confirm('Reset all progress?')) {
+    localStorage.removeItem('prep_done_p3p4');
+    render();
+  }
+}
+
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,1324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SDE-2 Android Interview Prep · Phase 9 & 10</title>
+<style>
+  :root {
+    --bg: #0b0f17; --card: #121826; --card-hover: #1a2236;
+    --border: #232b3d; --text: #e6edf7; --text-dim: #8a94a7;
+    --accent: #6ea8fe; --accent-hover: #90bcff;
+    --success: #3fb950; --success-bg: #0f2a1a;
+    --warn: #f0b429; --code-bg: #0a0e15;
+    --phase9: #38d9a9; --phase10: #ff6b6b;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg); color: var(--text); line-height: 1.65;
+    padding: 24px 16px 80px;
+  }
+  .container { max-width: 960px; margin: 0 auto; }
+  header { text-align: center; margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid var(--border); }
+  header h1 {
+    font-size: 28px; font-weight: 700; margin-bottom: 8px;
+    background: linear-gradient(135deg, var(--phase9), var(--phase10));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  header p { color: var(--text-dim); font-size: 14px; }
+  .progress-bar { margin-top: 16px; background: var(--card); border-radius: 999px; height: 8px; overflow: hidden; border: 1px solid var(--border); }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--phase9), var(--phase10)); width: 0%; transition: width 0.4s ease; }
+  .progress-text { margin-top: 8px; font-size: 13px; color: var(--text-dim); }
+  .phase-header { margin: 40px 0 20px; padding: 16px 20px; background: var(--card); border-left: 4px solid var(--phase9); border-radius: 8px; }
+  .phase-header.phase-10 { border-left-color: var(--phase10); }
+  .phase-header h2 { font-size: 20px; margin-bottom: 4px; }
+  .phase-header p { color: var(--text-dim); font-size: 13px; }
+  .question-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 12px; overflow: hidden; transition: all 0.2s ease; }
+  .question-card:hover { border-color: var(--accent); }
+  .question-card.done { background: var(--success-bg); border-color: var(--success); opacity: 0.75; }
+  .question-card.done .question-text { text-decoration: line-through; color: var(--text-dim); }
+  .question-header { display: flex; align-items: flex-start; gap: 12px; padding: 16px 20px; }
+  .question-number { background: var(--bg); color: var(--accent); font-weight: 600; font-size: 13px; padding: 4px 10px; border-radius: 6px; border: 1px solid var(--border); flex-shrink: 0; min-width: 48px; text-align: center; }
+  .question-text { flex: 1; font-size: 15px; font-weight: 500; padding-top: 2px; }
+  .tag { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 4px; margin-left: 6px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+  .tag-hard { background: rgba(248, 81, 73, 0.15); color: #f85149; }
+  .tag-med { background: rgba(240, 180, 41, 0.15); color: var(--warn); }
+  .tag-easy { background: rgba(63, 185, 80, 0.15); color: var(--success); }
+  .actions { display: flex; gap: 8px; flex-shrink: 0; }
+  .btn { background: var(--bg); color: var(--text); border: 1px solid var(--border); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 500; transition: all 0.15s ease; white-space: nowrap; }
+  .btn:hover { background: var(--card-hover); border-color: var(--accent); }
+  .btn-view { color: var(--accent); }
+  .btn-done { color: var(--success); }
+  .btn-done.active { background: var(--success); color: white; border-color: var(--success); }
+  .answer { display: none; padding: 0 20px 20px 20px; border-top: 1px solid var(--border); margin-top: 4px; padding-top: 16px; color: var(--text); }
+  .answer.open { display: block; }
+  .answer .opener { background: rgba(110, 168, 254, 0.08); border-left: 3px solid var(--accent); padding: 12px 16px; margin-bottom: 16px; border-radius: 4px; font-size: 14px; font-style: italic; }
+  .answer .opener strong { color: var(--accent); font-style: normal; }
+  .answer .say { background: rgba(56, 217, 169, 0.06); border-left: 3px solid var(--phase9); padding: 10px 14px; margin: 12px 0; border-radius: 4px; font-size: 14px; }
+  .answer .say::before { content: '🎤 '; }
+  .answer h4 { color: var(--accent); font-size: 14px; margin: 18px 0 6px; font-weight: 600; }
+  .answer p { margin-bottom: 10px; font-size: 14px; }
+  .answer ul, .answer ol { margin: 8px 0 12px 20px; font-size: 14px; }
+  .answer li { margin-bottom: 5px; }
+  .answer code { background: var(--code-bg); padding: 2px 6px; border-radius: 4px; font-family: 'SF Mono', Monaco, Consolas, monospace; font-size: 13px; color: #ffa657; }
+  .answer pre { background: var(--code-bg); padding: 12px 14px; border-radius: 6px; overflow-x: auto; margin: 10px 0; border: 1px solid var(--border); }
+  .answer pre code { background: none; padding: 0; color: var(--text); font-size: 13px; line-height: 1.5; }
+  .answer strong { color: var(--accent-hover); }
+  .gotcha { background: rgba(240, 180, 41, 0.08); border-left: 3px solid var(--warn); padding: 10px 14px; margin: 12px 0; border-radius: 4px; font-size: 13px; }
+  .gotcha strong { color: var(--warn); }
+  .reset-btn { position: fixed; bottom: 20px; right: 20px; background: var(--card); border: 1px solid var(--border); color: var(--text-dim); padding: 8px 14px; border-radius: 999px; cursor: pointer; font-size: 12px; }
+  .reset-btn:hover { color: var(--text); }
+  @media (max-width: 600px) {
+    .question-header { flex-wrap: wrap; }
+    .actions { width: 100%; justify-content: flex-end; margin-top: 8px; }
+    header h1 { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>SDE-2 Android Interview Prep</h1>
+    <p>Phase 9 & 10 · Advanced System Design + LLD Classics · Answers written as if you're speaking to an interviewer</p>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-text" id="progressText">0 of 0 completed</div>
+  </header>
+
+  <div class="phase-header">
+    <h2 id="phase-9">Phase 9 · System Design (Advanced)</h2>
+    <p>Seven end-to-end mobile system design scenarios that actually come up at Meta, Google, Uber, Amazon, Flipkart, Swiggy, CRED. Each answer is structured the way you'd speak it — clarifying questions, thinking aloud, tradeoffs named out loud.</p>
+  </div>
+  <div id="phase9-container"></div>
+
+  <div class="phase-header phase-10">
+    <h2 id="phase-10">Phase 10 · Low-Level Design (Classics)</h2>
+    <p>Seven LLD problems Microsoft, Amazon, Atlassian, Uber and the Indian unicorns ask on repeat. Focus on class design, SOLID, design patterns applied with reason — not for their own sake.</p>
+  </div>
+  <div id="phase10-container"></div>
+</div>
+
+<button class="reset-btn" onclick="resetProgress()">↻ Reset Progress</button>
+
+<script>
+const questions = [
+  // ============ PHASE 9: SYSTEM DESIGN (ADVANCED) ============
+  {
+    phase: 9,
+    difficulty: 'hard',
+    q: "Design a Netflix / Prime Video mobile app with streaming and offline download.",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Okay, video apps are fun because they stress almost every mobile constraint — bandwidth, storage, battery, DRM. Let me clarify scope first, then I'll walk through the architecture, and finally deep-dive on the two interesting parts: adaptive streaming and offline download."</div>
+
+      <div class="say"><strong>"Before I dive in, a few clarifying questions:</strong> Are we designing the mobile client, or the full system? I'll assume mobile is the focus. What scale — are we talking 1M users or 100M? Premium content so DRM is required? Offline downloads available to all tiers or premium-only? Any Chromecast / TV requirements? I'll assume a 100M user global app, DRM required, offline available to paying users, no cast for now."</div>
+
+      <h4>The high level — how I'd draw it</h4>
+      <p>I'd sketch five layers from top to bottom. UI is Compose-first using Media3's <code>PlayerView</code> in an <code>AndroidView</code>. Below that, a Player layer wrapping ExoPlayer — this is where adaptive streaming and DRM live. Then a Data layer with Repository pattern — catalog comes from the server via Retrofit, offline metadata lives in Room. Below that, two storage systems: a streaming cache (SimpleCache with ~200MB LRU) and a separate DownloadManager for persistent offline downloads. Finally the network layer — Retrofit for catalog JSON, and OkHttp with a custom interceptor chain for media (auth tokens, range requests).</p>
+
+      <h4>Adaptive streaming — the first hard part</h4>
+      <p>"When a user hits play, I don't know their network — could be 5Mbps 4G, could be 100Mbps WiFi. So we use adaptive bitrate streaming with DASH or HLS. The server pre-encodes the same video into multiple quality ladders — 240p, 480p, 720p, 1080p, 4K — chunked into 2-10 second segments. A manifest (DASH MPD or HLS M3U8) lists them.</p>
+      <p>The player starts low — usually 480p — and measures how long each segment takes to download. If segments arrive faster than they play, we step up. If we're falling behind and the buffer drains, we step down. Media3's <code>DefaultTrackSelector</code> does this out of the box, but I'd tune the thresholds — our users on Indian 4G behave very differently from US broadband. I'd log every rebuffering event to see if the thresholds are right."</p>
+
+      <h4>Offline download with DRM — the interesting part</h4>
+      <p>"For offline, I'd use ExoPlayer's <code>DownloadManager</code>. Under the hood it uses WorkManager for persistence — downloads survive reboots and app kills, which is non-negotiable for a 2GB movie. I track progress and state in Room so the UI can show a progress bar and support pause/resume. Storage goes to internal app storage by default — it's secure and auto-cleaned on uninstall — with a settings toggle for SD card if the user has limited internal space.</p>
+      <p>Now DRM — premium content is encrypted with Widevine L1. The flow is: download the encrypted video, then fetch a license from the license server. The license has an expiry, say 30 days. When the user plays offline, before starting playback I check if the license is valid; if it's expired, I tell the user 'needs internet to refresh.' I'd store licenses via ExoPlayer's <code>OfflineLicenseHelper</code>."</p>
+
+      <h4>Catalog and feed</h4>
+      <p>"The browse screens — Continue Watching, Trending, etc. — are Paging 3 with Room as the single source of truth, fed by a RemoteMediator. So if the user opens the app offline, they still see the last browsed content. Images (poster art) via Coil with aggressive caching — these rarely change. Personalization happens server-side; client just renders."</p>
+
+      <h4>Tradeoffs I'd call out</h4>
+      <ul>
+        <li><strong>Storage management</strong> — library grows, storage fills. I'd add an auto-delete-after-watch option and a per-app quota.</li>
+        <li><strong>Bandwidth on metered networks</strong> — default to pause downloads on cellular, opt-in to allow.</li>
+        <li><strong>Thermal throttling</strong> — 4K streaming heats the device. I'd watch <code>PowerManager.getCurrentThermalStatus()</code> and downgrade quality if thermal is severe. Good devices do this; users notice.</li>
+        <li><strong>Startup time</strong> — a key metric. Baseline profile for player init. Preload the first two segments in parallel with splash screen.</li>
+      </ul>
+
+      <h4>What I'd measure</h4>
+      <p>"Time to first frame, rebuffering ratio, download success rate, offline play success, thermal events. These are the KPIs that tell me whether the system works for actual users, not just on my Pixel."</p>
+
+      <div class="gotcha"><strong>Follow-up they'll ask:</strong> "How do you support Chromecast?" — Media3 has a CastPlayer that wraps the local Player. When cast starts, transfer state (mediaItem, position) to CastPlayer. When cast ends, transfer back. Same Player interface, different backend.</div>
+    `
+  },
+  {
+    phase: 9,
+    difficulty: 'hard',
+    q: "Design a YouTube Shorts / Instagram Reels vertical video feed.",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Vertical video feed looks simple — it's just a scrollable list of videos. But the engineering is all about perceived performance. Users expect zero friction: instant start, no black frames, seamless scroll. Let me clarify scope, then walk through how I'd build this."</div>
+
+      <div class="say"><strong>"Quick clarifying questions:</strong> We're designing the client, right? Server provides a feed API — an ordered list of video IDs with metadata? We need infinite scroll with preloading, likes/comments as overlays, and swipe-to-next? Assume yes on all. Scale: 50M DAU. Typical session is 10-20 minutes of scrolling."</div>
+
+      <h4>The core challenge</h4>
+      <p>"Let's name the problem: in a reels feed, the single most important metric is time-to-first-frame on the next video. If the user swipes and sees black for more than 200ms, engagement drops. So my whole architecture centers on prefetching — at any moment, the next 1-2 videos should already be downloaded and decoded, ready to play."</p>
+
+      <h4>UI layer</h4>
+      <p>"I'd use Compose's <code>VerticalPager</code>. Each page is a video card — PlayerView, UI overlay with author info and actions. The Pager makes only the current page visible; I hook into page-change events to manage player lifecycle."</p>
+
+      <h4>Player pooling — the trick</h4>
+      <p>"Naive approach: one ExoPlayer per card. Don't do this — ExoPlayer allocates codec instances, which are a limited hardware resource. Instead, I maintain a pool of 3 players — one for the current video, one for the next, one for the previous. As the user swipes, I rotate the pool: prev player is released, current becomes prev, next becomes current, and I create a new 'next' player for the upcoming video.</p>
+      <p>This gives instant start because the next player is already prepared and buffered before the user swipes."</p>
+
+      <h4>Prefetch strategy</h4>
+      <p>"When the feed API returns 10 video URLs, I don't wait for the user to scroll to start downloading the next ones. I kick off prefetch for the next 2 videos immediately — just enough to get the first segment downloaded so playback can start instantly.</p>
+      <p>I'd use ExoPlayer's <code>DownloadHelper</code> to prepare the download without actually playing, and limit prefetch to the first 5-10 seconds of each video. Full download happens when the video becomes current."</p>
+
+      <h4>Network caching</h4>
+      <p>"SimpleCache with a ~500MB LRU. Segments are cached, so if a user rewatches a reel within their session, it comes from disk. I also enable <code>CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR</code> so a brief network blip doesn't break playback when we have the bytes cached."</p>
+
+      <h4>Data source of truth</h4>
+      <p>"The feed itself is Paging 3 with RemoteMediator + Room. User likes and comment counts are on the video object. Likes update optimistically — I flip the UI state instantly, enqueue a WorkManager job to sync. If sync fails after retries, I revert with a toast.</p>
+      <p>For view tracking — which is how creators get paid — I fire an analytics event when the video has played continuously for at least 3 seconds. Batch those events, send to backend via a dedicated WorkManager."</p>
+
+      <h4>Battery and data concerns</h4>
+      <p>"Video is expensive on both. I'd auto-pause when the app is backgrounded. I'd offer a 'data saver' toggle that caps resolution to 480p and disables prefetch beyond the next video. On cellular, default quality is 720p; WiFi goes up to 1080p."</p>
+
+      <h4>Observability</h4>
+      <p>"Three metrics to watch: time-to-first-frame (p50 &lt; 200ms), stall count per session (&lt;0.5), crash rate. If any of these regress by 10%, it's a rollback conversation."</p>
+
+      <div class="gotcha"><strong>Gotcha that kills teams:</strong> Memory leaks from not releasing Players in the pool when a card is offscreen. Android's MediaCodec will throw <code>Cannot acquire codec</code> if you leak. Always <code>player.release()</code> in <code>onDispose</code> of the Composable.</div>
+    `
+  },
+  {
+    phase: 9,
+    difficulty: 'hard',
+    q: "Design a Swiggy / Zomato food delivery app with real-time order tracking.",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "This is a broad one — I'll scope it. I'll focus on the consumer app and three critical journeys: browsing restaurants, placing an order, and live-tracking the delivery. Each has different constraints."</div>
+
+      <div class="say"><strong>"Questions first:</strong> Scale — 30M users, 1-2M orders/day? Are we multi-city? Yes. Do we need offline cart support? I'd say yes — users build carts during commutes. Payment integration — multiple providers like UPI, cards, wallets? Sure. OK let me start with architecture."</div>
+
+      <h4>Modularization</h4>
+      <p>"I'd split this into feature modules — <code>:feature:home</code> (restaurant discovery), <code>:feature:menu</code> (restaurant detail + cart), <code>:feature:checkout</code>, <code>:feature:orders</code> (live + history), <code>:feature:profile</code>. Core modules below: <code>:core:data</code>, <code>:core:network</code>, <code>:core:database</code>, <code>:core:location</code>, <code>:core:payments</code>. This lets 5 teams work in parallel."</p>
+
+      <h4>Browsing restaurants</h4>
+      <p>"The discovery feed is location-aware. I get the user's location once — fused provider, balanced accuracy — and cache it with a 5-minute TTL. Feed is Paging 3 + Room + RemoteMediator. The feed pipelines: 'near you' section, 'trending', 'cuisines', each is a horizontal row. Images via Coil with memory + disk cache. For search, debounced text input with 300ms delay → API call → results. I cache recent searches locally for instant replay."</p>
+
+      <h4>Cart and offline</h4>
+      <p>"Cart lives in Room — never only in memory. So if the user adds items and their phone rings or dies, the cart is intact. Each cart mutation goes to Room first, then optionally syncs to server (for cart abandonment emails). On the checkout screen, I validate the cart against live server prices — sometimes a restaurant changes prices or marks items out of stock."</p>
+
+      <h4>Checkout and payment</h4>
+      <p>"Checkout is a state machine — ADDRESS → PAYMENT_METHOD → CONFIRMING → PLACED. Each state has its own screen. I persist the state machine in the ViewModel + savedState so rotation or backgrounding doesn't lose progress.</p>
+      <p>Payment — I integrate Razorpay/Stripe SDK. Never handle card data ourselves, PCI compliance nightmare. SDK returns a token; I pass the token to our server to finalize. Critical: idempotency key on the order creation call. If the user's network drops after server processed but before response reached us, the retry must not create a duplicate order."</p>
+
+      <h4>Live order tracking — the interesting part</h4>
+      <p>"Once order is placed, the user opens the order screen. I need to show: current status (CONFIRMED → PREPARING → PICKED_UP → OUT_FOR_DELIVERY → DELIVERED), delivery partner's live location, ETA.</p>
+      <p>Two connection options: WebSocket or long-poll + FCM. WebSocket is cleaner for the ~30-minute window an order is active. I open it when the user opens the order screen, tear it down when they leave. For status updates while the app is backgrounded, FCM — high-priority data notifications that update local state without showing a notification banner."</p>
+      <p>Map integration: Google Maps SDK. The delivery partner's location comes over WebSocket every 5-10 seconds. I smoothly animate the marker between updates using <code>ValueAnimator</code> over the polyline to avoid jumpy movement. ETA is calculated server-side and sent with each update."</p>
+
+      <h4>Error handling and edge cases</h4>
+      <ul>
+        <li><strong>Order placed but WebSocket fails to connect</strong> — fall back to polling every 30 seconds.</li>
+        <li><strong>User loses connectivity mid-order</strong> — show last-known state with a "reconnecting" banner.</li>
+        <li><strong>Multiple active orders</strong> — rare but happens. List screen with per-order tracking.</li>
+        <li><strong>Order cancellation</strong> — optimistic UI, but server is source of truth. If server says can't cancel (driver already picked up), revert.</li>
+      </ul>
+
+      <h4>What I'd measure</h4>
+      <p>"Cart conversion rate, time-to-place-order, p95 tracking-update latency, crash rate on order screen, payment failure rate by provider."</p>
+
+      <div class="gotcha"><strong>The subtle thing:</strong> Time zones and clocks. The delivery partner's phone might have wrong time. Never trust client timestamps for ETA — always server authoritative. I've debugged bugs where ETA said 'delivering 2 hours ago' because of this.</div>
+    `
+  },
+  {
+    phase: 9,
+    difficulty: 'hard',
+    q: "Design Google Maps — offline tiles, turn-by-turn navigation.",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Maps is interesting because it hits everything — huge data, offline-critical, battery-sensitive, precise timing on navigation. I'll clarify what flavor of Maps we're building, then walk through tile rendering, offline, and navigation."</div>
+
+      <div class="say"><strong>"Clarifying:</strong> Are we rendering our own map or building on top of the Maps SDK? I'll assume we're building our own, because that's the harder and more interesting problem. Are we supporting turn-by-turn navigation? Yes. Offline maps? Yes — users download regions like 'Delhi NCR' and use them without network."</div>
+
+      <h4>Map tile rendering</h4>
+      <p>"Maps render as a pyramid of tiles. Zoom level 0 is the whole world as one 256×256 tile. Each zoom level doubles both axes — so level 1 has 4 tiles, level 2 has 16, and so on up to level 19-20 for street level. Total tile count at level 20 would be infinite in practice, so we fetch on demand.</p>
+      <p>For each visible zoom level and viewport, I calculate the set of tile coordinates (x, y, z) needed, check a cache (memory → disk → network), and render. Tiles come as vector (Protobuf MVT format — smaller, stylable) or raster (PNG — simpler but bigger). I'd go vector, render to Canvas or OpenGL."</p>
+
+      <h4>Caching strategy — three layers</h4>
+      <ol>
+        <li><strong>Memory cache</strong> — LruCache of ~50MB decoded tiles. Hit ratio ~90% for pan/zoom within same region.</li>
+        <li><strong>Disk cache</strong> — SimpleCache backed by internal storage, ~500MB default with user-configurable cap.</li>
+        <li><strong>Network</strong> — OkHttp with standard HTTP caching, falls through only on miss.</li>
+      </ol>
+
+      <h4>Offline maps</h4>
+      <p>"For offline, user picks a region. I calculate the bounding box and tile IDs needed for zoom levels 10 through 18 (city-level to street-level). That's typically 500MB-2GB per city. I download as a batch via WorkManager, write to a separate 'offline' partition of disk cache so it doesn't get LRU-evicted.</p>
+      <p>Key design: offline tiles are pinned — they never evict. Regular streaming cache is LRU. They share the same disk access paths but different eviction rules."</p>
+
+      <h4>Turn-by-turn navigation</h4>
+      <p>"Navigation has three sub-problems: route calculation, location tracking during the trip, and re-routing on deviation.</p>
+      <p><strong>Route calculation</strong> — one backend call to Directions API returns a polyline encoded as lat/lng pairs plus an instruction list (turn right in 200m, etc.). I cache the route locally.</p>
+      <p><strong>Location during trip</strong> — I request high-accuracy GPS updates at 1-5 second intervals. I use <code>PRIORITY_HIGH_ACCURACY</code> because navigation demands it, and run as a Foreground Service because Doze will kill us otherwise. Persistent notification shows current instruction.</p>
+      <p><strong>Matching to route</strong> — for each GPS fix, I find the nearest point on the polyline. If the user's actual position diverges by more than ~30 meters for more than 10 seconds, I trigger reroute — new API call with current position as origin.</p>
+      <p><strong>Instruction timing</strong> — I calculate distance-to-next-turn from the current matched polyline position. Trigger voice guidance at 500m, 200m, 50m.</p>"</p>
+
+      <h4>Battery — the nightmare</h4>
+      <p>"GPS at 1Hz + screen on + audio + network = serious drain. Mitigations: batch tile fetches (prefetch the next ~10 tiles along the route so we're not making continuous calls), dim screen if no interaction for 30 seconds but keep navigation running, drop GPS update rate to 5s on straight highway segments. Reference: Google Maps nav can burn 15-20% battery/hour even with their optimizations; users expect this."</p>
+
+      <h4>Gotchas</h4>
+      <ul>
+        <li>Tile servers have rate limits. Throttle client requests; exponential backoff on 429.</li>
+        <li>Map canvas must render at 60fps — offload tile decoding to background thread, only draw on main.</li>
+        <li>Memory on low-end devices: at zoom 20 with 3 screens of tiles, decoded bitmaps can exceed 200MB. Bitmap pooling and subsampling are critical.</li>
+        <li>Licensing: if building on Mapbox/OpenStreetMap rather than Google, their TOS limits offline caching duration.</li>
+      </ul>
+
+      <div class="gotcha"><strong>Follow-up to expect:</strong> "What about indoor / building interiors?" — Separate data layer, much higher zoom levels. Typically only rendered at zoom 18+. Different data source, often crowd-sourced.</div>
+    `
+  },
+  {
+    phase: 9,
+    difficulty: 'hard',
+    q: "Design a Twitter / X-like timeline feed.",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Twitter feed is a classic. On the client side it's a mixed feed with different post types — text, image, video, quote tweet — with infinite scroll, live reactions, and rich interactions. The hard part is keeping it smooth and handling the fan-out pattern from backend."</div>
+
+      <div class="say"><strong>"Quick clarifications:</strong> We're designing the mobile client. Backend provides a timeline API returning tweets in order. We need support for rich media (images, autoplay videos), likes, retweets, reply counts. Real-time updates? Yes, users see new tweets indicator at the top as they're published by people they follow. Scale: 100M DAU."</div>
+
+      <h4>Feed architecture — Paging 3 as usual</h4>
+      <p>"Paging 3 with RemoteMediator, Room as single source of truth. But tweets are polymorphic — text-only, with image(s), with video, with quote-tweet embed, with poll. I'd model this as a sealed hierarchy:</p>
+      <pre><code>sealed class TimelineItem {
+    abstract val id: String
+    abstract val authorId: String
+    abstract val timestamp: Long
+    data class Text(...) : TimelineItem()
+    data class Image(..., val imageUrls: List&lt;String&gt;) : TimelineItem()
+    data class Video(..., val videoUrl: String, val aspectRatio: Float) : TimelineItem()
+    data class Quote(..., val quoted: TimelineItem) : TimelineItem()
+}</code></pre>
+      <p>For Room, I'd store everything in one table with a <code>type</code> column and polymorphic JSON for the type-specific fields (via Moshi TypeAdapter). Simpler than N tables."</p>
+
+      <h4>LazyColumn optimization</h4>
+      <p>"Each tweet card has totally different height. LazyColumn needs content keys and content types to recycle properly. I provide both — <code>key = tweet.id</code>, <code>contentType = tweet.type</code>. This lets Compose reuse composables of the same type when scrolling, cutting recomposition cost significantly.</p>
+      <p>For images, Coil with aggressive caching. For videos, I only initialize ExoPlayer when the video is >50% visible and release when it scrolls off. A simple <code>Modifier.onGloballyPositioned</code> checks visibility."</p>
+
+      <h4>Autoplay video</h4>
+      <p>"Only one video plays at a time. I track 'current autoplay candidate' in a <code>rememberSaveable</code> state. Each visible video composable reports its visibility ratio; the one most-centered becomes the current. Others pause. When the user scrolls fast, even 'most-centered' can change multiple times per second — debounce by 300ms before actually playing, or users see videos flashing on-off."</p>
+
+      <h4>Optimistic interactions</h4>
+      <p>"Like button — user taps, I flip the UI immediately, update the Room row, enqueue a WorkManager job to sync. If sync fails after retries, I revert + toast. Retweet is similar but with an extra confirmation modal. Reply opens a compose screen."</p>
+
+      <h4>Real-time 'new tweets' indicator</h4>
+      <p>"Two options: long-poll or WebSocket. For 100M DAU, WebSocket is expensive on both sides. I'd go with a hybrid: poll every 30-60s when the app is foreground on the timeline screen, short-circuit with FCM push when a highly-engaged account posts. The 'New tweets' pill at the top shows count; tap to scroll to top and refresh."</p>
+
+      <h4>Caching policy</h4>
+      <ul>
+        <li>Keep last ~500 tweets in Room (10 pages). Prune older on schedule.</li>
+        <li>Images cached aggressively by Coil (100MB memory, 200MB disk).</li>
+        <li>Videos — no persistent cache, streaming only (copyright, storage).</li>
+      </ul>
+
+      <h4>Offline experience</h4>
+      <p>"Timeline loads last-cached pages instantly. User can read, but actions (like/reply) queue up in WorkManager and flush when online. The UI shows a small 'offline' banner so user knows interactions are pending."</p>
+
+      <h4>Metrics</h4>
+      <p>"Scroll jank rate (using JankStats), time-to-first-tweet on app open, image load p95, video autoplay success ratio, crash rate per screen."</p>
+
+      <div class="gotcha"><strong>The subtle one — tweet updates:</strong> When a tweet's like count changes on the server, how does the client know? Either polling with If-Modified-Since, or a separate WebSocket for 'subscribe to tweet IDs visible on screen.' Twitter uses the latter for recently-published tweets. It's a system design deep-dive if the interviewer pushes.</div>
+    `
+  },
+  {
+    phase: 9,
+    difficulty: 'hard',
+    q: "Design an offline-first note-taking app like Notion / Evernote.",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Note apps have a unique constraint: the entire feature set must work offline. And they have conflict resolution as a core concern — user edits on phone and laptop, then syncs both. Let me scope and design."</div>
+
+      <div class="say"><strong>"Questions:</strong> Are notes text-only, or rich (images, embeds)? I'll go rich — markdown with embedded images. Are we supporting multi-device sync for the same user? Yes. Real-time collaborative editing with multiple users? That's a much harder problem (OT or CRDTs). I'll handle single-user multi-device sync, and mention collab as a possible extension."</div>
+
+      <h4>Data model</h4>
+      <p>"A note has an id, title, body (markdown), createdAt, updatedAt, and a versioning field. I'd structure as:</p>
+      <pre><code>@Entity
+data class Note(
+    @PrimaryKey val id: String,         // UUID, client-generated
+    val title: String,
+    val body: String,                   // markdown
+    val createdAt: Long,
+    val updatedAt: Long,                // monotonic, client-set
+    val version: Int,                   // increments on each local edit
+    val serverVersion: Int?,            // last version confirmed by server
+    val deleted: Boolean = false,       // tombstone for deletes
+    val pendingSync: Boolean = false    // local edits waiting to sync
+)</code></pre>
+
+      <h4>Offline-first write path</h4>
+      <p>"Every create/edit/delete goes to Room first with <code>pendingSync = true</code>. The UI re-renders from Room, so the user sees their change instantly — no waiting for network. A sync worker wakes on connectivity or periodic trigger and ships pending changes."</p>
+
+      <h4>Sync protocol</h4>
+      <p>"Two-phase sync. Phase 1: push local changes. For each <code>pendingSync = true</code> note, POST to /sync/push with the note body and its <code>version</code>. Server accepts if its current version is ≤ my <code>serverVersion</code>. If server version is higher, we have a conflict — server returns 409 and the current server version. We'll handle that in a moment.</p>
+      <p>Phase 2: pull remote changes. GET /sync/pull?since=lastPullTimestamp returns notes modified since my last sync. Merge into Room — straightforward for notes I haven't touched locally."</p>
+
+      <h4>Conflict resolution</h4>
+      <p>"For the push conflict case, I have a few options, in order of sophistication:</p>
+      <ol>
+        <li><strong>Last-write-wins</strong> — overwrite with local. Loses remote edits. Bad for notes.</li>
+        <li><strong>Three-way merge</strong> — if we have the common ancestor (serverVersion we last saw), diff local vs ancestor and remote vs ancestor, merge non-overlapping changes. Works for text.</li>
+        <li><strong>Manual resolution</strong> — save both as 'Note (conflicted copy)'. Dropbox-style. Never loses data, but ugly.</li>
+        <li><strong>CRDTs</strong> — data types designed to merge deterministically. YJS or Automerge for rich text. Complex but robust, and enables real collaboration.</li>
+      </ol>
+      <p>"For a first version I'd do manual resolution — dead simple, no data loss, good enough. If the product wants real collaborative editing later, migrate to CRDTs. That's a 3-month project, not a sprint."</p>
+
+      <h4>Images and attachments</h4>
+      <p>"Inline images are referenced by URL in the markdown. On paste/attach, I upload the image to blob storage (S3) via a resumable uploader (see the photo uploader design), get back a URL, insert it into the markdown. Images aren't subject to sync conflicts — once uploaded with a URL, they're immutable."</p>
+
+      <h4>Search</h4>
+      <p>"Full-text search offline. Room has FTS4 / FTS5 support — I create an FTS index over title + body. On each save, update the FTS row. Search query is a single SQL statement that returns results in relevance order. Sub-50ms for 10,000 notes."</p>
+
+      <h4>Encryption at rest</h4>
+      <p>"Notes often contain sensitive info. I'd encrypt the body column with a key stored in Android Keystore. Room supports SQLCipher integration — the entire DB is encrypted. Simpler than column-level encryption and gives blanket protection."</p>
+
+      <h4>Export / import</h4>
+      <p>"Users expect to export notes. Simple: iterate notes, write as markdown files to a selected directory via <code>ACTION_OPEN_DOCUMENT_TREE</code> (scoped storage). Import reverse."</p>
+
+      <div class="gotcha"><strong>Clock skew bug:</strong> If the phone's clock is wrong, <code>updatedAt</code> values are wrong, and sync ordering breaks. Use a hybrid logical clock (HLC) — combines wall clock with a logical counter — to get consistent ordering across devices even with clock drift.</div>
+    `
+  },
+  {
+    phase: 9,
+    difficulty: 'med',
+    q: "Design a push notification system — multi-channel, priorities, grouping.",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Push notifications look simple from the outside — FCM delivers a payload, you show it. The real work is handling channels, priorities, grouping, deep-linking, permissions, and giving users control. Let me walk through how I'd design the full client-side system."</div>
+
+      <div class="say"><strong>"Clarifying:</strong> We receive notifications for multiple categories — orders, promotions, chat messages, system. Users can mute categories. Some notifications deep-link into the app, others are just informational. We need grouping (like 'John: 3 new messages'). On Android 13+ users must grant POST_NOTIFICATIONS. That's the scope."</div>
+
+      <h4>Notification Channels — Android 8+ core concept</h4>
+      <p>"Every notification must belong to a channel. Channels control importance (HIGH = sound + popup, DEFAULT = sound, LOW = silent, MIN = no badge). Once created, users can modify channel importance in settings — we can't override that. So I design channels carefully upfront:</p>
+      <ul>
+        <li><strong>channel_orders_high</strong> — order placed, delivered, delayed. HIGH importance.</li>
+        <li><strong>channel_chat</strong> — messages. HIGH, with heads-up.</li>
+        <li><strong>channel_promotions</strong> — offers. DEFAULT, user can mute without uninstalling.</li>
+        <li><strong>channel_system</strong> — account, security. HIGH.</li>
+      </ul>
+      <p>Register channels on app start with idempotent <code>NotificationManager.createNotificationChannels</code>. Safe to call every launch."</p>
+
+      <h4>Receiving FCM</h4>
+      <pre><code>class AppFcmService : FirebaseMessagingService() {
+    override fun onMessageReceived(msg: RemoteMessage) {
+        val payload = Payload.from(msg.data)
+        handler.handle(payload)
+    }
+    override fun onNewToken(token: String) {
+        // send to server for this user
+    }
+}</code></pre>
+      <p>"I always use 'data' messages, not 'notification' messages. Data messages give me full control — I decide whether to show a system notification, update in-app state silently, or both. Notification messages hand control to Android and I can't intercept when app is backgrounded."</p>
+
+      <h4>Routing by type</h4>
+      <p>"The payload has a <code>type</code> field — CHAT_MESSAGE, ORDER_UPDATE, PROMO, etc. A <code>NotificationHandlerRegistry</code> dispatches to type-specific handlers. Each handler knows which channel, which deep link, which grouping to use."</p>
+
+      <h4>Grouping</h4>
+      <p>"Multiple chat messages from the same sender should collapse to a single 'John: 3 new messages' notification. I use Android's notification grouping:</p>
+      <pre><code>val msgNotif = NotificationCompat.Builder(ctx, CHANNEL_CHAT)
+    .setContentTitle(senderName)
+    .setContentText(messagePreview)
+    .setGroup("chat_" + conversationId)   // group key
+    .build()
+
+val summary = NotificationCompat.Builder(ctx, CHANNEL_CHAT)
+    .setStyle(NotificationCompat.InboxStyle()
+        .setSummaryText("$count new messages"))
+    .setGroup("chat_" + conversationId)
+    .setGroupSummary(true)
+    .build()
+
+notifManager.notify(messageId.hashCode(), msgNotif)
+notifManager.notify(summaryId, summary)</code></pre>
+
+      <h4>Deep links</h4>
+      <p>"PendingIntent with an implicit <code>Intent(ACTION_VIEW, myapp://chat/$conversationId)</code>. Manifest declares intent filter on the target Activity. Routing goes through a central <code>DeepLinkRouter</code> that validates and navigates."</p>
+
+      <h4>Permission flow (Android 13+)</h4>
+      <p>"I don't ask for POST_NOTIFICATIONS immediately on launch. I wait for a natural moment — after the user places their first order, show a rationale screen explaining why. Then request. This doubles grant rates vs cold-asking."</p>
+
+      <h4>User preferences</h4>
+      <p>"Backend stores per-user notification preferences — mute promos, quiet hours, etc. Server honors them, but I also mirror client-side to stop showing even if server leaks one. Defense in depth."</p>
+
+      <h4>Observability</h4>
+      <p>"Track: received count (from FCM), shown count (Android suppressions — throttling, priority, user block), clicked count. Gap between received and shown is often 20%+ on poorly managed channels."</p>
+
+      <div class="gotcha"><strong>Doze and delivery:</strong> Android Doze delays normal-priority FCM messages significantly. For time-sensitive stuff like chat, mark the FCM payload with priority=high. But don't abuse — Google penalizes apps that send HIGH priority for non-urgent content.</div>
+    `
+  },
+
+  // ============ PHASE 10: LLD CLASSICS ============
+  {
+    phase: 10,
+    difficulty: 'med',
+    q: "Design an Elevator system.",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Elevator LLD is about identifying entities, capturing their behaviors, and choosing a scheduling strategy. Let me first clarify what kind of elevator system — single or multiple cars, any priority rules — then I'll design."</div>
+
+      <div class="say"><strong>"Scope check:</strong> Let's say a building with multiple elevators (say 3-5), each serves all floors. Users can request from inside the elevator (floor selection) or from outside (up/down button on a floor). Scheduling goal: minimize wait time. That's the standard scope."</div>
+
+      <h4>Entities I'd identify</h4>
+      <ol>
+        <li><strong>Elevator</strong> — a single car. Has position, direction, state (idle/moving/stopped), queue of target floors.</li>
+        <li><strong>Floor</strong> — has an up-call button, down-call button, display panel.</li>
+        <li><strong>Request</strong> — either from inside (select a floor) or outside (up/down on a floor).</li>
+        <li><strong>ElevatorController</strong> — the brain; assigns external requests to elevators.</li>
+        <li><strong>Direction</strong> — UP, DOWN, IDLE (enum).</li>
+        <li><strong>State</strong> — IDLE, MOVING, STOPPED, DOOR_OPEN, MAINTENANCE.</li>
+      </ol>
+
+      <h4>Classes</h4>
+      <pre><code>enum class Direction { UP, DOWN, IDLE }
+enum class State { IDLE, MOVING, DOOR_OPEN, MAINTENANCE }
+
+data class Request(val floor: Int, val direction: Direction)
+
+class Elevator(
+    val id: Int,
+    var currentFloor: Int = 0,
+    var direction: Direction = Direction.IDLE,
+    var state: State = State.IDLE,
+    private val upQueue: TreeSet&lt;Int&gt; = TreeSet(),     // floors above current
+    private val downQueue: TreeSet&lt;Int&gt; = TreeSet(compareByDescending { it })  // floors below
+) {
+    fun addStop(floor: Int) {
+        if (floor &gt; currentFloor) upQueue.add(floor)
+        else if (floor &lt; currentFloor) downQueue.add(floor)
+    }
+    fun step() {
+        when (direction) {
+            Direction.UP -&gt; {
+                if (upQueue.isEmpty()) switchToDownOrIdle()
+                else moveToward(upQueue.first())
+            }
+            Direction.DOWN -&gt; {
+                if (downQueue.isEmpty()) switchToUpOrIdle()
+                else moveToward(downQueue.first())
+            }
+            Direction.IDLE -&gt; { /* wait for request */ }
+        }
+    }
+    private fun moveToward(target: Int) {
+        currentFloor += if (target &gt; currentFloor) 1 else -1
+        if (currentFloor == target) { openDoor(); removeFromQueue(target) }
+    }
+    // ...openDoor, closeDoor, canHandle(request) etc
+}</code></pre>
+
+      <h4>Scheduling strategy — Strategy pattern</h4>
+      <pre><code>interface SchedulingStrategy {
+    fun pickElevator(elevators: List&lt;Elevator&gt;, request: Request): Elevator
+}
+
+class NearestElevatorStrategy : SchedulingStrategy {
+    override fun pickElevator(elevators: List&lt;Elevator&gt;, request: Request): Elevator {
+        return elevators.minBy { e -&gt;
+            costFor(e, request)
+        }!!
+    }
+    // cost = distance + penalty if wrong direction
+}</code></pre>
+      <p>"Strategy pattern here is justified — different buildings want different behavior. A hospital wants priority for emergencies. A hotel wants fairness. An office during rush might want zoning (odd elevators serve odd floors). The controller doesn't care; it just uses whichever strategy is plugged in."</p>
+
+      <h4>Controller</h4>
+      <pre><code>class ElevatorController(
+    private val elevators: List&lt;Elevator&gt;,
+    private val strategy: SchedulingStrategy
+) {
+    fun submitExternalRequest(req: Request) {
+        val chosen = strategy.pickElevator(elevators, req)
+        chosen.addStop(req.floor)
+    }
+    fun submitInternalRequest(elevatorId: Int, floor: Int) {
+        elevators.first { it.id == elevatorId }.addStop(floor)
+    }
+    fun tick() { elevators.forEach { it.step() } }
+}</code></pre>
+
+      <h4>SCAN (elevator) algorithm</h4>
+      <p>"The classic algorithm is SCAN — elevator continues in its current direction servicing all stops, reverses when no more stops in that direction. That's what my TreeSet-based queues implement. It's the right default because it minimizes direction changes, which is both efficient and feels fair to riders."</p>
+
+      <h4>Patterns used and why</h4>
+      <ul>
+        <li><strong>Strategy</strong> — scheduling algorithm is swappable.</li>
+        <li><strong>State</strong> — elevator state (<code>DoorOpen</code>, <code>Moving</code>, etc.) could be further formalized as State pattern if state transitions get complex.</li>
+        <li><strong>Observer</strong> — if we had a display panel observing elevator position, that's Observer.</li>
+        <li><strong>Singleton</strong> — only for the <code>ElevatorController</code> in small buildings; larger systems would have one per building/bank.</li>
+      </ul>
+
+      <h4>Follow-ups to anticipate</h4>
+      <ul>
+        <li><strong>Emergency mode</strong> — firefighter override. State change to MAINTENANCE, clear queues, return to ground floor.</li>
+        <li><strong>Weight limit</strong> — sensor integration; reject new requests if at capacity.</li>
+        <li><strong>Destination dispatch</strong> — user enters target floor on the outside panel, system groups riders with similar destinations into the same elevator. More efficient for tall buildings.</li>
+      </ul>
+
+      <div class="gotcha"><strong>Thread safety:</strong> In a real system, requests come in concurrently. I'd make <code>addStop</code> synchronized, or use a concurrent queue. Don't forget to mention concurrency when asked — many candidates miss it.</div>
+    `
+  },
+  {
+    phase: 10,
+    difficulty: 'med',
+    q: "Design Splitwise — expense sharing app.",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Splitwise is great LLD because it has clean entities, interesting algorithms (debt simplification), and forces you to think about different split types. Let me clarify scope, then design."</div>
+
+      <div class="say"><strong>"Scope:</strong> Users can form groups, add expenses within a group, split the expense equally or unequally or by percentage or by shares. System tracks who owes whom. 'Settle up' to pay off debt. Optional: debt simplification — reduce number of transactions."</div>
+
+      <h4>Entities</h4>
+      <ol>
+        <li><strong>User</strong> — id, name, email.</li>
+        <li><strong>Group</strong> — id, name, members, expenses.</li>
+        <li><strong>Expense</strong> — id, description, amount, payer, splitStrategy, splits, createdAt.</li>
+        <li><strong>Split</strong> — user, amount owed.</li>
+        <li><strong>Balance</strong> — between two users, how much one owes the other.</li>
+        <li><strong>SplitStrategy</strong> — EQUAL, EXACT, PERCENTAGE, SHARES.</li>
+      </ol>
+
+      <h4>Classes</h4>
+      <pre><code>data class User(val id: String, val name: String, val email: String)
+
+data class Group(
+    val id: String, val name: String,
+    val members: MutableList&lt;User&gt; = mutableListOf(),
+    val expenses: MutableList&lt;Expense&gt; = mutableListOf()
+)
+
+enum class SplitType { EQUAL, EXACT, PERCENTAGE }
+
+data class Split(val user: User, val amount: Double)
+
+data class Expense(
+    val id: String,
+    val description: String,
+    val totalAmount: Double,
+    val payer: User,
+    val splits: List&lt;Split&gt;,    // computed by strategy
+    val createdAt: Long
+)
+
+interface SplitStrategy {
+    fun split(total: Double, payer: User, participants: List&lt;Pair&lt;User, Double?&gt;&gt;): List&lt;Split&gt;
+}</code></pre>
+
+      <h4>Strategies</h4>
+      <pre><code>class EqualSplit : SplitStrategy {
+    override fun split(total: Double, payer: User, participants: List&lt;Pair&lt;User, Double?&gt;&gt;): List&lt;Split&gt; {
+        val n = participants.size
+        val share = total / n
+        return participants.map { (u, _) -&gt; Split(u, share) }
+    }
+}
+
+class ExactSplit : SplitStrategy {
+    override fun split(total: Double, payer: User, participants: List&lt;Pair&lt;User, Double?&gt;&gt;): List&lt;Split&gt; {
+        val sum = participants.sumOf { it.second!! }
+        require(abs(sum - total) &lt; 0.01) { "exact splits must sum to total" }
+        return participants.map { (u, amt) -&gt; Split(u, amt!!) }
+    }
+}
+
+class PercentageSplit : SplitStrategy {
+    override fun split(total: Double, payer: User, participants: List&lt;Pair&lt;User, Double?&gt;&gt;): List&lt;Split&gt; {
+        val sumPct = participants.sumOf { it.second!! }
+        require(abs(sumPct - 100.0) &lt; 0.01) { "percentages must sum to 100" }
+        return participants.map { (u, pct) -&gt; Split(u, total * pct!! / 100) }
+    }
+}</code></pre>
+
+      <h4>Balance tracking</h4>
+      <p>"I maintain a <code>Map&lt;Pair&lt;User, User&gt;, Double&gt;</code> keyed by (from, to). Every expense updates balances: for each split, the splitee owes the payer their split amount.</p>
+      <pre><code>class BalanceSheet {
+    private val balances = mutableMapOf&lt;Pair&lt;String, String&gt;, Double&gt;()
+
+    fun record(expense: Expense) {
+        for (split in expense.splits) {
+            if (split.user == expense.payer) continue
+            addDebt(split.user.id, expense.payer.id, split.amount)
+        }
+    }
+    private fun addDebt(from: String, to: String, amount: Double) {
+        // If B already owes A, reduce that first (netting)
+        val reverseKey = to to from
+        val reverse = balances[reverseKey] ?: 0.0
+        if (reverse &gt;= amount) {
+            balances[reverseKey] = reverse - amount
+            if (balances[reverseKey] == 0.0) balances.remove(reverseKey)
+        } else {
+            val remaining = amount - reverse
+            balances.remove(reverseKey)
+            balances[from to to] = (balances[from to to] ?: 0.0) + remaining
+        }
+    }
+    fun owedBy(user: String): Map&lt;String, Double&gt; =
+        balances.filterKeys { it.first == user }.mapKeys { it.key.second }
+}</code></pre>
+
+      <h4>Debt simplification — the interesting part</h4>
+      <p>"Given a set of balances, reduce to the minimum number of transactions. This is a greedy algorithm: compute net balance per user (what they owe overall, positive or negative). Use a max-heap of creditors and min-heap of debtors. Match the biggest debtor with biggest creditor, settle min(abs(both)), push remainders back. Repeat until both heaps empty.</p>
+      <p>For N users, this reduces at most N(N-1)/2 transactions to at most N-1. Not always globally optimal (it's actually NP-hard in general), but greedy gets very close in practice."</p>
+
+      <h4>Patterns used</h4>
+      <ul>
+        <li><strong>Strategy</strong> — SplitStrategy is the core pattern here.</li>
+        <li><strong>Facade</strong> — a <code>SplitwiseService</code> class wraps Group + BalanceSheet + strategies for clients.</li>
+      </ul>
+
+      <h4>Edge cases to call out</h4>
+      <ul>
+        <li>Floating-point precision — use BigDecimal or fixed-point cents internally for money.</li>
+        <li>Rounding: if total is 10 and 3 people split equally, 3.33 × 3 = 9.99. Allocate the extra cent to someone — the payer usually.</li>
+        <li>Multi-currency — add Currency to Expense, convert to user's preferred currency for display.</li>
+      </ul>
+
+      <div class="gotcha"><strong>Concurrency:</strong> Two expenses added simultaneously in the same group. BalanceSheet must be thread-safe — synchronize or use a transactional update. In a real system, this is a DB transaction.</div>
+    `
+  },
+  {
+    phase: 10,
+    difficulty: 'hard',
+    q: "Design BookMyShow — movie ticket booking with concurrent seat selection.",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Ticket booking is interesting because the hard part isn't class design — it's concurrency. 100 users might tap the same seat simultaneously. Let me scope, then talk through the solution."</div>
+
+      <div class="say"><strong>"Scope:</strong> Users browse movies, pick a cinema and show, see a seat map with available/booked/selected, select seats, pay, receive tickets. The critical property: a seat can only be sold once. That's the invariant I'll protect."</div>
+
+      <h4>Entities</h4>
+      <ol>
+        <li><strong>Movie</strong> — title, duration, genre.</li>
+        <li><strong>Cinema</strong> — name, location, list of auditoriums.</li>
+        <li><strong>Auditorium</strong> — rows × columns of seats.</li>
+        <li><strong>Show</strong> — specific movie + auditorium + time + pricing tier.</li>
+        <li><strong>Seat</strong> — row, column, seat-type (REGULAR, PREMIUM, RECLINER).</li>
+        <li><strong>ShowSeat</strong> — seat within a specific show, with availability state.</li>
+        <li><strong>Booking</strong> — user + show + seats + payment + status.</li>
+        <li><strong>Payment</strong> — amount, provider, status.</li>
+      </ol>
+
+      <h4>ShowSeat state machine</h4>
+      <p>"This is the core of the design. A ShowSeat has these states:</p>
+      <ul>
+        <li><strong>AVAILABLE</strong> — anyone can try to reserve it.</li>
+        <li><strong>LOCKED</strong> — reserved for one user for a short window (5 min) to complete payment.</li>
+        <li><strong>BOOKED</strong> — paid, confirmed. Terminal state.</li>
+        <li><strong>RELEASED</strong> — booking cancelled, back to available after refund.</li>
+      </ul>
+
+      <pre><code>enum class SeatStatus { AVAILABLE, LOCKED, BOOKED }
+
+data class ShowSeat(
+    val id: String,
+    val show: Show,
+    val seat: Seat,
+    var status: SeatStatus = SeatStatus.AVAILABLE,
+    var lockedBy: String? = null,
+    var lockedUntil: Long? = null     // epoch ms
+)</code></pre>
+
+      <h4>Concurrency — the hard part</h4>
+      <p>"This is where interviewers push. 10 users tap seat A1 simultaneously. Naive: check <code>status == AVAILABLE</code>, then set to LOCKED. Race condition — multiple users pass the check.</p>
+      <p>Solution: atomic compare-and-set on the database. In SQL, a conditional update: <code>UPDATE show_seats SET status='LOCKED', locked_by=:user, locked_until=:exp WHERE id=:id AND status='AVAILABLE'</code>. The database guarantees atomicity. Check rows affected — if 1, the user got the seat; if 0, someone else won.</p>
+      <p>For multiple seats in one request, I do this per-seat in a transaction with SELECT ... FOR UPDATE to lock the rows, then verify all are AVAILABLE before committing. If even one fails, release all — all-or-nothing semantics."</p>
+
+      <h4>Lock expiry</h4>
+      <p>"If the user locks seats but doesn't pay within 5 minutes, seats must revert to AVAILABLE. Two approaches: a background sweeper job that scans expired locks every minute (simple, eventual), or lazy check — whenever someone tries to book a seat, check its <code>lockedUntil</code> and release it if past. I'd do both: lazy for correctness, sweeper for timely release."</p>
+
+      <h4>Service layer</h4>
+      <pre><code>class BookingService(
+    private val seatLockRepo: ShowSeatRepo,
+    private val paymentService: PaymentService,
+    private val bookingRepo: BookingRepo
+) {
+    fun lockSeats(showId: String, seatIds: List&lt;String&gt;, userId: String): LockResult {
+        val expiry = System.currentTimeMillis() + 5 * 60_000
+        val locked = mutableListOf&lt;String&gt;()
+        try {
+            for (sid in seatIds) {
+                val ok = seatLockRepo.tryLock(sid, userId, expiry)
+                if (!ok) throw SeatUnavailableException(sid)
+                locked += sid
+            }
+            return LockResult.Success(locked)
+        } catch (e: SeatUnavailableException) {
+            locked.forEach { seatLockRepo.release(it, userId) }   // rollback
+            return LockResult.Failed(e.seatId)
+        }
+    }
+
+    fun confirmBooking(lockedSeats: List&lt;String&gt;, userId: String, payment: PaymentInfo): Booking {
+        val result = paymentService.charge(payment)
+        if (!result.success) {
+            lockedSeats.forEach { seatLockRepo.release(it, userId) }
+            throw PaymentFailedException()
+        }
+        lockedSeats.forEach { seatLockRepo.confirm(it, userId) }
+        return bookingRepo.create(lockedSeats, userId, result.paymentId)
+    }
+}</code></pre>
+
+      <h4>Patterns used</h4>
+      <ul>
+        <li><strong>State</strong> — SeatStatus state machine.</li>
+        <li><strong>Strategy</strong> — pricing per seat type (Regular, Premium, Recliner).</li>
+        <li><strong>Repository</strong> — abstracting data access for testability.</li>
+        <li><strong>Facade</strong> — BookingService hides the coordination of locks + payment + confirmation.</li>
+      </ul>
+
+      <h4>Real-time seat map updates</h4>
+      <p>"As one user locks seats, other users viewing the same show should see those seats grey out. WebSocket to <code>/shows/{id}/seats</code> pushes state changes. Each client subscribes on screen open, unsubscribes on leave."</p>
+
+      <h4>Payment integration gotcha</h4>
+      <p>"Payment is external and slow (5-30s). If user's phone dies during payment, lock may expire while payment is succeeding. Solution: payment webhook from provider; if lock expired but payment succeeded, re-acquire or refund."</p>
+
+      <div class="gotcha"><strong>Real-world addition:</strong> Most systems also do 'hold' before 'lock' — a short 30-second hold when user tentatively taps a seat (no payment initiated), converts to longer lock when they proceed to payment. Keeps the UX smooth without tying up seats too early.</div>
+    `
+  },
+  {
+    phase: 10,
+    difficulty: 'easy',
+    q: "Design a Logger with levels, multiple outputs, and thread safety.",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "A logger looks trivial but it's a great LLD interview because it exercises Singleton, Strategy, Chain of Responsibility, and thread safety. Let me scope and design."</div>
+
+      <div class="say"><strong>"Scope:</strong> Log messages have levels — DEBUG, INFO, WARN, ERROR, FATAL. Output can go to console, file, remote. User configures global minimum level and which sinks are active. Must be thread-safe and preferably non-blocking in hot path."</div>
+
+      <h4>Core entities</h4>
+      <ol>
+        <li><strong>LogLevel</strong> — DEBUG &lt; INFO &lt; WARN &lt; ERROR &lt; FATAL, ordered enum.</li>
+        <li><strong>LogEvent</strong> — timestamp, level, tag, message, throwable?.</li>
+        <li><strong>LogSink</strong> — interface for anything that consumes LogEvents (console, file, remote).</li>
+        <li><strong>Logger</strong> — the public API; filters by level, dispatches to sinks.</li>
+      </ol>
+
+      <h4>Code</h4>
+      <pre><code>enum class LogLevel { DEBUG, INFO, WARN, ERROR, FATAL }
+
+data class LogEvent(
+    val timestamp: Long = System.currentTimeMillis(),
+    val level: LogLevel,
+    val tag: String,
+    val message: String,
+    val throwable: Throwable? = null
+)
+
+interface LogSink {
+    fun write(event: LogEvent)
+    fun flush() {}
+    fun close() {}
+}
+
+class ConsoleSink : LogSink {
+    override fun write(event: LogEvent) {
+        println("${event.timestamp} [${event.level}] ${event.tag}: ${event.message}")
+        event.throwable?.printStackTrace()
+    }
+}
+
+class FileSink(private val file: File) : LogSink {
+    private val writer = file.bufferedWriter()
+    @Synchronized override fun write(event: LogEvent) {
+        writer.appendLine("${event.timestamp} [${event.level}] ${event.tag}: ${event.message}")
+        event.throwable?.let { writer.append(it.stackTraceToString()) }
+    }
+    @Synchronized override fun flush() = writer.flush()
+    @Synchronized override fun close() = writer.close()
+}
+
+class RemoteSink(private val api: LogApi) : LogSink {
+    private val queue = Channel&lt;LogEvent&gt;(Channel.BUFFERED)
+    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+    init {
+        scope.launch {
+            val batch = mutableListOf&lt;LogEvent&gt;()
+            for (event in queue) {
+                batch += event
+                if (batch.size &gt;= 50) { api.send(batch); batch.clear() }
+            }
+        }
+    }
+    override fun write(event: LogEvent) { queue.trySend(event) }
+}</code></pre>
+
+      <h4>Logger</h4>
+      <pre><code>class Logger private constructor() {
+    private val sinks = mutableListOf&lt;LogSink&gt;()
+    @Volatile private var minLevel: LogLevel = LogLevel.INFO
+
+    fun addSink(sink: LogSink) { synchronized(sinks) { sinks += sink } }
+    fun setMinLevel(level: LogLevel) { minLevel = level }
+
+    fun log(level: LogLevel, tag: String, message: String, t: Throwable? = null) {
+        if (level.ordinal &lt; minLevel.ordinal) return
+        val event = LogEvent(level = level, tag = tag, message = message, throwable = t)
+        synchronized(sinks) {
+            sinks.forEach { runCatching { it.write(event) } }  // one sink failing shouldn't kill others
+        }
+    }
+    fun debug(tag: String, msg: String) = log(LogLevel.DEBUG, tag, msg)
+    fun info(tag: String, msg: String)  = log(LogLevel.INFO, tag, msg)
+    fun warn(tag: String, msg: String)  = log(LogLevel.WARN, tag, msg)
+    fun error(tag: String, msg: String, t: Throwable? = null) = log(LogLevel.ERROR, tag, msg, t)
+
+    companion object {
+        val INSTANCE: Logger by lazy { Logger() }
+    }
+}</code></pre>
+
+      <h4>Thread safety analysis</h4>
+      <p>"The hot path — <code>log()</code> — takes a synchronized block only around sink iteration. The critical section is small, and sinks are added rarely (startup), so contention is minimal. Each sink is responsible for its own thread safety — FileSink synchronizes writes, RemoteSink uses a Channel + single consumer coroutine. Console sink is trivially safe because <code>println</code> is synchronized on System.out."</p>
+
+      <h4>Non-blocking hot path</h4>
+      <p>"In a real app, the caller shouldn't wait for file I/O. I'd wrap sinks in an <code>AsyncSink</code> decorator:</p>
+      <pre><code>class AsyncSink(private val delegate: LogSink) : LogSink {
+    private val queue = Channel&lt;LogEvent&gt;(Channel.BUFFERED)
+    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+    init {
+        scope.launch { for (event in queue) delegate.write(event) }
+    }
+    override fun write(event: LogEvent) { queue.trySend(event) }
+    override fun flush() { delegate.flush() }
+}</code></pre>
+      <p>Decorator pattern — wraps any sink to make it async without modifying it."</p>
+
+      <h4>Patterns used</h4>
+      <ul>
+        <li><strong>Singleton</strong> — single global Logger. Debatable, but classic.</li>
+        <li><strong>Strategy</strong> — different sinks = different output strategies.</li>
+        <li><strong>Decorator</strong> — AsyncSink wraps any sink.</li>
+        <li><strong>Composite</strong> — Logger holds multiple sinks and dispatches to all.</li>
+        <li><strong>Builder</strong> — for complex configuration (could add).</li>
+      </ul>
+
+      <h4>Real-world extensions</h4>
+      <ul>
+        <li>Structured logging — JSON key-value pairs instead of free text.</li>
+        <li>Sampling — for high-volume INFO logs, only write 1 in N to stay within storage/bandwidth budgets.</li>
+        <li>Log rotation — FileSink cycles to file.log.1, file.log.2 when size exceeds threshold.</li>
+        <li>Filtering by tag — lower level for network tag, higher for everything else.</li>
+      </ul>
+
+      <div class="gotcha"><strong>Singleton critique:</strong> "Why Singleton?" — because logger config should be global. But for testing, use DI to inject the Logger so tests can substitute a capturing sink. Singleton as implementation, injection as usage.</div>
+    `
+  },
+  {
+    phase: 10,
+    difficulty: 'easy',
+    q: "Design Snake and Ladder — game board, players, dice.",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Snake and Ladder is a good warm-up LLD. Clean entities, straightforward rules, nice place to discuss OO composition. Let me scope, then design."</div>
+
+      <div class="say"><strong>"Scope:</strong> Standard 10×10 board, 100 cells. Snakes send you down, ladders send you up. Multiple players (2-4 typically). Turn-by-turn. First to land exactly on 100 wins. Roll 6 to start? I'll keep that optional. I'll keep rules pluggable."</div>
+
+      <h4>Entities</h4>
+      <ol>
+        <li><strong>Board</strong> — size, snakes, ladders.</li>
+        <li><strong>Snake</strong> — start cell (head), end cell (tail). Head &gt; tail.</li>
+        <li><strong>Ladder</strong> — start cell (bottom), end cell (top). Top &gt; bottom.</li>
+        <li><strong>Dice</strong> — roll() returns value 1-6 (configurable sides).</li>
+        <li><strong>Player</strong> — id, name, currentPosition.</li>
+        <li><strong>Game</strong> — orchestrator; holds board, dice, players, current turn.</li>
+      </ol>
+
+      <h4>Code</h4>
+      <pre><code>data class Snake(val head: Int, val tail: Int) {
+    init { require(head &gt; tail) { "snake head must be &gt; tail" } }
+}
+data class Ladder(val bottom: Int, val top: Int) {
+    init { require(top &gt; bottom) { "ladder top must be &gt; bottom" } }
+}
+
+class Board(
+    val size: Int = 100,
+    snakes: List&lt;Snake&gt;,
+    ladders: List&lt;Ladder&gt;
+) {
+    private val jumps: Map&lt;Int, Int&gt; =
+        snakes.associate { it.head to it.tail } +
+        ladders.associate { it.bottom to it.top }
+
+    fun finalPosition(landedOn: Int): Int {
+        // Follow jumps recursively (rare but possible — ladder leading to snake etc)
+        var current = landedOn
+        val visited = mutableSetOf&lt;Int&gt;()
+        while (current in jumps && current !in visited) {
+            visited += current
+            current = jumps[current]!!
+        }
+        return current
+    }
+    fun isEnd(pos: Int) = pos == size
+}
+
+class Dice(private val sides: Int = 6, private val random: Random = Random.Default) {
+    fun roll(): Int = random.nextInt(sides) + 1
+}
+
+data class Player(val id: String, val name: String, var position: Int = 0)</code></pre>
+
+      <h4>Game orchestrator</h4>
+      <pre><code>class Game(
+    private val board: Board,
+    private val players: List&lt;Player&gt;,
+    private val dice: Dice,
+    private val listener: GameListener? = null
+) {
+    private var currentIdx = 0
+
+    fun play(): Player {
+        while (true) {
+            val player = players[currentIdx]
+            val roll = dice.roll()
+            val nextPos = player.position + roll
+
+            if (nextPos &gt; board.size) {
+                // overshoot — don't move
+                listener?.onOvershoot(player, roll)
+            } else {
+                player.position = board.finalPosition(nextPos)
+                listener?.onMove(player, roll, player.position)
+
+                if (board.isEnd(player.position)) {
+                    listener?.onWin(player)
+                    return player
+                }
+            }
+            currentIdx = (currentIdx + 1) % players.size
+        }
+    }
+}
+
+interface GameListener {
+    fun onMove(p: Player, roll: Int, to: Int)
+    fun onOvershoot(p: Player, roll: Int)
+    fun onWin(p: Player)
+}</code></pre>
+
+      <h4>Patterns used</h4>
+      <ul>
+        <li><strong>Observer</strong> — GameListener decouples game logic from UI / logs.</li>
+        <li><strong>Strategy</strong> — if we want variant rules (exact-100, overshoot bounces back, double-6 rolls again), swap a <code>RuleSet</code> strategy.</li>
+        <li><strong>Composition over inheritance</strong> — Board doesn't extend a generic Grid; it holds what it needs.</li>
+      </ul>
+
+      <h4>Variant rules I'd leave hooks for</h4>
+      <ul>
+        <li>Bounce-back on overshoot: next = 100 - (next - 100).</li>
+        <li>Double-6 = roll again. Three 6s in a row = forfeit that turn.</li>
+        <li>Start only after rolling a 6.</li>
+      </ul>
+
+      <h4>Testing angle</h4>
+      <p>"To make this testable, inject Dice with a seeded Random or a stub. Don't call <code>Random.nextInt</code> directly inside logic. Same trick for any randomness — makes tests deterministic."</p>
+
+      <div class="gotcha"><strong>Edge case:</strong> A ladder that leads directly to a snake's head is a 'chute' — infinite loop if not handled. My <code>finalPosition</code> uses a <code>visited</code> set to break cycles. Real boards are designed to avoid these, but code should defend.</div>
+    `
+  },
+  {
+    phase: 10,
+    difficulty: 'med',
+    q: "Design a Vending Machine using State pattern.",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Vending machine is the textbook State pattern example. The machine behaves differently in different states — can't dispense if no money inserted, can't take more money if already dispensing, etc. Let me walk through the design."</div>
+
+      <div class="say"><strong>"Scope:</strong> Machine accepts coins/notes, user selects a product, receives product + change. Products have inventory. Machine tracks balance while user is inserting money. Handle out-of-stock and cancel requests. Four main states: Idle, MoneyInserted, ProductSelected, Dispensing."</div>
+
+      <h4>Core entities</h4>
+      <pre><code>data class Product(val code: String, val name: String, val price: Int)
+
+data class Inventory(private val slots: MutableMap&lt;Product, Int&gt;) {
+    fun has(p: Product) = (slots[p] ?: 0) &gt; 0
+    fun dispense(p: Product) { slots[p] = (slots[p] ?: 0) - 1 }
+    fun count(p: Product) = slots[p] ?: 0
+}
+
+class VendingMachine(val inventory: Inventory) {
+    var balance: Int = 0
+    var selected: Product? = null
+    var state: State = IdleState()
+        set(value) { field = value; value.onEnter(this) }
+
+    fun insertCoin(amount: Int) = state.insertCoin(this, amount)
+    fun selectProduct(p: Product) = state.selectProduct(this, p)
+    fun dispense() = state.dispense(this)
+    fun cancel() = state.cancel(this)
+}</code></pre>
+
+      <h4>State interface</h4>
+      <pre><code>interface State {
+    fun onEnter(m: VendingMachine) {}
+    fun insertCoin(m: VendingMachine, amount: Int): Response
+    fun selectProduct(m: VendingMachine, p: Product): Response
+    fun dispense(m: VendingMachine): Response
+    fun cancel(m: VendingMachine): Response
+}
+
+sealed class Response {
+    object Ok : Response()
+    data class Err(val msg: String) : Response()
+    data class Dispensed(val product: Product, val change: Int) : Response()
+}</code></pre>
+
+      <h4>Concrete states</h4>
+      <pre><code>class IdleState : State {
+    override fun insertCoin(m: VendingMachine, amount: Int): Response {
+        m.balance += amount
+        m.state = HasMoneyState()
+        return Response.Ok
+    }
+    override fun selectProduct(m: VendingMachine, p: Product) = Response.Err("insert money first")
+    override fun dispense(m: VendingMachine) = Response.Err("insert money and select first")
+    override fun cancel(m: VendingMachine) = Response.Err("nothing to cancel")
+}
+
+class HasMoneyState : State {
+    override fun insertCoin(m: VendingMachine, amount: Int): Response {
+        m.balance += amount
+        return Response.Ok
+    }
+    override fun selectProduct(m: VendingMachine, p: Product): Response {
+        if (!m.inventory.has(p)) return Response.Err("out of stock")
+        if (m.balance &lt; p.price) return Response.Err("insert \${p.price - m.balance} more")
+        m.selected = p
+        m.state = DispensingState()
+        return m.dispense()
+    }
+    override fun dispense(m: VendingMachine) = Response.Err("select a product first")
+    override fun cancel(m: VendingMachine): Response {
+        val refund = m.balance
+        m.balance = 0; m.state = IdleState()
+        return Response.Dispensed(Product("REFUND", "refund", 0), refund)
+    }
+}
+
+class DispensingState : State {
+    override fun insertCoin(m: VendingMachine, amount: Int) = Response.Err("dispensing, wait")
+    override fun selectProduct(m: VendingMachine, p: Product) = Response.Err("dispensing")
+    override fun dispense(m: VendingMachine): Response {
+        val p = m.selected!!
+        m.inventory.dispense(p)
+        val change = m.balance - p.price
+        m.balance = 0; m.selected = null; m.state = IdleState()
+        return Response.Dispensed(p, change)
+    }
+    override fun cancel(m: VendingMachine) = Response.Err("cannot cancel mid-dispense")
+}</code></pre>
+
+      <h4>Why State pattern fits perfectly</h4>
+      <p>"Without State pattern, <code>VendingMachine.insertCoin</code> would be a giant switch on the current state. Every new state or transition means modifying that switch — fragile. With State pattern, behavior lives IN the state classes. Adding a new state (say <code>MaintenanceState</code>) just means a new class; nothing else changes."</p>
+
+      <h4>Patterns used</h4>
+      <ul>
+        <li><strong>State</strong> — the primary pattern.</li>
+        <li><strong>Strategy</strong> — if we wanted pluggable pricing (discount codes, happy hour), a PricingStrategy.</li>
+        <li><strong>Observer</strong> — notify admin when inventory for a product drops below a threshold.</li>
+        <li><strong>Sealed class</strong> for Response — a modern Kotlin idiom that enforces exhaustive handling.</li>
+      </ul>
+
+      <h4>Real-world extensions</h4>
+      <ul>
+        <li>Multiple payment methods — coin, card, UPI — via a Strategy (<code>PaymentMethod</code>).</li>
+        <li>Partial change problem: can we give exact change from available coin denominations? Dynamic programming sub-problem.</li>
+        <li>Maintenance mode: admin-locked state where no user operations work.</li>
+      </ul>
+
+      <div class="gotcha"><strong>Watch out for shared mutable state</strong> across states if VendingMachine is accessed concurrently. In a real machine it's single-user, but as a server-side abstraction (e.g. for kiosks), you'd synchronize the transition or use an actor model.</div>
+    `
+  },
+  {
+    phase: 10,
+    difficulty: 'med',
+    q: "Design a File System — files, directories, basic commands.",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "File systems are a great tree-based LLD. The pattern that fits perfectly is Composite — files and directories share a common interface, but directories contain children. Let me design the classes and then show commands on top."</div>
+
+      <div class="say"><strong>"Scope:</strong> Hierarchical directories and files. Operations: create file, create directory, list contents, read file, write file, delete, move, find. Permissions and linking are optional extensions I'll mention at the end."</div>
+
+      <h4>Composite hierarchy</h4>
+      <pre><code>sealed class FsNode(
+    val name: String,
+    var parent: Directory? = null,
+    val createdAt: Long = System.currentTimeMillis()
+) {
+    abstract fun size(): Long
+    val path: String
+        get() = if (parent == null) "/" else "${parent!!.path.trimEnd('/')}/$name"
+}
+
+class File(
+    name: String,
+    var content: ByteArray = ByteArray(0)
+) : FsNode(name) {
+    override fun size(): Long = content.size.toLong()
+    fun read() = content
+    fun write(data: ByteArray) { content = data }
+    fun append(data: ByteArray) { content += data }
+}
+
+class Directory(name: String) : FsNode(name) {
+    private val children = mutableMapOf&lt;String, FsNode&gt;()
+
+    override fun size(): Long = children.values.sumOf { it.size() }
+
+    fun add(node: FsNode) {
+        require(node.name !in children) { "name exists" }
+        node.parent = this
+        children[node.name] = node
+    }
+    fun remove(name: String): FsNode? = children.remove(name)?.also { it.parent = null }
+    fun get(name: String): FsNode? = children[name]
+    fun list(): List&lt;FsNode&gt; = children.values.toList()
+}</code></pre>
+
+      <h4>FileSystem facade</h4>
+      <pre><code>class FileSystem {
+    private val root = Directory("")
+
+    fun resolve(path: String): FsNode? {
+        if (path == "/" || path.isEmpty()) return root
+        val parts = path.trim('/').split("/")
+        var current: FsNode = root
+        for (p in parts) {
+            if (current !is Directory) return null
+            current = current.get(p) ?: return null
+        }
+        return current
+    }
+
+    fun mkdir(path: String): Directory {
+        val parts = path.trim('/').split("/")
+        var current: Directory = root
+        for (p in parts) {
+            val existing = current.get(p)
+            current = when (existing) {
+                is Directory -&gt; existing
+                null -&gt; Directory(p).also { current.add(it) }
+                else -&gt; throw IllegalStateException("$p is a file")
+            }
+        }
+        return current
+    }
+
+    fun touch(path: String): File {
+        val parent = parentOf(path)
+        val name = path.substringAfterLast('/')
+        return File(name).also { parent.add(it) }
+    }
+
+    fun rm(path: String) {
+        val node = resolve(path) ?: return
+        node.parent?.remove(node.name)
+    }
+
+    fun mv(src: String, dst: String) {
+        val node = resolve(src) ?: throw IllegalArgumentException("no $src")
+        node.parent?.remove(node.name)
+        val dstParent = parentOf(dst)
+        val dstName = dst.substringAfterLast('/')
+        // rename if dst name differs (need a setter or recreate)
+        dstParent.add(node)
+    }
+
+    fun find(startPath: String, predicate: (FsNode) -&gt; Boolean): List&lt;FsNode&gt; {
+        val start = resolve(startPath) as? Directory ?: return emptyList()
+        val results = mutableListOf&lt;FsNode&gt;()
+        fun walk(dir: Directory) {
+            for (child in dir.list()) {
+                if (predicate(child)) results += child
+                if (child is Directory) walk(child)
+            }
+        }
+        walk(start)
+        return results
+    }
+
+    private fun parentOf(path: String): Directory {
+        val parentPath = path.substringBeforeLast('/', "/")
+        return resolve(parentPath) as? Directory ?: throw IllegalArgumentException("no parent")
+    }
+}</code></pre>
+
+      <h4>Patterns used</h4>
+      <ul>
+        <li><strong>Composite</strong> — File and Directory both extend FsNode; Directory contains children that could be either.</li>
+        <li><strong>Facade</strong> — FileSystem class exposes simple methods, hiding tree traversal.</li>
+        <li><strong>Visitor</strong> (optional) — for operations like "total size recursively" or "find by name", a Visitor pattern cleanly traverses the tree.</li>
+      </ul>
+
+      <h4>Extensions</h4>
+      <ul>
+        <li><strong>Permissions</strong> — add owner + rwx bits per node. Check on operations.</li>
+        <li><strong>Hard links / symlinks</strong> — Link class pointing to another FsNode. Tree becomes graph; need cycle detection in recursive ops.</li>
+        <li><strong>In-memory vs persistent</strong> — swap File's content for a file handle or DB-backed storage.</li>
+        <li><strong>Concurrency</strong> — read-write locks per Directory for isolation.</li>
+        <li><strong>Quota / size limits</strong> — enforce before accepting writes.</li>
+      </ul>
+
+      <h4>LeetCode variant (commonly asked)</h4>
+      <p>"LC 588 'Design In-Memory File System' is this exact question with specific commands. The key insight is always the same: Composite pattern with a resolve() method that walks the path."</p>
+
+      <div class="gotcha"><strong>Rename gotcha:</strong> If a FsNode stores its name as an immutable <code>val</code>, you can't rename without creating a new node and losing identity (and anything observing it). Make name a <code>var</code> or expose a <code>rename(newName)</code> on the parent — not a pure 'val' design.</div>
+    `
+  }
+];
+
+const p9 = document.getElementById('phase9-container');
+const p10 = document.getElementById('phase10-container');
+
+function render() {
+  p9.innerHTML = ''; p10.innerHTML = '';
+  let c9 = 0, c10 = 0;
+  questions.forEach((item, idx) => {
+    const done = getDone(idx);
+    const diffLabel = item.difficulty === 'hard' ? 'Hard' : item.difficulty === 'med' ? 'Medium' : 'Easy';
+    const diffClass = item.difficulty === 'hard' ? 'tag-hard' : item.difficulty === 'med' ? 'tag-med' : 'tag-easy';
+    if (item.phase === 9) c9++; else c10++;
+    const qNum = item.phase === 9 ? c9 : c10;
+
+    const card = document.createElement('div');
+    card.className = 'question-card' + (done ? ' done' : '');
+    card.innerHTML = `
+      <div class="question-header">
+        <div class="question-number">Q${qNum}</div>
+        <div class="question-text">${item.q}<span class="tag ${diffClass}">${diffLabel}</span></div>
+        <div class="actions">
+          <button class="btn btn-view" data-idx="${idx}">View Answer</button>
+          <button class="btn btn-done ${done ? 'active' : ''}" data-done="${idx}">${done ? '✓ Done' : 'Mark Done'}</button>
+        </div>
+      </div>
+      <div class="answer" id="answer-${idx}">${item.a}</div>
+    `;
+    (item.phase === 9 ? p9 : p10).appendChild(card);
+  });
+
+  document.querySelectorAll('[data-idx]').forEach(btn => {
+    btn.onclick = (e) => {
+      const idx = e.target.dataset.idx;
+      const ans = document.getElementById('answer-' + idx);
+      const open = ans.classList.toggle('open');
+      e.target.textContent = open ? 'Hide Answer' : 'View Answer';
+    };
+  });
+  document.querySelectorAll('[data-done]').forEach(btn => {
+    btn.onclick = (e) => {
+      const idx = parseInt(e.target.dataset.done);
+      toggleDone(idx); render();
+    };
+  });
+  updateProgress();
+}
+function getDone(idx) {
+  const list = JSON.parse(localStorage.getItem('prep_done_p9p10') || '[]');
+  return list.includes(idx);
+}
+function toggleDone(idx) {
+  let list = JSON.parse(localStorage.getItem('prep_done_p9p10') || '[]');
+  if (list.includes(idx)) list = list.filter(i => i !== idx); else list.push(idx);
+  localStorage.setItem('prep_done_p9p10', JSON.stringify(list));
+}
+function updateProgress() {
+  const list = JSON.parse(localStorage.getItem('prep_done_p9p10') || '[]');
+  const total = questions.length, done = list.length;
+  const pct = total ? (done / total * 100) : 0;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = `${done} of ${total} completed (${Math.round(pct)}%)`;
+}
+function resetProgress() {
+  if (confirm('Reset all progress?')) { localStorage.removeItem('prep_done_p9p10'); render(); }
+}
+render();
+</script>
+</body>
+</html>

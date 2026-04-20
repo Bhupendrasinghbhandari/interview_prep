@@ -1,0 +1,1614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SDE-2 Android Interview Prep | Bhupendra</title>
+<style>
+  :root {
+    --bg: #0b0f17;
+    --card: #121826;
+    --card-hover: #1a2236;
+    --border: #232b3d;
+    --text: #e6edf7;
+    --text-dim: #8a94a7;
+    --accent: #6ea8fe;
+    --accent-hover: #90bcff;
+    --success: #3fb950;
+    --success-bg: #0f2a1a;
+    --warn: #f0b429;
+    --code-bg: #0a0e15;
+    --phase1: #6ea8fe;
+    --phase2: #bb86fc;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    padding: 24px 16px 80px;
+  }
+  .container { max-width: 960px; margin: 0 auto; }
+  header {
+    text-align: center;
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+  header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, var(--phase1), var(--phase2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  header p { color: var(--text-dim); font-size: 14px; }
+  .progress-bar {
+    margin-top: 16px;
+    background: var(--card);
+    border-radius: 999px;
+    height: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--phase1), var(--phase2));
+    width: 0%;
+    transition: width 0.4s ease;
+  }
+  .progress-text {
+    margin-top: 8px;
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+  .phase-header {
+    margin: 40px 0 20px;
+    padding: 16px 20px;
+    background: var(--card);
+    border-left: 4px solid var(--phase1);
+    border-radius: 8px;
+  }
+  .phase-header.phase-2 { border-left-color: var(--phase2); }
+  .phase-header h2 { font-size: 20px; margin-bottom: 4px; }
+  .phase-header p { color: var(--text-dim); font-size: 13px; }
+  .question-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 12px;
+    overflow: hidden;
+    transition: all 0.2s ease;
+  }
+  .question-card:hover { border-color: var(--accent); }
+  .question-card.done {
+    background: var(--success-bg);
+    border-color: var(--success);
+    opacity: 0.75;
+  }
+  .question-card.done .question-text { text-decoration: line-through; color: var(--text-dim); }
+  .question-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px 20px;
+  }
+  .question-number {
+    background: var(--bg);
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 13px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    flex-shrink: 0;
+    min-width: 48px;
+    text-align: center;
+  }
+  .question-text {
+    flex: 1;
+    font-size: 15px;
+    font-weight: 500;
+    padding-top: 2px;
+  }
+  .tag {
+    display: inline-block;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-left: 6px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .tag-hard { background: rgba(248, 81, 73, 0.15); color: #f85149; }
+  .tag-med { background: rgba(240, 180, 41, 0.15); color: var(--warn); }
+  .tag-easy { background: rgba(63, 185, 80, 0.15); color: var(--success); }
+  .actions {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+  .btn {
+    background: var(--bg);
+    color: var(--text);
+    border: 1px solid var(--border);
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 500;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+  }
+  .btn:hover { background: var(--card-hover); border-color: var(--accent); }
+  .btn-view { color: var(--accent); }
+  .btn-done { color: var(--success); }
+  .btn-done.active {
+    background: var(--success);
+    color: white;
+    border-color: var(--success);
+  }
+  .answer {
+    display: none;
+    padding: 0 20px 20px 20px;
+    border-top: 1px solid var(--border);
+    margin-top: 4px;
+    padding-top: 16px;
+    color: var(--text);
+  }
+  .answer.open { display: block; }
+  .answer h4 {
+    color: var(--accent);
+    font-size: 14px;
+    margin: 14px 0 6px;
+  }
+  .answer h4:first-child { margin-top: 0; }
+  .answer p { margin-bottom: 10px; font-size: 14px; }
+  .answer ul, .answer ol { margin: 8px 0 12px 20px; font-size: 14px; }
+  .answer li { margin-bottom: 4px; }
+  .answer code {
+    background: var(--code-bg);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'SF Mono', Monaco, Consolas, monospace;
+    font-size: 13px;
+    color: #ffa657;
+  }
+  .answer pre {
+    background: var(--code-bg);
+    padding: 12px 14px;
+    border-radius: 6px;
+    overflow-x: auto;
+    margin: 10px 0;
+    border: 1px solid var(--border);
+  }
+  .answer pre code {
+    background: none;
+    padding: 0;
+    color: var(--text);
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .answer strong { color: var(--accent-hover); }
+  .gotcha {
+    background: rgba(240, 180, 41, 0.08);
+    border-left: 3px solid var(--warn);
+    padding: 10px 14px;
+    margin: 12px 0;
+    border-radius: 4px;
+    font-size: 13px;
+  }
+  .gotcha strong { color: var(--warn); }
+  .reset-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    padding: 8px 14px;
+    border-radius: 999px;
+    cursor: pointer;
+    font-size: 12px;
+  }
+  .reset-btn:hover { color: var(--text); }
+  @media (max-width: 600px) {
+    .question-header { flex-wrap: wrap; }
+    .actions { width: 100%; justify-content: flex-end; margin-top: 8px; }
+    header h1 { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>SDE-2 Android Interview Prep</h1>
+    <p>Phase 1 & 2 · Kotlin Deep Dive + Jetpack Compose · Targeted at FAANG / Unicorns / Startups</p>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-text" id="progressText">0 of 0 completed</div>
+  </header>
+
+  <div class="phase-header">
+    <h2>Phase 1 · Kotlin Deep Dive</h2>
+    <p>Coroutines, Flow, generics, delegates, scope functions, memory — the stuff senior interviewers probe hardest.</p>
+  </div>
+  <div id="phase1-container"></div>
+
+  <div class="phase-header phase-2">
+    <h2>Phase 2 · Jetpack Compose & Modern UI</h2>
+    <p>Recomposition, state management, side effects, performance — directly relevant to your Country Delight work.</p>
+  </div>
+  <div id="phase2-container"></div>
+</div>
+
+<button class="reset-btn" onclick="resetProgress()">↻ Reset Progress</button>
+
+<script>
+const questions = [
+  // ============ PHASE 1: KOTLIN DEEP DIVE ============
+  {
+    phase: 1,
+    difficulty: 'med',
+    q: "What is the difference between `launch` and `async` in coroutines? When would you use each?",
+    a: `
+      <h4>Core difference</h4>
+      <p><strong>launch</strong> is fire-and-forget. It returns a <code>Job</code> and is used when you don't need a result back.</p>
+      <p><strong>async</strong> returns a <code>Deferred&lt;T&gt;</code> which produces a result via <code>.await()</code>. Use it for parallel decomposition when you need values.</p>
+      <h4>Code example</h4>
+      <pre><code>// launch — no return value needed
+viewModelScope.launch {
+    repository.logAnalyticsEvent("screen_viewed")
+}
+
+// async — running parallel calls and combining results
+viewModelScope.launch {
+    val user = async { repo.getUser() }
+    val orders = async { repo.getOrders() }
+    val combined = Profile(user.await(), orders.await())
+}</code></pre>
+      <h4>Exception handling gotcha</h4>
+      <p>With <code>launch</code>, exceptions propagate immediately to the parent. With <code>async</code>, exceptions are held inside the Deferred and only thrown on <code>.await()</code>. This is a common senior-level trap.</p>
+      <div class="gotcha"><strong>Interview trap:</strong> "Does async start running immediately?" — Yes, by default it starts eagerly. Use <code>CoroutineStart.LAZY</code> if you want it to wait until <code>.await()</code> or <code>.start()</code>.</div>
+    `
+  },
+  {
+    phase: 1,
+    difficulty: 'hard',
+    q: "Explain structured concurrency. Why does it matter, and how does CoroutineScope enforce it?",
+    a: `
+      <h4>Definition</h4>
+      <p>Structured concurrency means every coroutine is launched in a specific scope, and the parent scope waits for all children before completing. No coroutine can "leak" beyond its parent's lifetime.</p>
+      <h4>Why it matters</h4>
+      <ul>
+        <li><strong>No leaks:</strong> Cancel the scope → all children cancel automatically. This is why <code>viewModelScope</code> cancels everything when the ViewModel clears.</li>
+        <li><strong>Error propagation is predictable:</strong> Child failure cancels siblings (unless <code>SupervisorJob</code> is used).</li>
+        <li><strong>No orphan work:</strong> You can't accidentally start a coroutine that outlives the screen.</li>
+      </ul>
+      <h4>Example: breaking structure is bad</h4>
+      <pre><code>// BAD — leaks past ViewModel lifecycle
+class MyViewModel : ViewModel() {
+    fun loadData() {
+        GlobalScope.launch { /* survives even after VM cleared */ }
+    }
+}
+
+// GOOD — tied to VM lifecycle
+class MyViewModel : ViewModel() {
+    fun loadData() {
+        viewModelScope.launch { /* cancelled with VM */ }
+    }
+}</code></pre>
+      <div class="gotcha"><strong>Senior-level follow-up:</strong> "What happens if a child coroutine throws?" — With regular <code>Job</code>, parent and all siblings cancel. With <code>SupervisorJob</code> (used in <code>viewModelScope</code>), siblings survive but the parent is notified.</div>
+    `
+  },
+  {
+    phase: 1,
+    difficulty: 'hard',
+    q: "What is the difference between `Flow`, `StateFlow`, `SharedFlow`, and `Channel`?",
+    a: `
+      <h4>Flow</h4>
+      <p>Cold stream — the producer only runs when a collector subscribes. Each collector gets a fresh execution. Used for one-shot streams like network-to-UI pipes.</p>
+      <h4>StateFlow</h4>
+      <p>Hot, conflated, always holds a current value. One value per subscriber, latest only. Perfect for UI state — it's the Compose-era replacement for LiveData.</p>
+      <pre><code>private val _uiState = MutableStateFlow(UiState.Loading)
+val uiState: StateFlow&lt;UiState&gt; = _uiState.asStateFlow()</code></pre>
+      <h4>SharedFlow</h4>
+      <p>Hot, configurable replay and buffer. Good for one-time events (snackbar, navigation) where you don't want state semantics. Set <code>replay = 0</code> for events that should fire once.</p>
+      <h4>Channel</h4>
+      <p>Hot, point-to-point queue — each value is consumed by exactly one collector. Use when you need back-pressure and guaranteed delivery to a single receiver.</p>
+      <h4>Decision matrix</h4>
+      <ul>
+        <li>UI state that always has a "current value" → <strong>StateFlow</strong></li>
+        <li>One-time events (toast, nav) → <strong>SharedFlow</strong> (replay=0) or Channel</li>
+        <li>Cold data pipeline (DB → UI) → <strong>Flow</strong></li>
+        <li>Producer-consumer queue with back-pressure → <strong>Channel</strong></li>
+      </ul>
+      <div class="gotcha"><strong>Common mistake:</strong> Using StateFlow for events. If the user rotates the screen, the last event replays and fires again (duplicate navigation, duplicate toast). Always use SharedFlow with replay=0 for events.</div>
+    `
+  },
+  {
+    phase: 1,
+    difficulty: 'med',
+    q: "What are `suspend` functions under the hood? How does the compiler transform them?",
+    a: `
+      <h4>The magic</h4>
+      <p>A suspend function is compiled into a state machine. The compiler adds a hidden <code>Continuation</code> parameter to the function signature — this is called <strong>Continuation-Passing Style (CPS)</strong>.</p>
+      <h4>Example transformation</h4>
+      <pre><code>// What you write:
+suspend fun getUser(): User {
+    val token = getToken()   // suspension point
+    return fetchUser(token)  // suspension point
+}
+
+// What the compiler generates (simplified):
+fun getUser(continuation: Continuation&lt;User&gt;): Any? {
+    // State machine with labels
+    when (state.label) {
+        0 -&gt; { state.label = 1; return getToken(state) }
+        1 -&gt; { val token = state.result; state.label = 2; return fetchUser(token, state) }
+        2 -&gt; return state.result
+    }
+}</code></pre>
+      <h4>Key implications</h4>
+      <ul>
+        <li>No OS thread is blocked at a suspension point — the coroutine yields control.</li>
+        <li>Each <code>suspend</code> call is a potential suspension point where the state machine can pause.</li>
+        <li>There's a small allocation cost per coroutine (Continuation object), but it's cheap compared to threads.</li>
+      </ul>
+      <div class="gotcha"><strong>Senior follow-up:</strong> "Where do suspended coroutines live?" — On the heap, as Continuation objects referenced by the scheduler. That's why you can have millions of coroutines but only a few dozen threads.</div>
+    `
+  },
+  {
+    phase: 1,
+    difficulty: 'med',
+    q: "Explain `inline`, `noinline`, and `crossinline`. When do you actually need them?",
+    a: `
+      <h4>inline</h4>
+      <p>The compiler copies the function body (and any lambda passed to it) into the call site. Eliminates lambda object allocation and enables non-local returns.</p>
+      <pre><code>inline fun measure(block: () -&gt; Unit) {
+    val start = System.nanoTime()
+    block()
+    println("Took: ${'$'}{System.nanoTime() - start}ns")
+}</code></pre>
+      <h4>noinline</h4>
+      <p>When an inline function has multiple lambdas and you want to keep one of them NOT inlined (e.g., to store it in a variable or pass it onward).</p>
+      <pre><code>inline fun foo(inlined: () -&gt; Unit, noinline stored: () -&gt; Unit) {
+    inlined()
+    saveForLater(stored) // can't do this with a pure inline lambda
+}</code></pre>
+      <h4>crossinline</h4>
+      <p>Forbids non-local returns from the lambda, which is required when the lambda is called from another execution context (like inside an object or another lambda).</p>
+      <pre><code>inline fun runOnUi(crossinline block: () -&gt; Unit) {
+    Handler(Looper.getMainLooper()).post { block() }
+    // block() is called inside another lambda — non-local return would be unsafe
+}</code></pre>
+      <h4>When to use inline in practice</h4>
+      <ul>
+        <li>High-order utility functions called frequently (<code>let</code>, <code>apply</code>, <code>measure</code>).</li>
+        <li>Functions with reified type parameters — <code>inline</code> is required.</li>
+        <li><strong>Don't</strong> inline big functions — you'll bloat the bytecode.</li>
+      </ul>
+      <div class="gotcha"><strong>Gotcha:</strong> Kotlin's stdlib <code>let</code>, <code>apply</code>, <code>run</code>, <code>also</code>, <code>with</code> are all inline — zero lambda allocation. That's why they're cheap.</div>
+    `
+  },
+  {
+    phase: 1,
+    difficulty: 'med',
+    q: "Explain `reified` type parameters. Why do they require `inline`?",
+    a: `
+      <h4>The problem</h4>
+      <p>Java/JVM erases generic types at runtime — <code>List&lt;String&gt;</code> becomes just <code>List</code>. So you normally can't write <code>T::class.java</code> inside a generic function.</p>
+      <h4>The fix</h4>
+      <p><code>reified</code> tells the compiler to replace <code>T</code> with the actual concrete type at every call site. This is only possible because <code>inline</code> copies the function body into the call site — where the type IS known.</p>
+      <h4>Classic Android example</h4>
+      <pre><code>inline fun &lt;reified T : Activity&gt; Context.startActivity() {
+    startActivity(Intent(this, T::class.java))
+}
+
+// Usage — clean and type-safe
+context.startActivity&lt;DetailActivity&gt;()
+
+// vs without reified:
+context.startActivity(DetailActivity::class.java) // must pass class explicitly</code></pre>
+      <h4>Gson/Moshi usage</h4>
+      <pre><code>inline fun &lt;reified T&gt; Gson.fromJson(json: String): T =
+    fromJson(json, T::class.java)
+
+val user: User = gson.fromJson(jsonString) // type inferred</code></pre>
+      <div class="gotcha"><strong>Why only inline?</strong> Because non-inline functions are compiled once with erased types. Inline functions have their body copy-pasted per call site, so at each site the real type is available.</div>
+    `
+  },
+  {
+    phase: 1,
+    difficulty: 'hard',
+    q: "What's the difference between `Dispatchers.IO`, `Dispatchers.Default`, and `Dispatchers.Main`?",
+    a: `
+      <h4>Dispatchers.Main</h4>
+      <p>Android's UI thread. For touching views, LiveData/StateFlow emissions consumed by UI, and anything requiring the main looper. On JVM-only code (like tests), you need <code>Dispatchers.setMain</code>.</p>
+      <h4>Dispatchers.Default</h4>
+      <p>Backed by a shared pool sized to <code>max(2, CPU_CORES)</code>. Use for CPU-intensive work — JSON parsing, sorting large lists, image processing, computation.</p>
+      <h4>Dispatchers.IO</h4>
+      <p>Backed by a larger pool (default 64 threads), optimized for I/O-bound work that blocks threads — file reads, network (blocking), DB queries that aren't suspend-native.</p>
+      <h4>Why the split matters</h4>
+      <p>If you run blocking I/O on <code>Default</code>, you'll starve CPU-bound work — the pool is too small and blocked threads aren't doing useful work. IO's larger pool absorbs the blocked threads.</p>
+      <h4>Real example</h4>
+      <pre><code>suspend fun loadProfile(): Profile = withContext(Dispatchers.IO) {
+    val json = file.readText()                           // I/O-bound
+    withContext(Dispatchers.Default) {
+        Json.decodeFromString&lt;Profile&gt;(json)             // CPU-bound
+    }
+}</code></pre>
+      <div class="gotcha"><strong>Pitfall:</strong> Room and Retrofit already offload work off the main thread when you use <code>suspend</code> queries. Don't wrap them in <code>withContext(Dispatchers.IO)</code> — it's redundant.</div>
+    `
+  },
+  {
+    phase: 1,
+    difficulty: 'med',
+    q: "How does `suspendCancellableCoroutine` work? When should you use it?",
+    a: `
+      <h4>Purpose</h4>
+      <p>Bridges callback-based APIs into suspend functions while respecting cancellation. Without it, cancelling a coroutine wouldn't stop the underlying callback work.</p>
+      <h4>Example: wrapping a callback API</h4>
+      <pre><code>suspend fun getLocation(): Location = suspendCancellableCoroutine { cont -&gt;
+    val listener = object : LocationListener {
+        override fun onLocationChanged(loc: Location) {
+            cont.resume(loc)
+        }
+        override fun onFailure(e: Exception) {
+            cont.resumeWithException(e)
+        }
+    }
+    locationManager.requestSingleUpdate(listener)
+
+    cont.invokeOnCancellation {
+        locationManager.removeUpdates(listener)  // cleanup on cancel
+    }
+}</code></pre>
+      <h4>Key rules</h4>
+      <ul>
+        <li>Always call <code>resume</code> or <code>resumeWithException</code> exactly once.</li>
+        <li>Use <code>invokeOnCancellation</code> to clean up (remove listeners, close resources).</li>
+        <li>Prefer <code>suspendCancellableCoroutine</code> over <code>suspendCoroutine</code> — the latter ignores cancellation, which leaks.</li>
+      </ul>
+      <div class="gotcha"><strong>Production lesson:</strong> When wrapping Firebase, Google Play Services, or any callback API, always use the cancellable version. Forgetting this causes listener leaks when users navigate away mid-request.</div>
+    `
+  },
+  {
+    phase: 1,
+    difficulty: 'hard',
+    q: "What is a `CoroutineExceptionHandler`? How does exception handling differ between `launch` and `async`?",
+    a: `
+      <h4>The asymmetry</h4>
+      <p><strong>launch:</strong> Uncaught exceptions propagate immediately to the parent, and if uncaught, go to the <code>CoroutineExceptionHandler</code>.</p>
+      <p><strong>async:</strong> Exceptions are captured inside the <code>Deferred</code> and only thrown when you call <code>.await()</code>. <code>CoroutineExceptionHandler</code> does NOT catch them.</p>
+      <h4>Example</h4>
+      <pre><code>val handler = CoroutineExceptionHandler { _, e -&gt;
+    Log.e("App", "Caught: ${'$'}{e.message}")
+}
+
+// This works — launch's exception is caught
+scope.launch(handler) { throw RuntimeException("boom") }
+
+// This does NOT work — async's exception sits in the Deferred
+val deferred = scope.async(handler) { throw RuntimeException("boom") }
+// exception only surfaces here:
+deferred.await()  // throws</code></pre>
+      <h4>Supervisor vs regular Job</h4>
+      <p>With a regular <code>Job</code>, one child's failure cancels siblings. With <code>SupervisorJob</code>, failures are isolated to that child. <code>viewModelScope</code> uses a SupervisorJob, so a failing API call doesn't cancel your analytics coroutine.</p>
+      <h4>Best practice pattern</h4>
+      <pre><code>viewModelScope.launch {
+    try {
+        val result = repository.fetch()
+        _state.value = UiState.Success(result)
+    } catch (e: CancellationException) {
+        throw e  // NEVER swallow cancellation
+    } catch (e: Exception) {
+        _state.value = UiState.Error(e.message)
+    }
+}</code></pre>
+      <div class="gotcha"><strong>Critical:</strong> Never catch <code>CancellationException</code> and swallow it — you'll break structured concurrency. Always rethrow it.</div>
+    `
+  },
+  {
+    phase: 1,
+    difficulty: 'med',
+    q: "Explain property delegation. How does `by lazy` work?",
+    a: `
+      <h4>Delegation concept</h4>
+      <p>Property delegation lets you outsource get/set behavior to another object. The compiler calls <code>getValue()</code> and <code>setValue()</code> on the delegate.</p>
+      <h4>by lazy</h4>
+      <pre><code>val expensiveData: Config by lazy {
+    // runs only the first time expensiveData is accessed
+    loadConfigFromDisk()
+}</code></pre>
+      <p>Behind the scenes: <code>lazy {}</code> returns a <code>Lazy&lt;T&gt;</code> instance that caches the result after first access. Thread-safe by default using double-checked locking.</p>
+      <h4>Common delegates</h4>
+      <ul>
+        <li><code>by lazy</code> — initialize once on first access.</li>
+        <li><code>by Delegates.observable</code> — callback on every set.</li>
+        <li><code>by Delegates.vetoable</code> — callback that can reject the new value.</li>
+        <li><code>by viewModels()</code> — lazy ViewModel creation tied to lifecycle.</li>
+        <li><code>by rememberSaveable</code> / <code>by remember</code> — Compose state.</li>
+      </ul>
+      <h4>Lazy thread-safety modes</h4>
+      <pre><code>lazy(LazyThreadSafetyMode.SYNCHRONIZED) { ... }  // default, thread-safe
+lazy(LazyThreadSafetyMode.PUBLICATION) { ... }    // multiple init allowed, first wins
+lazy(LazyThreadSafetyMode.NONE) { ... }           // no sync, only for confined threads</code></pre>
+      <div class="gotcha"><strong>Mistake:</strong> Using <code>by lazy</code> for properties that depend on injected Context in a way that could change — lazy caches forever, so you'll hold a stale reference.</div>
+    `
+  },
+  {
+    phase: 1,
+    difficulty: 'med',
+    q: "What's the difference between `==`, `===`, and `equals()` in Kotlin?",
+    a: `
+      <h4>== (structural equality)</h4>
+      <p>Compiles to a null-safe <code>equals()</code> call. <code>a == b</code> becomes <code>a?.equals(b) ?: (b === null)</code>.</p>
+      <h4>=== (referential equality)</h4>
+      <p>True only if both operands point to the exact same object instance. Analogous to Java's <code>==</code> for objects.</p>
+      <h4>equals()</h4>
+      <p>The actual method — same semantics as Java. You override it in your classes (or get it free from <code>data class</code>).</p>
+      <h4>Example</h4>
+      <pre><code>val a = User("Alice", 30)
+val b = User("Alice", 30)  // different instance, same data
+
+println(a == b)    // true if User is a data class (structural)
+println(a === b)   // false (different references)</code></pre>
+      <h4>Gotcha with primitives and boxing</h4>
+      <pre><code>val x: Int? = 127
+val y: Int? = 127
+println(x === y)  // true — Integer cache
+
+val p: Int? = 200
+val q: Int? = 200
+println(p === q)  // false — outside cache, different Integer objects</code></pre>
+      <div class="gotcha"><strong>Rule of thumb:</strong> Always use <code>==</code> unless you specifically need to check "is this the same instance." <code>===</code> is mostly used in low-level code and Compose internals.</div>
+    `
+  },
+  {
+    phase: 1,
+    difficulty: 'easy',
+    q: "When should you use `let`, `apply`, `run`, `also`, `with`? Give a decision framework.",
+    a: `
+      <h4>Decision matrix</h4>
+      <table style="width:100%; border-collapse:collapse; margin:10px 0; font-size:13px;">
+        <tr style="background:#0a0e15;">
+          <th style="padding:8px; text-align:left; border:1px solid #232b3d;">Fn</th>
+          <th style="padding:8px; text-align:left; border:1px solid #232b3d;">Receiver</th>
+          <th style="padding:8px; text-align:left; border:1px solid #232b3d;">Returns</th>
+          <th style="padding:8px; text-align:left; border:1px solid #232b3d;">Use for</th>
+        </tr>
+        <tr><td style="padding:8px; border:1px solid #232b3d;"><code>let</code></td><td style="padding:8px; border:1px solid #232b3d;">it</td><td style="padding:8px; border:1px solid #232b3d;">lambda result</td><td style="padding:8px; border:1px solid #232b3d;">null-safe transform</td></tr>
+        <tr><td style="padding:8px; border:1px solid #232b3d;"><code>run</code></td><td style="padding:8px; border:1px solid #232b3d;">this</td><td style="padding:8px; border:1px solid #232b3d;">lambda result</td><td style="padding:8px; border:1px solid #232b3d;">config + compute</td></tr>
+        <tr><td style="padding:8px; border:1px solid #232b3d;"><code>apply</code></td><td style="padding:8px; border:1px solid #232b3d;">this</td><td style="padding:8px; border:1px solid #232b3d;">receiver</td><td style="padding:8px; border:1px solid #232b3d;">builder-style setup</td></tr>
+        <tr><td style="padding:8px; border:1px solid #232b3d;"><code>also</code></td><td style="padding:8px; border:1px solid #232b3d;">it</td><td style="padding:8px; border:1px solid #232b3d;">receiver</td><td style="padding:8px; border:1px solid #232b3d;">side effects (log, debug)</td></tr>
+        <tr><td style="padding:8px; border:1px solid #232b3d;"><code>with</code></td><td style="padding:8px; border:1px solid #232b3d;">this</td><td style="padding:8px; border:1px solid #232b3d;">lambda result</td><td style="padding:8px; border:1px solid #232b3d;">multiple calls on object</td></tr>
+      </table>
+      <h4>Canonical examples</h4>
+      <pre><code>// let — null safety
+user?.let { sendWelcomeEmail(it) }
+
+// apply — builder setup
+val intent = Intent().apply {
+    action = Intent.ACTION_VIEW
+    data = Uri.parse(url)
+    flags = Intent.FLAG_ACTIVITY_NEW_TASK
+}
+
+// also — side effect while keeping value
+val result = repo.fetch().also { Log.d("TAG", "Got ${'$'}it") }
+
+// run — scoped computation
+val areaText = rectangle.run { "Area: ${'$'}{width * height}" }
+
+// with — multiple ops on non-null object
+with(binding) {
+    title.text = "Hello"
+    subtitle.text = "World"
+}</code></pre>
+      <div class="gotcha"><strong>Readability tip:</strong> Don't chain 4 scope functions "because you can." Senior reviewers flag that as write-only code. One or two per block is the sweet spot.</div>
+    `
+  },
+  {
+    phase: 1,
+    difficulty: 'hard',
+    q: "What is `flatMapLatest`? How does it differ from `flatMapConcat` and `flatMapMerge`?",
+    a: `
+      <h4>Problem space</h4>
+      <p>When a Flow emits a value that itself triggers another Flow (like a search query → network call), you need to decide what to do with in-flight inner Flows when a new value arrives.</p>
+      <h4>flatMapLatest</h4>
+      <p>Cancels the previous inner Flow when a new value arrives. Classic use: search-as-you-type.</p>
+      <pre><code>searchQuery
+    .debounce(300)
+    .flatMapLatest { query -&gt; repo.search(query) }
+    .collect { results -&gt; _uiState.value = results }</code></pre>
+      <h4>flatMapConcat</h4>
+      <p>Waits for each inner Flow to finish before starting the next. Preserves order, but can queue up.</p>
+      <h4>flatMapMerge</h4>
+      <p>Runs inner Flows concurrently. Results interleave by arrival time. Use when you want parallelism and order doesn't matter.</p>
+      <h4>Visual comparison</h4>
+      <pre><code>// Upstream emits A, B, C quickly, each maps to inner Flow emitting 1,2,3
+
+flatMapConcat:  A1 A2 A3 B1 B2 B3 C1 C2 C3
+flatMapMerge:   A1 B1 C1 A2 B2 C2 A3 B3 C3  (interleaved)
+flatMapLatest:  A1 A2 B1 C1 C2 C3           (A, B get cancelled mid-flight)</code></pre>
+      <div class="gotcha"><strong>Real use at Country Delight scale:</strong> For search, always <code>flatMapLatest</code> — otherwise the user types "milk" and sees results for "m", "mi", "mil" flicker through. For pagination, use <code>flatMapConcat</code> to preserve page order.</div>
+    `
+  },
+  {
+    phase: 1,
+    difficulty: 'med',
+    q: "What are sealed classes and sealed interfaces? Why are they useful for UI state?",
+    a: `
+      <h4>Definition</h4>
+      <p>A sealed type restricts inheritance to the same file/module. The compiler knows all subtypes at compile time, making <code>when</code> expressions exhaustive without an <code>else</code> branch.</p>
+      <h4>The UI state pattern</h4>
+      <pre><code>sealed interface ProductListUiState {
+    object Loading : ProductListUiState
+    data class Success(val products: List&lt;Product&gt;) : ProductListUiState
+    data class Error(val message: String) : ProductListUiState
+    object Empty : ProductListUiState
+}
+
+@Composable
+fun ProductListScreen(state: ProductListUiState) {
+    when (state) {
+        is ProductListUiState.Loading -&gt; LoadingSpinner()
+        is ProductListUiState.Success -&gt; ProductGrid(state.products)
+        is ProductListUiState.Error -&gt; ErrorView(state.message)
+        is ProductListUiState.Empty -&gt; EmptyView()
+    }   // compiler enforces exhaustiveness — no else needed
+}</code></pre>
+      <h4>Sealed class vs sealed interface</h4>
+      <ul>
+        <li><strong>sealed class:</strong> Can hold state/properties, but a subclass can only extend one sealed class.</li>
+        <li><strong>sealed interface:</strong> Multiple inheritance. More flexible for cross-cutting hierarchies (e.g., a type that is both <code>Loading</code> and <code>Refreshable</code>).</li>
+      </ul>
+      <h4>Why senior devs love them</h4>
+      <ul>
+        <li>Adding a new state forces you to update every <code>when</code> — compile-time safety.</li>
+        <li>Self-documenting UI contract.</li>
+        <li>Works cleanly with StateFlow and Compose.</li>
+      </ul>
+      <div class="gotcha"><strong>Anti-pattern:</strong> Using nullable fields to represent state (<code>data class UiState(val loading: Boolean, val error: String?, val data: List?)</code>). You end up with impossible states like <code>loading=true, data=[...]</code>. Sealed types make impossible states impossible.</div>
+    `
+  },
+  {
+    phase: 1,
+    difficulty: 'med',
+    q: "What is a `data class` under the hood? What methods does it generate? What are its limitations?",
+    a: `
+      <h4>Auto-generated methods</h4>
+      <p>For primary constructor properties, the compiler generates:</p>
+      <ul>
+        <li><code>equals()</code> — structural equality based on all properties.</li>
+        <li><code>hashCode()</code> — consistent with equals.</li>
+        <li><code>toString()</code> — readable form showing all props.</li>
+        <li><code>componentN()</code> — enables destructuring (<code>val (name, age) = user</code>).</li>
+        <li><code>copy()</code> — immutable update pattern.</li>
+      </ul>
+      <h4>copy() is the immutability workhorse</h4>
+      <pre><code>val user = User(name = "Alice", age = 30)
+val older = user.copy(age = 31)  // new instance, original unchanged</code></pre>
+      <h4>Limitations</h4>
+      <ul>
+        <li>Must have at least one primary constructor parameter.</li>
+        <li>Primary constructor params must all be <code>val</code> or <code>var</code>.</li>
+        <li>Can't be abstract, open, sealed, or inner.</li>
+        <li>Only primary-constructor properties are used in equals/hashCode. Properties declared in the body are ignored — common trap.</li>
+      </ul>
+      <h4>The body-property trap</h4>
+      <pre><code>data class User(val name: String) {
+    var cachedToken: String? = null  // NOT in equals/hashCode
+}
+
+val a = User("x").apply { cachedToken = "A" }
+val b = User("x").apply { cachedToken = "B" }
+a == b   // true — cachedToken is ignored</code></pre>
+      <div class="gotcha"><strong>Performance:</strong> <code>data class</code> allocates fresh objects on every <code>copy()</code>. Inside hot loops or frequent Compose recompositions, this adds up. Profile if suspicious.</div>
+    `
+  },
+  {
+    phase: 1,
+    difficulty: 'hard',
+    q: "What are `extension functions`? How are they resolved — statically or dynamically?",
+    a: `
+      <h4>Concept</h4>
+      <p>Extension functions let you "add" methods to existing types without inheritance.</p>
+      <pre><code>fun String.toSlug(): String = this.lowercase().replace(' ', '-')
+"Hello World".toSlug()  // "hello-world"</code></pre>
+      <h4>Under the hood</h4>
+      <p>The compiler emits a <strong>static function</strong> with the receiver as the first parameter. There's no dynamic dispatch — resolution happens at compile time based on the declared (not runtime) type.</p>
+      <pre><code>// What you write
+fun String.shout() = this.uppercase() + "!"
+
+// What the compiler generates (conceptually)
+public static String shout(String receiver) {
+    return receiver.toUpperCase() + "!";
+}</code></pre>
+      <h4>The static dispatch trap</h4>
+      <pre><code>open class Animal
+class Dog : Animal()
+
+fun Animal.greet() = "Hi Animal"
+fun Dog.greet() = "Hi Dog"
+
+val a: Animal = Dog()
+println(a.greet())  // "Hi Animal" — resolved by DECLARED type, not runtime type</code></pre>
+      <h4>Compare with member functions (dynamic dispatch)</h4>
+      <pre><code>open class Animal { open fun greet() = "Hi Animal" }
+class Dog : Animal() { override fun greet() = "Hi Dog" }
+
+val a: Animal = Dog()
+println(a.greet())  // "Hi Dog" — polymorphic</code></pre>
+      <div class="gotcha"><strong>Interview favorite:</strong> "Can an extension function override a member?" No. If a class has a member with the same signature, the member always wins — even if the extension is imported.</div>
+    `
+  },
+  {
+    phase: 1,
+    difficulty: 'hard',
+    q: "Explain variance in Kotlin generics: `in`, `out`, and `where`.",
+    a: `
+      <h4>The problem variance solves</h4>
+      <p>Is <code>List&lt;Dog&gt;</code> a subtype of <code>List&lt;Animal&gt;</code>? By default, no (invariant). Variance lets you say "yes, in this direction."</p>
+      <h4>out — covariance (producer)</h4>
+      <p><code>out T</code> means T is only ever returned (produced), never consumed. Enables subtype substitution going "up."</p>
+      <pre><code>interface Producer&lt;out T&gt; {
+    fun produce(): T  // OK
+    // fun consume(t: T)  // compile error — T is 'out'
+}
+
+val dogs: Producer&lt;Dog&gt; = ...
+val animals: Producer&lt;Animal&gt; = dogs  // OK — covariant</code></pre>
+      <h4>in — contravariance (consumer)</h4>
+      <p><code>in T</code> means T is only ever consumed, never returned. Enables substitution going "down."</p>
+      <pre><code>interface Consumer&lt;in T&gt; {
+    fun consume(t: T)  // OK
+    // fun produce(): T  // compile error
+}
+
+val animalConsumer: Consumer&lt;Animal&gt; = ...
+val dogConsumer: Consumer&lt;Dog&gt; = animalConsumer  // OK — contravariant</code></pre>
+      <h4>where — multiple bounds</h4>
+      <pre><code>fun &lt;T&gt; copyWhenGreater(list: List&lt;T&gt;, threshold: T): List&lt;String&gt;
+    where T : CharSequence, T : Comparable&lt;T&gt; {
+    return list.filter { it &gt; threshold }.map { it.toString() }
+}</code></pre>
+      <h4>Mnemonic</h4>
+      <ul>
+        <li><strong>PECS rule from Java:</strong> Producer Extends, Consumer Super → in Kotlin: Producer <code>out</code>, Consumer <code>in</code>.</li>
+        <li><code>List&lt;out T&gt;</code> — you can only read from it.</li>
+        <li><code>MutableList&lt;T&gt;</code> is invariant — you both read and write.</li>
+      </ul>
+      <div class="gotcha"><strong>Star projection <code>*</code>:</strong> <code>List&lt;*&gt;</code> means "List of something, but I don't care what." You can read (as <code>Any?</code>) but not write safely.</div>
+    `
+  },
+
+  // ============ PHASE 2: JETPACK COMPOSE ============
+  {
+    phase: 2,
+    difficulty: 'hard',
+    q: "What is recomposition? How does Compose decide what to recompose?",
+    a: `
+      <h4>Recomposition defined</h4>
+      <p>Recomposition is Compose re-invoking composable functions whose inputs (state) have changed, to produce a new UI tree.</p>
+      <h4>The smart re-execution</h4>
+      <p>Compose doesn't re-run everything — it's built around <strong>skippable</strong> composables. A composable is skippable if all its parameters are <code>@Stable</code>. If inputs haven't changed and the function is skippable, Compose skips re-running it.</p>
+      <h4>Two key concepts</h4>
+      <ul>
+        <li><strong>Stable:</strong> A type whose <code>equals()</code> behaves predictably and whose observable state changes notify Compose (e.g., primitives, <code>String</code>, <code>@Stable</code> classes, <code>State&lt;T&gt;</code>).</li>
+        <li><strong>Immutable:</strong> Strictly never changes. Stricter than stable.</li>
+      </ul>
+      <h4>Example: skippable vs non-skippable</h4>
+      <pre><code>// Skippable — all params are stable
+@Composable
+fun Greeting(name: String, age: Int) { Text("${'$'}name, ${'$'}age") }
+
+// NOT skippable — List&lt;String&gt; is unstable by default
+@Composable
+fun TagList(tags: List&lt;String&gt;) { /* recomposes every time */ }
+
+// Fix with ImmutableList from kotlinx.collections.immutable
+@Composable
+fun TagList(tags: ImmutableList&lt;String&gt;) { /* now skippable */ }</code></pre>
+      <h4>What triggers recomposition</h4>
+      <ul>
+        <li>A <code>State&lt;T&gt;</code> value read in the composable changes.</li>
+        <li>A parent passes a new value for a parameter.</li>
+        <li>A <code>CompositionLocal</code> value read in the composable changes.</li>
+      </ul>
+      <div class="gotcha"><strong>Layout Inspector tip:</strong> Turn on "Recomposition counts" — any composable recomposing unexpectedly often is your profiling target.</div>
+    `
+  },
+  {
+    phase: 2,
+    difficulty: 'med',
+    q: "What's the difference between `remember` and `rememberSaveable`? When do you use each?",
+    a: `
+      <h4>remember</h4>
+      <p>Caches a value across recompositions but loses it on configuration change (rotation, theme change, process death).</p>
+      <h4>rememberSaveable</h4>
+      <p>Caches across recompositions AND survives config change / process death by saving into <code>Bundle</code>. Works for types that are automatically saveable (primitives, Parcelable, Serializable) — or you pass a custom <code>Saver</code>.</p>
+      <h4>Examples</h4>
+      <pre><code>// Transient — scroll position can be re-derived, use remember
+val scrollState = rememberScrollState()
+
+// User input — must survive rotation, use rememberSaveable
+var query by rememberSaveable { mutableStateOf("") }
+
+// Custom type — provide a Saver
+data class Filter(val category: String, val priceMax: Int)
+val FilterSaver = Saver&lt;Filter, List&lt;Any&gt;&gt;(
+    save = { listOf(it.category, it.priceMax) },
+    restore = { Filter(it[0] as String, it[1] as Int) }
+)
+var filter by rememberSaveable(stateSaver = FilterSaver) {
+    mutableStateOf(Filter("all", 1000))
+}</code></pre>
+      <h4>Keys</h4>
+      <p>Both accept keys. If a key changes, the remembered value is recomputed.</p>
+      <pre><code>val profile = remember(userId) { loadProfile(userId) }
+// recomputes when userId changes</code></pre>
+      <div class="gotcha"><strong>Common mistake:</strong> Putting a ViewModel-backed value in <code>rememberSaveable</code>. State belongs in the ViewModel — <code>rememberSaveable</code> is for ephemeral UI state the ViewModel doesn't own.</div>
+    `
+  },
+  {
+    phase: 2,
+    difficulty: 'hard',
+    q: "Explain `LaunchedEffect`, `SideEffect`, `DisposableEffect`, and `rememberCoroutineScope`. When do you use each?",
+    a: `
+      <h4>LaunchedEffect</h4>
+      <p>Runs a suspend block tied to the composition. Cancels and restarts when the keys change. Used for: one-shot async work triggered by composition.</p>
+      <pre><code>LaunchedEffect(userId) {
+    val profile = repo.fetchProfile(userId)
+    _profile.value = profile
+}</code></pre>
+      <h4>rememberCoroutineScope</h4>
+      <p>Returns a scope bound to the composition. Used when you want to launch coroutines from callbacks (button clicks), not from composition itself.</p>
+      <pre><code>val scope = rememberCoroutineScope()
+Button(onClick = {
+    scope.launch { repo.submitOrder() }
+})</code></pre>
+      <h4>DisposableEffect</h4>
+      <p>For effects that need cleanup when the composable leaves composition or keys change. Think listeners, observers, broadcasts.</p>
+      <pre><code>DisposableEffect(lifecycleOwner) {
+    val observer = LifecycleEventObserver { _, event -&gt;
+        if (event == Lifecycle.Event.ON_RESUME) refresh()
+    }
+    lifecycleOwner.lifecycle.addObserver(observer)
+    onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+}</code></pre>
+      <h4>SideEffect</h4>
+      <p>Runs after every successful recomposition. Used to publish Compose state out to non-Compose systems (analytics, legacy listeners).</p>
+      <pre><code>SideEffect {
+    analytics.updateCurrentScreen(screenName)
+}</code></pre>
+      <h4>Quick decision table</h4>
+      <ul>
+        <li>Need a suspend call when composition starts/keys change? → <code>LaunchedEffect</code></li>
+        <li>Need to launch coroutine from onClick? → <code>rememberCoroutineScope</code></li>
+        <li>Need to subscribe/unsubscribe to something? → <code>DisposableEffect</code></li>
+        <li>Need to push state to non-Compose world every recomp? → <code>SideEffect</code></li>
+      </ul>
+      <div class="gotcha"><strong>Critical trap:</strong> Never do side effects directly in the composable body. Calling <code>analytics.log()</code> inline will fire it on every recomposition — possibly dozens of times.</div>
+    `
+  },
+  {
+    phase: 2,
+    difficulty: 'hard',
+    q: "What are Compose's three phases? Why does this matter for performance?",
+    a: `
+      <h4>The three phases</h4>
+      <ol>
+        <li><strong>Composition:</strong> Your composable functions run and build the UI tree (the "what").</li>
+        <li><strong>Layout:</strong> Measure and place each node (the "where and how big").</li>
+        <li><strong>Drawing:</strong> Render to the canvas (the "pixels").</li>
+      </ol>
+      <p>State changes can cause any one of these to re-run, not necessarily all three.</p>
+      <h4>Phase skipping — the big performance win</h4>
+      <p>If state changes affect only drawing, Compose skips composition and layout entirely. Example: <code>Modifier.offset { }</code> reads state in a lambda that runs at layout time, not composition time.</p>
+      <pre><code>// BAD — offset read in composition, triggers recomposition on scroll
+Box(Modifier.offset(x = scrollOffset.dp))
+
+// GOOD — offset read in layout phase only
+Box(Modifier.offset { IntOffset(scrollOffset.toInt(), 0) })</code></pre>
+      <h4>Another example: graphicsLayer</h4>
+      <pre><code>// BAD — alpha change triggers recomposition
+Image(..., modifier = Modifier.alpha(animatedAlpha))
+
+// GOOD — alpha read in draw phase, skips composition + layout
+Image(..., modifier = Modifier.graphicsLayer { alpha = animatedAlpha })</code></pre>
+      <h4>Why it matters at scale</h4>
+      <p>For animations and scroll, you'll hit 60+ fps — 16ms budget per frame. Skipping composition on each frame is the difference between smooth and janky. Deferred-read modifiers (<code>offset { }</code>, <code>graphicsLayer { }</code>, <code>drawBehind { }</code>) exist specifically for this.</p>
+      <div class="gotcha"><strong>Country Delight-relevant:</strong> Product grid scroll performance almost always improves by moving <code>Modifier.offset</code> and alpha-style modifiers to their lambda form. Measure with Layout Inspector → Recomposition Counts.</div>
+    `
+  },
+  {
+    phase: 2,
+    difficulty: 'med',
+    q: "What is state hoisting? Why is it a core Compose pattern?",
+    a: `
+      <h4>Definition</h4>
+      <p>State hoisting is moving state UP to a caller, so the composable becomes stateless (receives state, emits events). The parent owns state; the child displays and reports.</p>
+      <h4>Before — stateful composable</h4>
+      <pre><code>@Composable
+fun CounterButton() {
+    var count by remember { mutableStateOf(0) }
+    Button(onClick = { count++ }) { Text("Count: ${'$'}count") }
+}
+// Parent can't read count, can't share it, can't test easily</code></pre>
+      <h4>After — hoisted</h4>
+      <pre><code>@Composable
+fun CounterButton(count: Int, onIncrement: () -&gt; Unit) {
+    Button(onClick = onIncrement) { Text("Count: ${'$'}count") }
+}
+
+// Parent owns state
+@Composable
+fun Screen() {
+    var count by rememberSaveable { mutableStateOf(0) }
+    CounterButton(count = count, onIncrement = { count++ })
+}</code></pre>
+      <h4>Benefits</h4>
+      <ul>
+        <li><strong>Single source of truth:</strong> One place owns the value.</li>
+        <li><strong>Reusable:</strong> The same composable works with different state sources (remember, ViewModel, parent).</li>
+        <li><strong>Testable:</strong> Pass state directly in tests, no wiring.</li>
+        <li><strong>Predictable:</strong> Unidirectional data flow — state flows down, events flow up.</li>
+      </ul>
+      <h4>Where to hoist to</h4>
+      <p>Hoist to the lowest common ancestor that needs the state. If only one composable needs it, keep it local. If the ViewModel needs it (for business logic, persistence, survival), hoist to the ViewModel.</p>
+      <div class="gotcha"><strong>Rule of thumb:</strong> If a composable has <code>remember { mutableStateOf() }</code> for something that affects business logic or persistence, it probably belongs in the ViewModel instead.</div>
+    `
+  },
+  {
+    phase: 2,
+    difficulty: 'hard',
+    q: "What is `derivedStateOf`? How does it differ from just reading state in a composable?",
+    a: `
+      <h4>The problem</h4>
+      <p>When you compute a value from multiple state sources, every change to any source triggers recomposition — even if the computed value didn't change.</p>
+      <h4>Example: scrolled-to-top indicator</h4>
+      <pre><code>// BAD — recomposes on every scroll pixel
+val showFab = listState.firstVisibleItemIndex == 0
+
+// GOOD — recomposes only when the boolean flips
+val showFab by remember {
+    derivedStateOf { listState.firstVisibleItemIndex == 0 }
+}</code></pre>
+      <p><code>firstVisibleItemIndex</code> changes constantly during scrolling (0, 0, 0, 1, 1, 1, 2...). Without <code>derivedStateOf</code>, the composable reading <code>showFab</code> recomposes every time. With it, the composable recomposes only when the boolean value actually changes (2 times: true→false, false→true).</p>
+      <h4>When to use</h4>
+      <ul>
+        <li>Input state changes frequently, but derived value changes rarely.</li>
+        <li>Derived value is an expensive computation worth memoizing.</li>
+        <li>You're deriving from multiple state sources.</li>
+      </ul>
+      <h4>When NOT to use</h4>
+      <p>If the input state changes no more often than the derived value. It's overhead for no gain.</p>
+      <pre><code>// UNNECESSARY — count changes exactly when doubled changes
+val doubled by remember { derivedStateOf { count * 2 } }
+
+// Just do this:
+val doubled = count * 2</code></pre>
+      <div class="gotcha"><strong>Signal for <code>derivedStateOf</code>:</strong> You notice your composable recomposing way too often in Layout Inspector, and the cause is a frequently-changing state source that you're only using to compute something coarser.</div>
+    `
+  },
+  {
+    phase: 2,
+    difficulty: 'hard',
+    q: "What is `CompositionLocal`? When should you use it vs. just passing parameters?",
+    a: `
+      <h4>Concept</h4>
+      <p><code>CompositionLocal</code> is Compose's implicit parameter — a value available to any composable in the subtree without explicit passing. Think of it as scoped dependency injection.</p>
+      <h4>Built-in examples</h4>
+      <ul>
+        <li><code>LocalContext</code> — Android context</li>
+        <li><code>LocalDensity</code> — screen density for unit conversion</li>
+        <li><code>LocalLifecycleOwner</code> — for lifecycle-aware effects</li>
+        <li><code>MaterialTheme.colorScheme</code> — theme colors (backed by a CompositionLocal)</li>
+      </ul>
+      <h4>Creating your own</h4>
+      <pre><code>val LocalAnalytics = compositionLocalOf&lt;Analytics&gt; {
+    error("No Analytics provided")
+}
+
+// At app root
+CompositionLocalProvider(LocalAnalytics provides analyticsImpl) {
+    AppContent()
+}
+
+// Anywhere deep in the tree
+@Composable
+fun ProductCard() {
+    val analytics = LocalAnalytics.current
+    // use analytics
+}</code></pre>
+      <h4>When to use CompositionLocal</h4>
+      <ul>
+        <li>Truly cross-cutting dependencies (theme, density, analytics, locale).</li>
+        <li>Would need to pass through 5+ levels of composables.</li>
+      </ul>
+      <h4>When NOT to use</h4>
+      <ul>
+        <li>For data that's specific to one feature — just pass it as a parameter.</li>
+        <li>For anything that changes frequently — you lose skippability benefits.</li>
+      </ul>
+      <h4>staticCompositionLocalOf vs compositionLocalOf</h4>
+      <ul>
+        <li><code>staticCompositionLocalOf</code>: No observation — changing it invalidates everything reading it. Use for values that never/rarely change.</li>
+        <li><code>compositionLocalOf</code>: Only invalidates the readers. Use when the value may change.</li>
+      </ul>
+      <div class="gotcha"><strong>Anti-pattern:</strong> Dumping your ViewModel into a CompositionLocal to "save passing it around." That hides data flow and makes previews/tests painful. Pass state explicitly.</div>
+    `
+  },
+  {
+    phase: 2,
+    difficulty: 'med',
+    q: "How do you collect a Flow in Compose correctly? Why `collectAsStateWithLifecycle` over `collectAsState`?",
+    a: `
+      <h4>The naive approach</h4>
+      <pre><code>val uiState by viewModel.uiState.collectAsState()</code></pre>
+      <p><strong>Problem:</strong> <code>collectAsState</code> collects regardless of lifecycle. When the app is in the background, the Flow keeps emitting and you keep processing/allocating — wasting battery and risking ANRs when backgrounded network flows pile up.</p>
+      <h4>The fix</h4>
+      <pre><code>val uiState by viewModel.uiState.collectAsStateWithLifecycle()</code></pre>
+      <p>This ties collection to the <code>Lifecycle.State.STARTED</code> state by default — collection pauses when the screen goes to background and resumes when it returns.</p>
+      <h4>Under the hood</h4>
+      <p><code>collectAsStateWithLifecycle</code> uses <code>Flow.flowWithLifecycle</code>, which cancels the upstream Flow when lifecycle drops below the threshold and restarts it on return. Combined with <code>stateIn(sharingStarted = WhileSubscribed(5000))</code> in the ViewModel, upstream work (DB queries, network polls) also stops.</p>
+      <h4>Full ViewModel-to-UI pattern</h4>
+      <pre><code>// ViewModel
+val uiState: StateFlow&lt;UiState&gt; = repo.productFlow
+    .map { UiState.Success(it) }
+    .stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = UiState.Loading
+    )
+
+// Composable
+val uiState by viewModel.uiState.collectAsStateWithLifecycle()</code></pre>
+      <div class="gotcha"><strong>The 5000ms in WhileSubscribed:</strong> Keeps the upstream alive for 5 seconds after the last subscriber leaves. Bridges config changes (rotation) without re-fetching, but cancels on real backgrounding.</div>
+    `
+  },
+  {
+    phase: 2,
+    difficulty: 'med',
+    q: "What is the `@Stable` and `@Immutable` annotation? How do they help performance?",
+    a: `
+      <h4>The problem</h4>
+      <p>Compose uses type stability to decide whether to skip recomposition. A composable is skippable only if all its parameters are stable. If any parameter is unstable, Compose can't trust that <code>equals()</code> is reliable, so it always recomposes.</p>
+      <h4>Default stability rules</h4>
+      <ul>
+        <li>Primitives, <code>String</code>, functional types → stable.</li>
+        <li>Data classes with only stable properties → stable.</li>
+        <li>Anything with a <code>var</code> property → UNSTABLE (could change without notification).</li>
+        <li>Standard <code>List</code>, <code>Set</code>, <code>Map</code> → UNSTABLE (they have mutable subtypes).</li>
+        <li>Types from other modules without stability info → UNSTABLE by default.</li>
+      </ul>
+      <h4>@Stable — "trust me, I behave"</h4>
+      <p>A contract promising: equals() is consistent, public props notify Compose on change.</p>
+      <pre><code>@Stable
+class FilterState(
+    val category: String,
+    val priceMax: Int
+)</code></pre>
+      <h4>@Immutable — "I literally never change"</h4>
+      <p>Stronger promise. All properties are <code>val</code> and reference only immutable types.</p>
+      <pre><code>@Immutable
+data class Product(
+    val id: String,
+    val name: String,
+    val price: Int
+)</code></pre>
+      <h4>Fixing List instability</h4>
+      <p>Use <code>kotlinx.collections.immutable</code> — <code>ImmutableList</code> is correctly marked stable.</p>
+      <pre><code>// BAD — List is unstable, forces recomposition
+@Composable fun Feed(products: List&lt;Product&gt;)
+
+// GOOD
+@Composable fun Feed(products: ImmutableList&lt;Product&gt;)</code></pre>
+      <div class="gotcha"><strong>Diagnostic:</strong> Enable Compose compiler reports via gradle. They generate per-composable reports showing which are skippable/restartable and flag unstable params. It's how senior devs hunt jank.</div>
+    `
+  },
+  {
+    phase: 2,
+    difficulty: 'hard',
+    q: "How does `LazyColumn` achieve performance? What are `key` and `contentType` for?",
+    a: `
+      <h4>Why LazyColumn is fast</h4>
+      <ul>
+        <li>Only composes and measures items currently visible + a small buffer.</li>
+        <li>Reuses composition slots as items scroll off screen (like RecyclerView's view recycling, but at composition level).</li>
+        <li>Items off-screen are discarded from composition — zero render cost.</li>
+      </ul>
+      <h4>The key parameter</h4>
+      <p>Without keys, Compose identifies items by position. When you add/remove/reorder items, positions shift and composition state is associated with the wrong items — scroll position jumps, animations break, state gets lost.</p>
+      <pre><code>LazyColumn {
+    items(
+        items = products,
+        key = { product -&gt; product.id }  // stable identity
+    ) { product -&gt;
+        ProductCard(product)
+    }
+}</code></pre>
+      <h4>What keys enable</h4>
+      <ul>
+        <li>Animations on item add/remove/reorder (<code>Modifier.animateItemPlacement()</code>).</li>
+        <li>Preserved scroll position when list updates.</li>
+        <li>Correct <code>remember</code> state per item across updates.</li>
+      </ul>
+      <h4>contentType — the reuse optimization</h4>
+      <p>When items have multiple shapes (header + product + footer), <code>contentType</code> tells Compose "these items can reuse composition slots." Slots only get reused between items of the same contentType.</p>
+      <pre><code>LazyColumn {
+    item(contentType = "header") { HeroBanner() }
+    items(products, key = { it.id }, contentType = { "product" }) {
+        ProductCard(it)
+    }
+    item(contentType = "footer") { LoadMoreButton() }
+}</code></pre>
+      <h4>Common perf mistakes</h4>
+      <ul>
+        <li>Forgetting <code>key</code> → janky list updates, lost state.</li>
+        <li>Using index as key → defeats the purpose; same as no key.</li>
+        <li>Not using <code>contentType</code> with heterogeneous items → suboptimal slot reuse.</li>
+        <li>Heavy work in item composables → scroll jank. Pre-compute in ViewModel.</li>
+      </ul>
+      <div class="gotcha"><strong>Country Delight product grid-specific:</strong> Product cards with images should use <code>contentType = "product"</code> consistently, and images should use Coil's <code>AsyncImage</code> with a <code>placeholder</code> — otherwise Coil re-fires requests on recycled slots, hammering the network.</div>
+    `
+  },
+  {
+    phase: 2,
+    difficulty: 'med',
+    q: "How do you handle navigation in Compose? What are the trade-offs of Navigation-Compose vs. a sealed-class approach?",
+    a: `
+      <h4>Navigation-Compose (official)</h4>
+      <pre><code>NavHost(navController, startDestination = "home") {
+    composable("home") { HomeScreen(onProductClick = { id -&gt;
+        navController.navigate("product/${'$'}id")
+    }) }
+    composable(
+        "product/{id}",
+        arguments = listOf(navArgument("id") { type = NavType.StringType })
+    ) { backStack -&gt;
+        val id = backStack.arguments?.getString("id")!!
+        ProductScreen(id)
+    }
+}</code></pre>
+      <h4>Type-safe navigation (Compose Navigation 2.8+)</h4>
+      <pre><code>@Serializable data class ProductRoute(val id: String)
+@Serializable object HomeRoute
+
+NavHost(navController, startDestination = HomeRoute) {
+    composable&lt;HomeRoute&gt; { HomeScreen(...) }
+    composable&lt;ProductRoute&gt; {
+        val route: ProductRoute = it.toRoute()
+        ProductScreen(route.id)
+    }
+}</code></pre>
+      <p>Routes are Kotlin objects, not strings. Compile-time safety on arguments.</p>
+      <h4>Sealed-class / custom approach</h4>
+      <pre><code>sealed interface Screen {
+    object Home : Screen
+    data class Product(val id: String) : Screen
+}
+
+var currentScreen by rememberSaveable { mutableStateOf(Screen.Home) }
+when (val s = currentScreen) {
+    Screen.Home -&gt; HomeScreen(onProductClick = { currentScreen = Screen.Product(it) })
+    is Screen.Product -&gt; ProductScreen(s.id)
+}</code></pre>
+      <h4>Trade-offs</h4>
+      <table style="width:100%; border-collapse:collapse; margin:10px 0; font-size:13px;">
+        <tr style="background:#0a0e15;">
+          <th style="padding:8px; text-align:left; border:1px solid #232b3d;">Aspect</th>
+          <th style="padding:8px; text-align:left; border:1px solid #232b3d;">Navigation-Compose</th>
+          <th style="padding:8px; text-align:left; border:1px solid #232b3d;">Sealed class</th>
+        </tr>
+        <tr><td style="padding:8px; border:1px solid #232b3d;">Back stack</td><td style="padding:8px; border:1px solid #232b3d;">Built-in, proper</td><td style="padding:8px; border:1px solid #232b3d;">DIY — hard to get right</td></tr>
+        <tr><td style="padding:8px; border:1px solid #232b3d;">Deep links</td><td style="padding:8px; border:1px solid #232b3d;">First-class</td><td style="padding:8px; border:1px solid #232b3d;">Manual</td></tr>
+        <tr><td style="padding:8px; border:1px solid #232b3d;">Predictive back</td><td style="padding:8px; border:1px solid #232b3d;">Supported</td><td style="padding:8px; border:1px solid #232b3d;">Manual</td></tr>
+        <tr><td style="padding:8px; border:1px solid #232b3d;">Simplicity</td><td style="padding:8px; border:1px solid #232b3d;">More ceremony</td><td style="padding:8px; border:1px solid #232b3d;">Very simple for small apps</td></tr>
+      </table>
+      <div class="gotcha"><strong>Interview answer:</strong> For any production app, use Navigation-Compose (with type-safe routes). Sealed-class is fine for a demo but breaks down on deep links, back stack, and process death restoration.</div>
+    `
+  },
+  {
+    phase: 2,
+    difficulty: 'med',
+    q: "What is `Modifier` in Compose? Why does the order of modifiers matter?",
+    a: `
+      <h4>What Modifier is</h4>
+      <p>A Modifier is an ordered, immutable collection of decorations applied to a composable. Each modifier wraps the next, like a Russian doll.</p>
+      <h4>Why order matters</h4>
+      <p>Modifiers apply left to right; each one affects what comes after it.</p>
+      <pre><code>// Padding THEN background — colored box is padded
+Box(Modifier.padding(16.dp).background(Blue))
+
+// Background THEN padding — blue fills full box, padding is inside
+Box(Modifier.background(Blue).padding(16.dp))</code></pre>
+      <p>Visually very different, even though the modifiers are the same.</p>
+      <h4>Size and click</h4>
+      <pre><code>// Only inner size clickable
+Box(Modifier.size(100.dp).clickable { }.padding(16.dp))
+
+// Full size including padding clickable
+Box(Modifier.padding(16.dp).size(100.dp).clickable { })
+
+// Wait, that's still inner size... click is inside size
+// For "padding inside click area":
+Box(Modifier.clickable { }.padding(16.dp).size(100.dp))</code></pre>
+      <h4>Common pitfalls</h4>
+      <ul>
+        <li><code>fillMaxWidth()</code> before <code>wrapContentWidth()</code> — inner wraps, parent fills. Often surprising.</li>
+        <li><code>clickable</code> before <code>padding</code> — padding is inside click area. Reverse for "margin-like" behavior.</li>
+        <li><code>graphicsLayer</code> before size — layer applies to specified size only.</li>
+      </ul>
+      <h4>Convention for reusable composables</h4>
+      <p>Always accept a <code>modifier: Modifier = Modifier</code> parameter and apply it FIRST in your root. This lets callers customize sizing/padding/click from the outside.</p>
+      <pre><code>@Composable
+fun ProductCard(
+    product: Product,
+    modifier: Modifier = Modifier  // always first, with default
+) {
+    Card(modifier = modifier.fillMaxWidth()) { /* ... */ }
+}</code></pre>
+      <div class="gotcha"><strong>Interview gotcha:</strong> "What's wrong with <code>Modifier.padding(16.dp).clickable { }</code>?" The padded area isn't clickable — the click target is only the inner content. Users tapping the padding see no response.</div>
+    `
+  },
+  {
+    phase: 2,
+    difficulty: 'med',
+    q: "What is CompositionLocal and when should you use it?",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "CompositionLocal is Compose's way to pass values implicitly down the composition tree without threading them through every parameter. Think React Context. Used for cross-cutting concerns — theme, density, resources — not for domain data."</div>
+      <h4>Reading built-in CompositionLocals</h4>
+      <pre><code>val density = LocalDensity.current
+val context = LocalContext.current
+val layoutDirection = LocalLayoutDirection.current
+val windowInfo = LocalWindowInfo.current</code></pre>
+      <h4>Providing your own</h4>
+      <pre><code>val LocalUser = compositionLocalOf&lt;User&gt; { error("No user provided") }
+
+@Composable
+fun App(user: User) {
+    CompositionLocalProvider(LocalUser provides user) {
+        HomeScreen()                  // deep child reads LocalUser.current
+    }
+}</code></pre>
+      <h4>compositionLocalOf vs staticCompositionLocalOf</h4>
+      <ul>
+        <li><code>compositionLocalOf</code> — tracks reads; when the value changes, only readers recompose. Use for values that change during app runtime.</li>
+        <li><code>staticCompositionLocalOf</code> — doesn't track reads; changing the value forces the WHOLE provider subtree to recompose. Use for values that are fixed for a session (theme, density).</li>
+      </ul>
+      <h4>When CompositionLocal fits</h4>
+      <ul>
+        <li>Cross-cutting context used by many descendants (theme, user session, strings).</li>
+        <li>Can't thread through every composable without ruining readability.</li>
+      </ul>
+      <h4>When NOT to use it</h4>
+      <ul>
+        <li>For domain data — pass as parameters. Explicit is clearer.</li>
+        <li>To "save typing" — implicit deps hide coupling and make testing harder.</li>
+        <li>For one-off needs — if only 2 composables read it, just pass the param.</li>
+      </ul>
+      <div class="gotcha"><strong>Gotcha:</strong> CompositionLocal has no default in most cases — throwing <code>error()</code> in the default is the idiom. If someone forgets to wrap in a Provider, you want a crash early rather than silent wrong behavior.</div>
+    `
+  },
+  {
+    phase: 2,
+    difficulty: 'hard',
+    q: "How do you build a custom layout in Compose? When do you need SubcomposeLayout?",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "When built-in layouts (Row, Column, Box, LazyColumn) don't fit — staggered grids, flow layouts, custom positioning — drop to the <code>Layout</code> composable. It's measure + place. For layouts that need child size info before composing them, use <code>SubcomposeLayout</code>."</div>
+      <h4>Layout composable — two phases</h4>
+      <pre><code>@Composable
+fun TwoColumnLayout(
+    modifier: Modifier = Modifier,
+    content: @Composable () -&gt; Unit
+) {
+    Layout(modifier = modifier, content = content) { measurables, constraints -&gt;
+        // 1. MEASURE
+        val halfWidth = constraints.maxWidth / 2
+        val placeables = measurables.map { m -&gt;
+            m.measure(constraints.copy(maxWidth = halfWidth))
+        }
+        // 2. PLACE
+        val height = placeables.maxOf { it.height }
+        layout(constraints.maxWidth, height) {
+            var y = 0; var x = 0
+            placeables.forEach { p -&gt;
+                p.placeRelative(x = x, y = 0)
+                x += halfWidth
+                if (x &gt;= constraints.maxWidth) { x = 0; y += p.height }
+            }
+        }
+    }
+}</code></pre>
+      <h4>The rule: measure once per child</h4>
+      <p>Measuring a child more than once in the same pass throws. This is the key constraint that separates <code>Layout</code> from <code>SubcomposeLayout</code>.</p>
+      <h4>SubcomposeLayout — when you need child size BEFORE placement</h4>
+      <p>Example: BoxWithConstraints, LazyColumn, BottomSheetScaffold. LazyColumn only composes items that are about to be visible — it uses SubcomposeLayout to compose items on demand based on scroll offset.</p>
+      <pre><code>SubcomposeLayout { constraints -&gt;
+    val headerPlaceable = subcompose(slotId = "header") { Header() }.first().measure(constraints)
+    // Now I know header's height. Compose body with remaining space.
+    val bodyConstraints = constraints.copy(maxHeight = constraints.maxHeight - headerPlaceable.height)
+    val bodyPlaceable = subcompose(slotId = "body") { Body() }.first().measure(bodyConstraints)
+    layout(constraints.maxWidth, constraints.maxHeight) {
+        headerPlaceable.placeRelative(0, 0)
+        bodyPlaceable.placeRelative(0, headerPlaceable.height)
+    }
+}</code></pre>
+      <h4>Performance caveats</h4>
+      <ul>
+        <li>SubcomposeLayout is expensive — avoid in hot paths (LazyColumn items).</li>
+        <li>Custom Layout is cheap — use it freely for static positioning.</li>
+        <li>Intrinsic measurements — <code>minIntrinsicHeight</code>, <code>maxIntrinsicWidth</code> — let parent query child size without full measure pass.</li>
+      </ul>
+      <div class="gotcha"><strong>Common mistake:</strong> Reaching for SubcomposeLayout when Layout + intrinsic measurements would do. SubcomposeLayout composes children eagerly to measure — that's expensive. Use it only when genuinely needed.</div>
+    `
+  },
+  {
+    phase: 2,
+    difficulty: 'med',
+    q: "Walk me through Compose animation APIs. When do you pick which?",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Compose has a ladder of animation APIs from tiny to orchestrated. Pick the simplest that does the job. My mental model: single value → <code>animateXAsState</code>, multiple values in sync → <code>updateTransition</code>, swapping content → <code>AnimatedContent</code> or <code>Crossfade</code>, indefinite loops → <code>rememberInfiniteTransition</code>."</div>
+      <h4>animate*AsState — one value, fire-and-forget</h4>
+      <pre><code>val scale by animateFloatAsState(if (pressed) 0.95f else 1f, label = "scale")
+Box(Modifier.graphicsLayer { scaleX = scale; scaleY = scale })</code></pre>
+      <p>Great for hover, press, toggle. Variants: <code>animateColorAsState</code>, <code>animateDpAsState</code>, <code>animateIntAsState</code>, etc.</p>
+      <h4>updateTransition — multiple values in sync</h4>
+      <pre><code>val transition = updateTransition(targetState = boxState, label = "boxState")
+val color by transition.animateColor { if (it == Expanded) Color.Red else Color.Blue }
+val size by transition.animateDp { if (it == Expanded) 200.dp else 100.dp }</code></pre>
+      <p>When color + size + corner should animate together based on a single state change.</p>
+      <h4>AnimatedVisibility — enter/exit</h4>
+      <pre><code>AnimatedVisibility(visible = showBanner, enter = slideInVertically() + fadeIn(), exit = fadeOut()) {
+    Banner()
+}</code></pre>
+      <h4>AnimatedContent — swap with transitions</h4>
+      <pre><code>AnimatedContent(targetState = count, transitionSpec = {
+    if (targetState &gt; initialState) slideInVertically { it } + fadeIn() togetherWith slideOutVertically { -it } + fadeOut()
+    else slideInVertically { -it } + fadeIn() togetherWith slideOutVertically { it } + fadeOut()
+}) { c -&gt; Text("$c") }</code></pre>
+      <h4>Crossfade — dead simple content swap</h4>
+      <pre><code>Crossfade(targetState = screen) { s -&gt; when (s) { Home -&gt; HomeScreen(); Detail -&gt; DetailScreen() } }</code></pre>
+      <h4>rememberInfiniteTransition — loading spinners, pulses</h4>
+      <pre><code>val transition = rememberInfiniteTransition()
+val alpha by transition.animateFloat(0f, 1f, infiniteRepeatable(tween(1000), RepeatMode.Reverse))</code></pre>
+      <h4>Specs — spring vs tween vs keyframes</h4>
+      <ul>
+        <li><strong>spring</strong> — physics-based, natural. Default for most UI.</li>
+        <li><strong>tween</strong> — duration-based with easing curve. When you need exact timing.</li>
+        <li><strong>keyframes</strong> — multi-stop. Complex non-linear animations.</li>
+      </ul>
+      <div class="gotcha"><strong>Perf:</strong> Animate with <code>graphicsLayer</code> (scaleX, alpha, translation) — these run on the GPU without re-layout. Animating size / padding retriggers layout and is costly in deep trees. Prefer scale over size where it looks the same.</div>
+    `
+  },
+  {
+    phase: 2,
+    difficulty: 'med',
+    q: "How do you handle gestures in Compose — drag, swipe, custom pointer handling?",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Common gestures (click, long-click) are one-line Modifiers. For custom interactions — drag, swipe-to-dismiss, pinch — drop to <code>pointerInput</code> with detect* helpers, or raw pointer events for full control."</div>
+      <h4>Built-in modifier helpers</h4>
+      <pre><code>Modifier.clickable(onClick = { })
+Modifier.combinedClickable(onClick = {}, onLongClick = {}, onDoubleClick = {})
+Modifier.toggleable(value = checked, onValueChange = { })
+Modifier.draggable(state = rememberDraggableState { delta -&gt; ... }, orientation = Horizontal)</code></pre>
+      <h4>pointerInput — the escape hatch</h4>
+      <pre><code>Modifier.pointerInput(Unit) {
+    detectTapGestures(
+        onTap = { offset -&gt; },
+        onLongPress = { offset -&gt; },
+        onDoubleTap = { offset -&gt; },
+        onPress = { offset -&gt;
+            val released = tryAwaitRelease()
+            // use for custom press animations
+        }
+    )
+}</code></pre>
+      <h4>Drag with offset tracking</h4>
+      <pre><code>var offset by remember { mutableStateOf(Offset.Zero) }
+Box(Modifier
+    .offset { IntOffset(offset.x.toInt(), offset.y.toInt()) }
+    .pointerInput(Unit) {
+        detectDragGestures { change, dragAmount -&gt;
+            change.consume()
+            offset += dragAmount
+        }
+    })</code></pre>
+      <h4>detectTransformGestures — pinch + zoom + rotate</h4>
+      <pre><code>detectTransformGestures { centroid, pan, zoom, rotation -&gt;
+    scale *= zoom
+    offset += pan
+    angle += rotation
+}</code></pre>
+      <h4>Nested scrolling — NestedScrollConnection</h4>
+      <p>When you have a collapsing toolbar above a LazyColumn, or a bottom sheet over a list, use <code>NestedScrollConnection</code>. Parent pre-consumes scroll delta before/after the child handles it.</p>
+      <h4>Key pointerInput correctly</h4>
+      <p>The <code>key</code> arg to <code>pointerInput</code> matters — if it changes, the gesture coroutine restarts and in-flight gestures drop. Pass stable state as key; pass <code>Unit</code> for once-only setup.</p>
+      <div class="gotcha"><strong>Consume the event:</strong> In drag handlers, call <code>change.consume()</code> so parent NestedScroll doesn't also handle it. Missing this causes both parent and child to respond — the classic "list scrolls while I'm dragging a card" bug.</div>
+    `
+  },
+  {
+    phase: 2,
+    difficulty: 'med',
+    q: "How do you bridge Compose and XML Views? AndroidView vs ComposeView.",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Real apps are rarely pure Compose. You have legacy XML screens you can't rewrite yet, or third-party Views with no Compose equivalent — MapView, ExoPlayer's PlayerView, WebView. Two directions: show XML from Compose (<code>AndroidView</code>), show Compose from XML (<code>ComposeView</code>)."</div>
+      <h4>AndroidView — embed a View in Compose</h4>
+      <pre><code>AndroidView(
+    factory = { ctx -&gt; MapView(ctx).apply { onCreate(null); getMapAsync { ... } } },
+    update = { view -&gt;
+        view.onResume()
+        view.getMapAsync { map -&gt; map.moveCamera(CameraUpdateFactory.newLatLng(loc)) }
+    },
+    modifier = Modifier.fillMaxSize()
+)</code></pre>
+      <ul>
+        <li><code>factory</code> — runs once, create the View.</li>
+        <li><code>update</code> — runs whenever state read inside it changes. Sync Compose state to View.</li>
+        <li><code>onRelease</code> / <code>onReset</code> — for AndroidView inside LazyColumn (Compose 1.5+), for recycling.</li>
+      </ul>
+      <h4>ComposeView — put Compose inside XML or Fragment</h4>
+      <pre><code>&lt;androidx.compose.ui.platform.ComposeView
+    android:id="@+id/compose_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" /&gt;
+
+// In Fragment / Activity
+binding.composeView.apply {
+    setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+    setContent { MyComposable() }
+}</code></pre>
+      <h4>AbstractComposeView — custom View that hosts Compose</h4>
+      <p>When you want to ship a reusable View to non-Compose codebases: subclass <code>AbstractComposeView</code>, override <code>Content()</code>. Callers use it like any View.</p>
+      <h4>ViewCompositionStrategy — lifecycle attachment</h4>
+      <ul>
+        <li><strong>DisposeOnDetachedFromWindow</strong> (default) — fine for most cases.</li>
+        <li><strong>DisposeOnLifecycleDestroyed(viewLifecycleOwner)</strong> — for Fragments, matches view lifecycle.</li>
+        <li><strong>DisposeOnViewTreeLifecycleDestroyed</strong> — generic, good default for Fragment children.</li>
+      </ul>
+      <h4>Performance</h4>
+      <ul>
+        <li>AndroidView has measurement cost — don't nest a ViewGroup-heavy tree inside Compose.</li>
+        <li>Each AndroidView is a single View — put a ComposeView INSIDE a View tree carefully, it doesn't free up unless lifecycle strategy is set right.</li>
+        <li>In LazyColumn items, AndroidView can cause visual glitches on scroll; Compose 1.5+ added recycling support but test thoroughly.</li>
+      </ul>
+      <div class="gotcha"><strong>MapView / ExoPlayer gotcha:</strong> These have their own lifecycle (onCreate, onResume, onPause, onDestroy). You MUST forward Compose lifecycle to them. Use <code>DisposableEffect</code> paired with <code>LocalLifecycleOwner</code> and observe ON_RESUME / ON_PAUSE. Missing this leaks memory and breaks playback/map state.</div>
+    `
+  },
+  {
+    phase: 2,
+    difficulty: 'med',
+    q: "How do you make Compose UIs accessible? What's semantics?",
+    a: `
+      <div class="opener"><strong>How I'd open:</strong> "Compose accessibility is declarative through <code>semantics</code>. Most Material 3 components are accessible by default — buttons have role, text has content, checkboxes announce state. Custom composables need explicit semantics. The TalkBack user is your test."</div>
+      <h4>contentDescription for images and icons</h4>
+      <pre><code>Image(
+    painter = painterResource(R.drawable.avatar),
+    contentDescription = "Profile photo of \${user.name}"
+)
+Icon(Icons.Default.Close, contentDescription = "Close dialog")</code></pre>
+      <p>Decorative images: pass <code>null</code>. Never empty string — TalkBack still announces "unlabeled image".</p>
+      <h4>semantics { } modifier</h4>
+      <pre><code>Modifier.semantics {
+    role = Role.Button
+    stateDescription = if (selected) "selected" else "not selected"
+    contentDescription = "Size \${size.label}"
+    onClick(label = "select size") { onClick(); true }
+}</code></pre>
+      <h4>mergeDescendants — treat card as one unit</h4>
+      <pre><code>Column(Modifier.semantics(mergeDescendants = true) { }) {
+    Text(product.name)
+    Text(product.price)
+    // TalkBack reads this as "Milk 1L, ₹60" in one focus stop, not three
+}</code></pre>
+      <p>Without mergeDescendants, TalkBack stops at every text. Merge when the children are semantically one thing (a product card, a list item).</p>
+      <h4>Roles that matter</h4>
+      <ul>
+        <li><code>Role.Button</code> — announces as "button". Applied by <code>Modifier.clickable</code> automatically IF you set role.</li>
+        <li><code>Role.Checkbox</code> / <code>Role.Switch</code> — toggles. Reads checked state.</li>
+        <li><code>Role.Image</code>, <code>Role.Tab</code>, <code>Role.RadioButton</code>.</li>
+      </ul>
+      <h4>Live regions — dynamic content updates</h4>
+      <pre><code>Modifier.semantics { liveRegion = LiveRegionMode.Polite }
+// TalkBack announces this text whenever it changes</code></pre>
+      <p>For things like "5 items in cart" where the number changes and the user needs to hear it even without focusing.</p>
+      <h4>Minimum touch target</h4>
+      <p>48dp × 48dp is the Material guideline. Compose enforces this for Material components via <code>minimumInteractiveComponentSize</code>. For custom interactive composables, apply <code>Modifier.minimumInteractiveComponentSize()</code> or <code>Modifier.size(48.dp)</code>.</p>
+      <h4>Testing accessibility</h4>
+      <ul>
+        <li>Enable TalkBack in dev settings. Navigate your app without looking.</li>
+        <li>Accessibility Scanner app — highlights missing labels, low contrast.</li>
+        <li>Compose test framework — <code>onNodeWithContentDescription("...")</code>, assert <code>stateDescription</code>.</li>
+      </ul>
+      <div class="gotcha"><strong>The subtle miss:</strong> Using <code>Modifier.clickable</code> without specifying role. It's clickable, but TalkBack doesn't announce it as a button — just "double-tap to activate". Always pass <code>role = Role.Button</code> (or equivalent) to clickable for proper announcement.</div>
+    `
+  }
+];
+
+const phase1Container = document.getElementById('phase1-container');
+const phase2Container = document.getElementById('phase2-container');
+
+function render() {
+  phase1Container.innerHTML = '';
+  phase2Container.innerHTML = '';
+  let phase1Count = 0, phase2Count = 0;
+
+  questions.forEach((item, idx) => {
+    const done = getDone(idx);
+    const diffLabel = item.difficulty === 'hard' ? 'Hard' : item.difficulty === 'med' ? 'Medium' : 'Easy';
+    const diffClass = item.difficulty === 'hard' ? 'tag-hard' : item.difficulty === 'med' ? 'tag-med' : 'tag-easy';
+    if (item.phase === 1) phase1Count++;
+    else phase2Count++;
+    const qNum = item.phase === 1 ? phase1Count : phase2Count;
+
+    const card = document.createElement('div');
+    card.className = 'question-card' + (done ? ' done' : '');
+    card.innerHTML = `
+      <div class="question-header">
+        <div class="question-number">Q${qNum}</div>
+        <div class="question-text">${item.q}<span class="tag ${diffClass}">${diffLabel}</span></div>
+        <div class="actions">
+          <button class="btn btn-view" data-idx="${idx}">View Answer</button>
+          <button class="btn btn-done ${done ? 'active' : ''}" data-done="${idx}">${done ? '✓ Done' : 'Mark Done'}</button>
+        </div>
+      </div>
+      <div class="answer" id="answer-${idx}">${item.a}</div>
+    `;
+    if (item.phase === 1) phase1Container.appendChild(card);
+    else phase2Container.appendChild(card);
+  });
+
+  document.querySelectorAll('[data-idx]').forEach(btn => {
+    btn.onclick = (e) => {
+      const idx = e.target.dataset.idx;
+      const ans = document.getElementById('answer-' + idx);
+      const open = ans.classList.toggle('open');
+      e.target.textContent = open ? 'Hide Answer' : 'View Answer';
+    };
+  });
+  document.querySelectorAll('[data-done]').forEach(btn => {
+    btn.onclick = (e) => {
+      const idx = parseInt(e.target.dataset.done);
+      toggleDone(idx);
+      render();
+    };
+  });
+  updateProgress();
+}
+
+function getDone(idx) {
+  const doneList = JSON.parse(localStorage.getItem('prep_done') || '[]');
+  return doneList.includes(idx);
+}
+function toggleDone(idx) {
+  let doneList = JSON.parse(localStorage.getItem('prep_done') || '[]');
+  if (doneList.includes(idx)) doneList = doneList.filter(i => i !== idx);
+  else doneList.push(idx);
+  localStorage.setItem('prep_done', JSON.stringify(doneList));
+}
+function updateProgress() {
+  const doneList = JSON.parse(localStorage.getItem('prep_done') || '[]');
+  const total = questions.length;
+  const done = doneList.length;
+  const pct = total ? (done / total * 100) : 0;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = `${done} of ${total} completed (${Math.round(pct)}%)`;
+}
+function resetProgress() {
+  if (confirm('Reset all progress?')) {
+    localStorage.removeItem('prep_done');
+    render();
+  }
+}
+
+render();
+</script>
+</body>
+</html>
